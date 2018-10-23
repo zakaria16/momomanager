@@ -3,6 +3,7 @@ package com.mazitekgh.mtnmomo;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -41,7 +42,7 @@ public class MomoDetailFragment extends Fragment {
     }
 
     // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
+
     public static MomoDetailFragment newInstance(int whichType) {
         MomoDetailFragment fragment = new MomoDetailFragment();
         Bundle args = new Bundle();
@@ -80,10 +81,10 @@ public class MomoDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_momodetail_list, container, false);
-        final LinearLayout allViewClick = view.findViewById(R.id.all_activities);
+        LinearLayout allViewClick = view.findViewById(R.id.all_activities);
         LinearLayout receivedViewClick = view.findViewById(R.id.received_activities);
         LinearLayout sentViewClick = view.findViewById(R.id.sent_activities);
         LinearLayout creditViewClick = view.findViewById(R.id.credit_activities);
@@ -138,7 +139,7 @@ public class MomoDetailFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(Momo item);
+        void onListFragmentInteraction(String body);
 
     }
 

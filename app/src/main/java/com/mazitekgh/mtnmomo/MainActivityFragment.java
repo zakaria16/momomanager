@@ -12,8 +12,7 @@ import android.view.ViewGroup;
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
-    Context c;
-
+    private Context c;
     public MainActivityFragment() {
     }
 
@@ -27,12 +26,11 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_main, container, false);
         // ListView lv =v.findViewById(R.id.list_item);
         //  TextView tv =v.findViewById(R.id.amount_tv);
         // LinearLayout receivedActivitiesClick =v.findViewById(R.id.)
 
-        return v;
+        return inflater.inflate(R.layout.fragment_main, container, false);
     }
 
 }

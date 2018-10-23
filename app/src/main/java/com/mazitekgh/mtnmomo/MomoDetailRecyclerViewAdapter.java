@@ -21,12 +21,11 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
 
     private final List<Momo> mValues;
     private final OnListFragmentInteractionListener mListener;
-    private int whichMomo;
 
     public MomoDetailRecyclerViewAdapter(int whichMomo, List<Momo> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
-        this.whichMomo = whichMomo;
+
     }
 
     @NonNull
@@ -38,14 +37,15 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.momo_date.setText(mValues.get(position).getDateStr());
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        final int pos = position;
+        holder.mItem = mValues.get(pos);
+        holder.momo_date.setText(mValues.get(pos).getDateStr());
         // holder.momoTextView.setText(mValues.get(position).getContentStr());
-        holder.sender.setText(mValues.get(position).getSender());
-        holder.amountReceived.setText(mValues.get(position).getAmount());
-        holder.txID.setText(mValues.get(position).getTxID());
-        holder.currentBalance.setText(mValues.get(position).getCurrentBalance());
+        holder.sender.setText(mValues.get(pos).getSender());
+        holder.amountReceived.setText(mValues.get(pos).getAmount());
+        holder.txID.setText(mValues.get(pos).getTxID());
+        holder.currentBalance.setText(mValues.get(pos).getCurrentBalance());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,7 +53,7 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onListFragmentInteraction(mValues.get(pos).getContentStr());
                 }
             }
         });
@@ -92,22 +92,22 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView momo_date;
+        final View mView;
+        final TextView momo_date;
         //public final TextView momoTextView;
-        public final TextView sender;
-        public final TextView txID;
+        final TextView sender;
+        final TextView txID;
         // public final TextView momo_date;
-        public final TextView currentBalance;
-        public final TextView amountReceived;
-        public final TextView amountCaption;
-        public final TextView transactionFee;
-        public final TextView transactionFeeCaption;
+        final TextView currentBalance;
+        final TextView amountReceived;
+        final TextView amountCaption;
+        final TextView transactionFee;
+        final TextView transactionFeeCaption;
         //public final TextView momoTextView;
 
-        public Momo mItem;
+        Momo mItem;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             mView = view;
             momo_date = view.findViewById(R.id.momo_date);

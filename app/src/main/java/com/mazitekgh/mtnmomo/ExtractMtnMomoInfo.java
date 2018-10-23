@@ -14,7 +14,7 @@ import me.everything.providers.core.Data;
  * MtnMomo
  * Created by Zakaria on 01-Sep-18 at 4:03 PM.
  */
-public class ExtractMtnMomoInfo {
+class ExtractMtnMomoInfo {
     private List msgList;
 
     public ExtractMtnMomoInfo(Context c) {
@@ -319,7 +319,7 @@ public class ExtractMtnMomoInfo {
 
 
     //receive amount
-    public double getCashInReceivedAmount(Sms sms) {
+    private double getCashInReceivedAmount(Sms sms) {
         if (!isCashIn(sms)) {
             return 0;
         }
@@ -336,14 +336,14 @@ public class ExtractMtnMomoInfo {
         return Double.valueOf(ss);
     }
 
-    public double getPaymentReceivedAmount(Sms sms) {
+    private double getPaymentReceivedAmount(Sms sms) {
         if (!isPaymentReceived(sms)) {
             return 0;
         }
 
         double db;
         String tt = "Payment received for";
-        int st = -1;
+        int st;
         int end = -1;
         String ss;
         if (sms.body.contains(tt)) {
@@ -381,7 +381,7 @@ public class ExtractMtnMomoInfo {
 
 
     //sent amount
-    public double getCashOutAmount(Sms sms) {
+    private double getCashOutAmount(Sms sms) {
         if (!isCashOut(sms)) {
             return 0;
         }
@@ -398,7 +398,7 @@ public class ExtractMtnMomoInfo {
         return Double.valueOf(ss);
     }
 
-    public double getPaymentSentAmount(Sms sms) {
+    private double getPaymentSentAmount(Sms sms) {
         if (!isPaymentSent(sms)) {
             return 0;
         }
@@ -422,7 +422,7 @@ public class ExtractMtnMomoInfo {
         return db;
     }
 
-    public double getPaymentSentAmountMtn(Sms sms) {
+    private double getPaymentSentAmountMtn(Sms sms) {
         if (!isPaymentSentMtn(sms)) {
             return 0;
         }
@@ -475,8 +475,7 @@ public class ExtractMtnMomoInfo {
 
         int st = sms.body.indexOf("from ");
         int end = sms.body.indexOf("Current Balance");
-        String ss = sms.body.substring(st + 5, end);
-        return ss;
+        return sms.body.substring(st + 5, end);
     }
 
     private String getReceiver(Sms sms) {
@@ -513,8 +512,7 @@ public class ExtractMtnMomoInfo {
         startStr = "Transaction ID: ";
         int st = sms.body.indexOf(startStr);
         int end = sms.body.indexOf(".", st);
-        String ss = sms.body.substring(st + startStr.length(), end);
-        return ss;
+        return sms.body.substring(st + startStr.length(), end);
 
 
     }
@@ -523,7 +521,7 @@ public class ExtractMtnMomoInfo {
         boolean isPay = isPaymentReceived(sms);
         boolean isCashOut = isCashOut(sms);
         boolean isPaymentSentFor = isPaymentSentFor(sms);
-        if (!isPay && !isCashIn(sms) && !isCashOut && !isPaymentSent(sms)) {
+        if (!isPay && !isCashIn(sms) && !isCashOut && !isPaymentSent(sms) && !isPaymentSentMtn(sms)) {
             return 0;
         }
         String firstPattern = "Current Balance";
@@ -556,7 +554,8 @@ public class ExtractMtnMomoInfo {
         Sms sms;
         for (int i = 0; i < lastIndex; i++) {
             sms = (Sms) msgList.get(i);
-            if (isCashIn(sms) || isPaymentReceived(sms) || isCashOut(sms) || isPaymentSent(sms)) { //todo change for all
+            if (isCashIn(sms) || isPaymentReceived(sms) || isCashOut(sms) ||
+                    isPaymentSent(sms) || isPaymentSentMtn(sms)) { //todo change for all
                 currentBal = getIndividualCB(sms);
                 break;
             }

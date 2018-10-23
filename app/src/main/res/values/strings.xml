@@ -1,4 +1,19 @@
 <resources>
     <string name="app_name">Mtn Momo</string>
-    <string name="action_settings">Settings</string>
+
+
+    <string name="about_msg">Mtn Momo GH\nVersion 1.0\nDeveloped by <b>MaziTek GH</b></string>
+    <string name="loading">LOADING…</string>
+    <string name="balance">Balance</string>
+    <string name="total_received">Total Received</string>
+    <string name="total_spent">Total Spent</string>
+    <string name="message_title">MESSAGE TITLE</string>
+    <string name="this_is_the_message_side">this is the message side</string>
+    <string name="ok">OK</string>
+    <string name="all_nactivities">All Activities</string>
+    <string name="received_activities">Received Activities</string>
+    <string name="sent_activities">Sent Activities</string>
+    <string name="credit_activities">Credit Activities</string>
+
+
 </resources>

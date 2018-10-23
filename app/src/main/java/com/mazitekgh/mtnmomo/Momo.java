@@ -46,7 +46,7 @@ public class Momo implements Parcelable {
 
     }
 
-    protected Momo(Parcel in) {
+    private Momo(Parcel in) {
         dateStr = in.readString();
         contentStr = in.readString();
     }

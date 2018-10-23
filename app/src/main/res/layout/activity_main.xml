@@ -16,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/holo_blue_light"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
@@ -27,9 +26,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-
-                />
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
             <ProgressBar
                 android:id="@+id/progress"
@@ -50,7 +48,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Balance"
+                    android:text="@string/balance"
                     android:textColor="@android:color/white"
                     android:textSize="18sp" />
 
@@ -60,7 +58,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Total Received"
+                    android:text="@string/total_received"
                     android:textColor="@android:color/white"
 
                     android:textSize="18sp" />
@@ -71,7 +69,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Total Spent"
+                    android:text="@string/total_spent"
                     android:textColor="@android:color/white"
 
                     android:textSize="18sp" />
@@ -83,7 +81,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:text="0"
+                    android:text="0.00"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -119,7 +117,7 @@
 
 
     <FrameLayout
-        android:id="@id/container"
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"

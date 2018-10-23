@@ -12,12 +12,12 @@ import java.util.List;
  * MtnMomo
  * Created by Zakaria on 11-Oct-18 at 12:39 PM.
  */
-public class SharedPref {
+class SharedPref {
 
-    public static final String MOMO_KEY = "momo_key";
-    public static String TOTAL_RECEIVED_KEY = "total_received_key";
-    public static String TOTAL_SENT_KEY = "total_sent_key";
-    public static String BALANCE_KEY = "balance_key";
+    private static final String MOMO_KEY = "momo_key";
+    private static final String TOTAL_RECEIVED_KEY = "total_received_key";
+    private static final String TOTAL_SENT_KEY = "total_sent_key";
+    private static String BALANCE_KEY = "balance_key";
     private static String SHARED_KEY = "com.mazitekgh.mtnmomo.total_received_amount";
     private Context c;
 
@@ -39,11 +39,11 @@ public class SharedPref {
     public HashMap<String, String> getTotalValues() {
         SharedPreferences sp = c.getSharedPreferences(SHARED_KEY, Context.MODE_PRIVATE);
         HashMap<String, String> hs = new HashMap<>(3);
-        SharedPreferences.Editor editor = sp.edit();
 
         hs.put(TOTAL_RECEIVED_KEY, sp.getString(TOTAL_RECEIVED_KEY, "0"));
         hs.put(TOTAL_SENT_KEY, sp.getString(BALANCE_KEY, "0"));
         hs.put(BALANCE_KEY, sp.getString(BALANCE_KEY, "0"));
+
         return hs;
     }
 
