@@ -1,8 +1,10 @@
-package com.mazitekgh.mtnmomo;
+package com.mazitekgh.momorecords;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -11,21 +13,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity implements MomoDetailFragment.OnListFragmentInteractionListener {
-    private ProgressBar pb;
-
+    SmsReceiver smsReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // pb = findViewById(R.id.progress);
-
+        smsReceiver = new SmsReceiver();
+        registerReceiver(smsReceiver, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
+        smsReceiver.setMomoReceivedListener(new SmsReceiver.OnMomoReceive() {
+            @Override
+            public void momoReceive(String body) {
+                Toast.makeText(MainActivity.this, body, Toast.LENGTH_SHORT).show();
+            }
+        });
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
 
@@ -76,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
         if (id == R.id.action_about) {
 
             final AlertDialog mzDialog = new AlertDialog.Builder(this).create();
-            mzDialog.setTitle("MTN Momo");
+            mzDialog.setTitle("Mobile Money Expense Manager ");
             mzDialog.setMessage(getString(R.string.about_msg));
 
             mzDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Contact Mazitek GH", new DialogInterface.OnClickListener() {
@@ -87,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
                     i.putExtra(Intent.EXTRA_PHONE_NUMBER, "0541355996");
                     i.putExtra(Intent.EXTRA_CC, new String[]{"fatzak16@gmail.com"});
                     i.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@mazitekgh.com"});
-                    i.putExtra(Intent.EXTRA_SUBJECT, "About MTN MOMO");
+                    i.putExtra(Intent.EXTRA_SUBJECT, "About MOMO Records");
                     i.putExtra(Intent.EXTRA_TEXT, "Our website https://mazitekgh.com");
                     try {
                         startActivity(Intent.createChooser(i, "Send MaziTek GH email..."));
@@ -134,10 +141,17 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
                 .show();
     }
 
-
-
-
-    interface OnCommandReady {
-        void onSendComand(int whichMomo);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(smsReceiver, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(smsReceiver);
+    }
+
+
 }

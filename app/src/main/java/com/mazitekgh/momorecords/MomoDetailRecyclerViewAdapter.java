@@ -1,4 +1,4 @@
-package com.mazitekgh.mtnmomo;
+package com.mazitekgh.momorecords;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,14 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.mazitekgh.mtnmomo.MomoDetailFragment.OnListFragmentInteractionListener;
+import com.mazitekgh.momorecords.MomoDetailFragment.OnListFragmentInteractionListener;
 
 import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Momo} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
+ *
  */
 public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDetailRecyclerViewAdapter.ViewHolder> {
 
@@ -43,7 +43,7 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
         holder.momo_date.setText(mValues.get(pos).getDateStr());
         // holder.momoTextView.setText(mValues.get(position).getContentStr());
         holder.sender.setText(mValues.get(pos).getSender());
-        holder.amountReceived.setText(mValues.get(pos).getAmount());
+        holder.amountReceived.setText("GHS " + mValues.get(pos).getAmount());
         holder.txID.setText(mValues.get(pos).getTxID());
         holder.currentBalance.setText(mValues.get(pos).getCurrentBalance());
 

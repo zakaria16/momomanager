@@ -1,4 +1,4 @@
-package com.mazitekgh.mtnmomo;
+package com.mazitekgh.momorecords;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.mazitekgh.mtnmomo", appContext.getPackageName());
+        assertEquals("com.mazitekgh.momorecords", appContext.getPackageName());
     }
 }

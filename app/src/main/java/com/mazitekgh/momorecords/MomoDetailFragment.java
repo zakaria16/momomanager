@@ -1,4 +1,4 @@
-package com.mazitekgh.mtnmomo;
+package com.mazitekgh.momorecords;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -26,8 +26,8 @@ public class MomoDetailFragment extends Fragment {
     public static final int RECEIVED_MOMO = 2;
     public static final int SENT_MOMO = 3;
     public static final int CREDIT_MOMO = 5;
-    // TODO: Customize parameter argument names
-    private static final String MOMO_TYPE = "column-count";
+
+    private static final String MOMO_TYPE = "momo-type";
     private RecyclerView recyclerView;
     private List msgList;
     private int momoType = 1;
@@ -41,7 +41,6 @@ public class MomoDetailFragment extends Fragment {
     public MomoDetailFragment() {
     }
 
-    // TODO: Customize parameter initialization
 
     public static MomoDetailFragment newInstance(int whichType) {
         MomoDetailFragment fragment = new MomoDetailFragment();
@@ -138,7 +137,7 @@ public class MomoDetailFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
+
         void onListFragmentInteraction(String body);
 
     }

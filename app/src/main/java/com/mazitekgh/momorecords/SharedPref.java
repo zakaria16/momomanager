@@ -1,4 +1,4 @@
-package com.mazitekgh.mtnmomo;
+package com.mazitekgh.momorecords;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -18,7 +18,7 @@ class SharedPref {
     private static final String TOTAL_RECEIVED_KEY = "total_received_key";
     private static final String TOTAL_SENT_KEY = "total_sent_key";
     private static String BALANCE_KEY = "balance_key";
-    private static String SHARED_KEY = "com.mazitekgh.mtnmomo.total_received_amount";
+    private static String SHARED_KEY = "com.mazitekgh.momorecords.total_received_amount";
     private Context c;
 
     public SharedPref(Context context) {

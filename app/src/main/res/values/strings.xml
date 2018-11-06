@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">Mtn Momo</string>
+    <string name="app_name">MoMo Records</string>
 
 
-    <string name="about_msg">Mtn Momo GH\nVersion 1.0\nDeveloped by <b>MaziTek GH</b></string>
+    <string name="about_msg">MoMo Recods Manager\nVersion 1.0\nSupports only mtn for now\nDeveloped by <b>MaziTek GH</b></string>
     <string name="loading">LOADING…</string>
     <string name="balance">Balance</string>
     <string name="total_received">Total Received</string>
