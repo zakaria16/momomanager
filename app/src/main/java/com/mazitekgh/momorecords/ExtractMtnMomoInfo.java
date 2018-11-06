@@ -200,7 +200,7 @@ class ExtractMtnMomoInfo {
         Momo momo = new Momo();
         Date d = new Date();
         //Date date = new Date(dateStamp);
-
+        //TODO causing error here unknown patern character Y
         SimpleDateFormat sdf = new SimpleDateFormat("E d/M/YY h:m:s a", Locale.getDefault());
         //dateStr=sdf.format(date);
         //todo make use one var to test and extract
