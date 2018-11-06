@@ -1,10 +1,12 @@
-package com.mazitekgh.mtnmomo;
+package com.mazitekgh.momorecords;
 
 import android.content.Context;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import me.everything.providers.android.telephony.Sms;
 import me.everything.providers.android.telephony.TelephonyProvider;
@@ -140,7 +142,7 @@ class ExtractMtnMomoInfo {
         return sentMessages;
     }
 
-    //todo check if list can be added
+
     private List<Momo> getAllMessages() {
         List<Momo> allMsgs = new ArrayList<>();
         Sms sms;
@@ -165,10 +167,10 @@ class ExtractMtnMomoInfo {
     private Momo getReceivedMomo(Sms sms) {
         Momo momo = new Momo();
         Date d = new Date();
-
+        SimpleDateFormat sdf = new SimpleDateFormat("E d/M/YY h:m:s a", Locale.getDefault());
         if (receivedMessage(sms) != null) {
             d.setTime(sms.receivedDate);
-            momo.setDateStr(d.toString());
+            momo.setDateStr(sdf.format(d));
             momo.setContentStr(receivedMessage(sms));
             momo.setAmount(String.valueOf(getPaymentReceivedAmount(sms)));
             momo.setSender("FROM: " + getSender(sms));
@@ -178,7 +180,7 @@ class ExtractMtnMomoInfo {
             momo.setType(MomoDetailFragment.RECEIVED_MOMO);
         } else if (cashInMessage(sms) != null) {
             d.setTime(sms.receivedDate);
-            momo.setDateStr(d.toString());
+            momo.setDateStr(sdf.format(d));
             momo.setContentStr(cashInMessage(sms));
             momo.setAmount(String.valueOf(getCashInReceivedAmount(sms)));
             momo.setSender("FROM: " + getSender(sms));
@@ -197,20 +199,24 @@ class ExtractMtnMomoInfo {
     private Momo getSentMomo(Sms sms) {
         Momo momo = new Momo();
         Date d = new Date();
+        //Date date = new Date(dateStamp);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("E d/M/YY h:m:s a", Locale.getDefault());
+        //dateStr=sdf.format(date);
         //todo make use one var to test and extract
         if (paymentSentMessage(sms) != null) {
             d.setTime(sms.receivedDate);
-            momo.setDateStr(d.toString());
+            momo.setDateStr(sdf.format(d));
             momo.setContentStr(paymentSentMessage(sms));
             momo.setAmount(String.valueOf(getPaymentSentAmount(sms)));
             momo.setSender("To: " + getReceiver(sms));
-            momo.setTxID(getTxID(sms)); //todo
+            momo.setTxID(getTxID(sms));
             momo.setCurrentBalance(String.valueOf(getIndividualCB(sms)));
             momo.setType(MomoDetailFragment.SENT_MOMO);
 
         } else if (cashOutMessage(sms) != null) {
             d.setTime(sms.receivedDate);
-            momo.setDateStr(d.toString());
+            momo.setDateStr(sdf.format(d));
             momo.setContentStr(cashOutMessage(sms));
             momo.setAmount(String.valueOf(getCashOutAmount(sms)));
             momo.setSender("To: " + getReceiver(sms));
@@ -227,14 +233,15 @@ class ExtractMtnMomoInfo {
     private Momo getCreditMomo(Sms sms) {
         Momo momo = new Momo();
         Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("E d/M/YY h:m:s a", Locale.getDefault());
         //todo make use one var to test and extract
         if (paymentSentMessageMtn(sms) != null) {
             d.setTime(sms.receivedDate);
-            momo.setDateStr(d.toString());
+            momo.setDateStr(sdf.format(d));
             momo.setContentStr(paymentSentMessageMtn(sms));
             momo.setAmount(String.valueOf(getPaymentSentAmountMtn(sms)));
             momo.setSender("For: " + getReceiver(sms));
-            momo.setTxID(getTxID(sms)); //todo
+            momo.setTxID(getTxID(sms));
             momo.setCurrentBalance(String.valueOf(getIndividualCB(sms)));
             momo.setType(MomoDetailFragment.CREDIT_MOMO);
 
@@ -554,8 +561,7 @@ class ExtractMtnMomoInfo {
         Sms sms;
         for (int i = 0; i < lastIndex; i++) {
             sms = (Sms) msgList.get(i);
-            if (isCashIn(sms) || isPaymentReceived(sms) || isCashOut(sms) ||
-                    isPaymentSent(sms) || isPaymentSentMtn(sms)) { //todo change for all
+            if (isMobileMoneyMsg(sms)) {
                 currentBal = getIndividualCB(sms);
                 break;
             }

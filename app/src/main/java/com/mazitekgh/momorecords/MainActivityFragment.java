@@ -1,4 +1,4 @@
-package com.mazitekgh.mtnmomo;
+package com.mazitekgh.momorecords;
 
 import android.content.Context;
 import android.os.Bundle;

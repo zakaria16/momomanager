@@ -1,4 +1,4 @@
-package com.mazitekgh.mtnmomo;
+package com.mazitekgh.momorecords;
 
 import org.junit.Test;
 
