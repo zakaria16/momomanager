@@ -83,12 +83,13 @@ public class InitialActivity extends AppCompatActivity {
 
     private void requestSmsPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.READ_SMS)) {
-            Toast.makeText(getApplicationContext(), "Permission Required to Access Storage", Toast.LENGTH_SHORT).show();
+                Manifest.permission.READ_SMS) || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.RECEIVE_SMS)) {
+            Toast.makeText(getApplicationContext(), "Sms permission Required for app to work", Toast.LENGTH_SHORT).show();
         }
 
         //And finally ask for the permission
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS}, SMS_PERMISION_CODE);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS}, SMS_PERMISION_CODE);
     }
 
     private boolean isSmsPermissionGranted() {
@@ -98,9 +99,9 @@ public class InitialActivity extends AppCompatActivity {
 
     private void showDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("The needs your Permission")
-                .setMessage("This App works by reading your mobile money sms messages\n" +
-                        " On the next screen you have to grant this app the permission to access sms")
+        builder.setTitle("The app needs your Permission")
+                .setMessage(getString(R.string.permission_msg) +
+                        "")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

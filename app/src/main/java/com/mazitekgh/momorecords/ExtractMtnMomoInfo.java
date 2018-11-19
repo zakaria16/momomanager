@@ -167,7 +167,7 @@ class ExtractMtnMomoInfo {
     private Momo getReceivedMomo(Sms sms) {
         Momo momo = new Momo();
         Date d = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("E d/M/YY h:m:s a", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("E d/M/yy h:m:s a", Locale.getDefault());
         if (receivedMessage(sms) != null) {
             d.setTime(sms.receivedDate);
             momo.setDateStr(sdf.format(d));
@@ -201,7 +201,7 @@ class ExtractMtnMomoInfo {
         Date d = new Date();
         //Date date = new Date(dateStamp);
         //TODO causing error here unknown patern character Y
-        SimpleDateFormat sdf = new SimpleDateFormat("E d/M/YY h:m:s a", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("E d/M/yy h:m:s a", Locale.getDefault());
         //dateStr=sdf.format(date);
         //todo make use one var to test and extract
         if (paymentSentMessage(sms) != null) {
@@ -233,7 +233,8 @@ class ExtractMtnMomoInfo {
     private Momo getCreditMomo(Sms sms) {
         Momo momo = new Momo();
         Date d = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("E d/M/YY h:m:s a", Locale.getDefault());
+        //YY gives error  below 21
+        SimpleDateFormat sdf = new SimpleDateFormat("E d/M/yy h:m:s a", Locale.getDefault());
         //todo make use one var to test and extract
         if (paymentSentMessageMtn(sms) != null) {
             d.setTime(sms.receivedDate);

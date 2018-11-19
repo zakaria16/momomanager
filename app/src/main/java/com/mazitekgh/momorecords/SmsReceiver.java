@@ -5,13 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
+import android.util.Log;
+import android.widget.Toast;
 
 public class SmsReceiver extends BroadcastReceiver {
     OnMomoReceive mListener;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        mListener = (OnMomoReceive) context;
+        // mListener = (OnMomoReceive) context;
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
         if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
@@ -33,10 +35,12 @@ public class SmsReceiver extends BroadcastReceiver {
                             //Pass the message text to interface
                             mListener.momoReceive(msgBody);
 
+                        } else {
+                            Toast.makeText(context, "Not Momo Message", Toast.LENGTH_SHORT).show();
                         }
                     }
                 } catch (Exception e) {
-                    //      Log.d("Exception caught",e.getMessage());
+                    Log.d("Exception caught", e.getMessage());
                 }
             }
         }

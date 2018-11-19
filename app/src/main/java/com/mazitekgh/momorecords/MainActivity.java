@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
             @Override
             public void momoReceive(String body) {
                 Toast.makeText(MainActivity.this, body, Toast.LENGTH_SHORT).show();
+                frag(new MomoDetailFragment());
             }
         });
         Toolbar toolbar = findViewById(R.id.toolbar);
