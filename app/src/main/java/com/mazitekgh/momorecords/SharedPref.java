@@ -8,6 +8,8 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.List;
 
+import me.everything.providers.android.telephony.Sms;
+
 /**
  * MtnMomo
  * Created by Zakaria on 11-Oct-18 at 12:39 PM.
@@ -17,6 +19,8 @@ class SharedPref {
     private static final String MOMO_KEY = "momo_key";
     private static final String TOTAL_RECEIVED_KEY = "total_received_key";
     private static final String TOTAL_SENT_KEY = "total_sent_key";
+    private static final String CB_AMOUNT_KEY = "cb_amount";
+    private static final String CB_DATE_KEY = "cb_date_key";
     private static String BALANCE_KEY = "balance_key";
     private static String SHARED_KEY = "com.mazitekgh.momorecords.total_received_amount";
     private Context c;
@@ -47,8 +51,9 @@ class SharedPref {
         return hs;
     }
 
-    public void storeMomoMessages(String gsonForm) {
-
+    public void storeMomoMessages(List<Sms> list) {
+        Gson gs = new Gson();
+        String gsonForm = gs.toJson(list);
         SharedPreferences sp = c.getSharedPreferences(SHARED_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(MOMO_KEY, gsonForm);
@@ -64,5 +69,24 @@ class SharedPref {
             return null;
         }
         return gs.fromJson(gsonString, List.class);
+    }
+
+    void StoreCurrentBalance(Double amount, long date) {
+        SharedPreferences sp = c.getSharedPreferences(SHARED_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putFloat(CB_AMOUNT_KEY, amount.floatValue());
+        editor.putLong(CB_DATE_KEY, date);
+        editor.apply();
+    }
+
+    public long getLastCurentBalDate() {
+        SharedPreferences sp = c.getSharedPreferences(SHARED_KEY, Context.MODE_PRIVATE);
+        return sp.getLong(CB_DATE_KEY, 0);
+    }
+
+    public double getLastCurrentBalAmount() {
+
+        SharedPreferences sp = c.getSharedPreferences(SHARED_KEY, Context.MODE_PRIVATE);
+        return sp.getFloat(CB_AMOUNT_KEY, 0);
     }
 }

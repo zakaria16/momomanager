@@ -18,21 +18,36 @@ import me.everything.providers.core.Data;
  */
 class ExtractMtnMomoInfo {
     private List msgList;
+    private SharedPref sharedPref;
 
     public ExtractMtnMomoInfo(Context c) {
-
+        // if(shouldLoad()) {
         TelephonyProvider telephonyProvider = new TelephonyProvider(c);
+        sharedPref = new SharedPref(c);
         Data d = telephonyProvider.getSms(TelephonyProvider.Filter.INBOX);
         msgList = d.getList();
         msgList = getOnlyMomoSMS();
-
+        sharedPref.storeMomoMessages(msgList);
+//        }else {
+//            msgList = sharedPref.getStoreMomoMessages();
+//            //todo dont repeat ur self
+//            if(msgList==null){
+//                TelephonyProvider telephonyProvider = new TelephonyProvider(c);
+//                sharedPref = new SharedPref(c);
+//                Data d = telephonyProvider.getSms(TelephonyProvider.Filter.INBOX);
+//                msgList = d.getList();
+//                msgList = getOnlyMomoSMS();
+//                sharedPref.storeMomoMessages(msgList);
+//            }
+//       }
     }
 
     public ExtractMtnMomoInfo() {
     }
 
-    public ExtractMtnMomoInfo(List msgList) {
+    public ExtractMtnMomoInfo(Context context, List msgList) {
         this.msgList = msgList;
+        sharedPref = new SharedPref(context);
     }
 
     private List<Sms> getOnlyMomoSMS() {
@@ -549,7 +564,7 @@ class ExtractMtnMomoInfo {
         boolean isCashOut = isCashOut(sms);
         boolean isPaymentSentFor = isPaymentSentFor(sms);
         if (!isPay && !isCashIn(sms) && !isCashOut && !isPaymentSent(sms) && !isPaymentSentMtn(sms)) {
-            return 0;
+            return -1;
         }
         String firstPattern = "Current Balance";
         String endPattern; // = isPay ? ". Available Balance" : "Available Balance";
@@ -575,16 +590,22 @@ class ExtractMtnMomoInfo {
     }
 
     public double getLatestBalance() {
-        int lastIndex = msgList.size();
         double currentBal = 0;
-
-        Sms sms;
-        for (int i = 0; i < lastIndex; i++) {
-            sms = (Sms) msgList.get(i);
-            if (isMobileMoneyMsg(sms)) {
-                currentBal = getIndividualCB(sms);
-                break;
+        if (shouldLoad()) {
+            int msgSize = msgList.size();
+            Sms sms;
+            for (int i = 0; i < msgSize; i++) {
+                sms = (Sms) msgList.get(i);
+                if (isMobileMoneyMsg(sms)) {
+                    currentBal = getIndividualCB(sms);
+                    if (currentBal >= 0.0) {
+                        sharedPref.StoreCurrentBalance(currentBal, sms.receivedDate);
+                        break;
+                    }
+                }
             }
+        } else {
+            currentBal = sharedPref.getLastCurrentBalAmount();
         }
 
         return currentBal;
@@ -601,6 +622,17 @@ class ExtractMtnMomoInfo {
           String smms="Cash In received for GHS 60.50 from F.O.DIVINE VENTURES ISAAC SARPONG. Current Balance GHS 60.57  Available Balance GHS 60.57. Cash in (Deposit) is a free transaction on MTN Mobile Money. Please do not pay any fees for it. Thank you for using MTN MobileMoney. Fee charged: GHS 0.\n";
 
       }*/
+
+    private boolean shouldLoad() {
+        Sms currentMessage = (Sms) msgList.get(0);
+        Long currentMsgDate = currentMessage.receivedDate;
+
+        long lastDate = sharedPref.getLastCurentBalDate();
+
+        //new momo Msg is present reload curentBalance
+        return currentMsgDate > lastDate;
+
+    }
 
 
     public interface OnResultDone {

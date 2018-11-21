@@ -156,7 +156,7 @@ public class MomoDetailFragment extends Fragment {
                     //frag(MomoDetailFragment.newInstance(MomoDetailFragment.ALL_MOMO));
 
 
-                    resList = new ExtractMtnMomoInfo(msgList).getMessages(MomoDetailFragment.ALL_MOMO);
+                    resList = new ExtractMtnMomoInfo(getContext(), msgList).getMessages(MomoDetailFragment.ALL_MOMO);
                     break;
                 }
                 case R.id.received_activities: {
@@ -164,7 +164,7 @@ public class MomoDetailFragment extends Fragment {
                     //ctl.setBackgroundColor(getResources().getColor(R.color.colorReceived));
                     // frag(MomoDetailFragment.newInstance(MomoDetailFragment.RECEIVED_MOMO));
 
-                    resList = new ExtractMtnMomoInfo(msgList).getMessages(MomoDetailFragment.RECEIVED_MOMO);
+                    resList = new ExtractMtnMomoInfo(getContext(), msgList).getMessages(MomoDetailFragment.RECEIVED_MOMO);
                     break;
                 }
                 case R.id.sent_activities: {
@@ -172,13 +172,13 @@ public class MomoDetailFragment extends Fragment {
                     //ctl.setBackgroundColor(getResources().getColor(R.color.colorSent));
                     //frag(MomoDetailFragment.newInstance(MomoDetailFragment.SENT_MOMO));
 
-                    resList = new ExtractMtnMomoInfo(msgList).getMessages(MomoDetailFragment.SENT_MOMO);
+                    resList = new ExtractMtnMomoInfo(getContext(), msgList).getMessages(MomoDetailFragment.SENT_MOMO);
                     break;
                 }
                 case R.id.credit_activities: {
                     // ctl.setBackgroundColor(getResources().getColor(R.color.colorCredit));
 
-                    resList = new ExtractMtnMomoInfo(msgList).getMessages(MomoDetailFragment.CREDIT_MOMO);
+                    resList = new ExtractMtnMomoInfo(getContext(), msgList).getMessages(MomoDetailFragment.CREDIT_MOMO);
                     break;
                 }
             }
