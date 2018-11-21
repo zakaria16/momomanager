@@ -167,7 +167,14 @@ class ExtractMtnMomoInfo {
     private Momo getReceivedMomo(Sms sms) {
         Momo momo = new Momo();
         Date d = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("E d/M/yy h:m:s a", Locale.getDefault());
+
+        SimpleDateFormat sdf;
+        try {
+            sdf = new SimpleDateFormat("E d/M/y h:m:s a", Locale.getDefault());
+        } catch (IllegalArgumentException e) {
+            sdf = new SimpleDateFormat();
+        }
+
         if (receivedMessage(sms) != null) {
             d.setTime(sms.receivedDate);
             momo.setDateStr(sdf.format(d));
@@ -201,7 +208,13 @@ class ExtractMtnMomoInfo {
         Date d = new Date();
         //Date date = new Date(dateStamp);
         //TODO causing error here unknown patern character Y
-        SimpleDateFormat sdf = new SimpleDateFormat("E d/M/yy h:m:s a", Locale.getDefault());
+        SimpleDateFormat sdf;
+        try {
+            sdf = new SimpleDateFormat("E d/M/y h:m:s a", Locale.getDefault());
+        } catch (IllegalArgumentException e) {
+            sdf = new SimpleDateFormat();
+        }
+
         //dateStr=sdf.format(date);
         //todo make use one var to test and extract
         if (paymentSentMessage(sms) != null) {
@@ -234,7 +247,13 @@ class ExtractMtnMomoInfo {
         Momo momo = new Momo();
         Date d = new Date();
         //YY gives error  below 21
-        SimpleDateFormat sdf = new SimpleDateFormat("E d/M/yy h:m:s a", Locale.getDefault());
+        SimpleDateFormat sdf;
+        try {
+            sdf = new SimpleDateFormat("E d/M/y h:m:s a", Locale.getDefault());
+        } catch (IllegalArgumentException e) {
+            sdf = new SimpleDateFormat();
+        }
+
         //todo make use one var to test and extract
         if (paymentSentMessageMtn(sms) != null) {
             d.setTime(sms.receivedDate);
@@ -580,8 +599,6 @@ class ExtractMtnMomoInfo {
           String patern="Cash * In * received * for * GHS [0-9]*.[0-9]*";
 
           String smms="Cash In received for GHS 60.50 from F.O.DIVINE VENTURES ISAAC SARPONG. Current Balance GHS 60.57  Available Balance GHS 60.57. Cash in (Deposit) is a free transaction on MTN Mobile Money. Please do not pay any fees for it. Thank you for using MTN MobileMoney. Fee charged: GHS 0.\n";
-
-
 
       }*/
 
