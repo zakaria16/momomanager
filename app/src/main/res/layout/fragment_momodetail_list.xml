@@ -17,6 +17,17 @@
         <include layout="@layout/fragment_main" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/info_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:text="Click any of the button above load it\nVersion one is for MTN Mobile money only"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_section" />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list"
         android:name=".MomoDetailFragment"
@@ -25,7 +36,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/button_section"
+        app:layout_constraintTop_toBottomOf="@id/info_textview"
         tools:listitem="@layout/fragment_momodetail" />
 
 </android.support.constraint.ConstraintLayout>

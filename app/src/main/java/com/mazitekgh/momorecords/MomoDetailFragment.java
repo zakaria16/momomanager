@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class MomoDetailFragment extends Fragment {
     private int momoType = 1;
     private OnListFragmentInteractionListener mListener;
     private ProgressDialog pd;
+    private TextView infoView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -87,6 +89,7 @@ public class MomoDetailFragment extends Fragment {
         LinearLayout receivedViewClick = view.findViewById(R.id.received_activities);
         LinearLayout sentViewClick = view.findViewById(R.id.sent_activities);
         LinearLayout creditViewClick = view.findViewById(R.id.credit_activities);
+        infoView = view.findViewById(R.id.info_textview);
         recyclerView = view.findViewById(R.id.list);
 
         allViewClick.setOnClickListener(new mClickListener());
@@ -179,7 +182,11 @@ public class MomoDetailFragment extends Fragment {
                     break;
                 }
             }
-
+            if (resList != null) {
+                infoView.setVisibility(View.GONE);
+            } else {
+                infoView.setVisibility(View.VISIBLE);
+            }
             recyclerView.setAdapter(new MomoDetailRecyclerViewAdapter(momoType,
                     resList, mListener));
         }
