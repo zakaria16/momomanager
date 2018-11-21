@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -12,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
@@ -20,12 +22,16 @@ public class InitialActivity extends AppCompatActivity {
 
     private static final int SMS_PERMISION_CODE = 232;
     private ProgressBar pb;
+    private TextView progressPercent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial);
         pb = findViewById(R.id.progressBar);
+
+        progressPercent = findViewById(R.id.progress_percent);
+
         //First checking if the app is already having the permission 
         if (isSmsPermissionGranted()) {
             //If permission is already having then showing the toast
@@ -40,23 +46,24 @@ public class InitialActivity extends AppCompatActivity {
     }
 
     private void showApp() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                DecimalFormat df = new DecimalFormat("0.00");
-                ExtractMtnMomoInfo exi = new ExtractMtnMomoInfo(InitialActivity.this);
-                String totalReceived = df.format(exi.getTotalReceived());
-                String totalSent = df.format(exi.getTotalSent());
-                String currentBalance = df.format(exi.getLatestBalance());
-                Intent intent = new Intent(InitialActivity.this, MainActivity.class);
-                intent.putExtra("totalReceived", totalReceived);
-                intent.putExtra("totalSent", totalSent);
-                intent.putExtra("currentBalance", currentBalance);
-                startActivity(intent);
-                InitialActivity.this.finish();
-            }
-        }).start();
-
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                DecimalFormat df = new DecimalFormat("0.00");
+//                ExtractMtnMomoInfo exi = new ExtractMtnMomoInfo(InitialActivity.this);
+//                String totalReceived = df.format(exi.getTotalReceived());
+//                String totalSent = df.format(exi.getTotalSent());
+//                String currentBalance = df.format(exi.getLatestBalance());
+//                Intent intent = new Intent(InitialActivity.this, MainActivity.class);
+//                intent.putExtra("totalReceived", totalReceived);
+//                intent.putExtra("totalSent", totalSent);
+//                intent.putExtra("currentBalance", currentBalance);
+//                startActivity(intent);
+//                InitialActivity.this.finish();
+//            }
+//        }).start();
+        progressPercent.setText("20%");
+        new bgrndLoad().execute();
     }
 
 
@@ -76,7 +83,7 @@ public class InitialActivity extends AppCompatActivity {
                 Toast.makeText(this, "App cannot work without sms permission",
                         Toast.LENGTH_LONG).show();
                 pb.setVisibility(View.GONE);
-
+                progressPercent.setVisibility(View.GONE);
             }
         }
     }
@@ -108,5 +115,57 @@ public class InitialActivity extends AppCompatActivity {
                         requestSmsPermission();
                     }
                 }).show();
+    }
+
+    private class bgrndLoad extends AsyncTask<Void, Integer, Void> {
+        private Intent intent;
+
+        /**
+         * Override this method to perform a computation on a background thread. The
+         * specified parameters are the parameters passed to {@link #execute}
+         * by the caller of this task.
+         * <p>
+         * This method can call {@link #publishProgress} to publish updates
+         * on the UI thread.
+         *
+         * @param objects The parameters of the task.
+         * @return A result, defined by the subclass of this task.
+         * @see #onPreExecute()
+         * @see #onPostExecute
+         * @see #publishProgress
+         */
+        @Override
+        protected Void doInBackground(Void[] objects) {
+            DecimalFormat df = new DecimalFormat("0.00");
+            ExtractMtnMomoInfo exi = new ExtractMtnMomoInfo(InitialActivity.this);
+            publishProgress(50);
+            String totalReceived = df.format(exi.getTotalReceived());
+            publishProgress(65);
+            String totalSent = df.format(exi.getTotalSent());
+            publishProgress(75);
+            String currentBalance = df.format(exi.getLatestBalance());
+            publishProgress(85);
+            intent = new Intent(InitialActivity.this, MainActivity.class);
+            intent.putExtra("totalReceived", totalReceived);
+            intent.putExtra("totalSent", totalSent);
+            intent.putExtra("currentBalance", currentBalance);
+            publishProgress(100);
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            String s = values[0] + "%";
+            progressPercent.setText(s);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            startActivity(intent);
+            InitialActivity.this.finish();
+
+        }
     }
 }
