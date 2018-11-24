@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
         smsReceiver.setMomoReceivedListener(new SmsReceiver.OnMomoReceive() {
             @Override
             public void momoReceive(String body) {
-                Toast.makeText(MainActivity.this, "IS MOMO MESSAGE", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "IS a MOMO MESSAGE", Toast.LENGTH_SHORT).show();
                 //Toast.makeText(MainActivity.this, body, Toast.LENGTH_SHORT).show();
                 frag(new MomoDetailFragment());
             }

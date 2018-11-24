@@ -61,6 +61,8 @@ public class MomoDetailFragment extends Fragment {
         }
 
         pd = ProgressDialog.show(getContext(), "LOADING", "Please Wait...");
+        //todo make it async task
+        //todo if list is not empty dont load new one
         new Thread(new Runnable() {
             @Override
             public void run() {
