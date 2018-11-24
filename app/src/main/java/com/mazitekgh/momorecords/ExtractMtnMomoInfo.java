@@ -19,6 +19,9 @@ import me.everything.providers.core.Data;
 class ExtractMtnMomoInfo {
     private List msgList;
     private SharedPref sharedPref;
+    private final int CUR_BALANCE = 0;
+    private final int TOTAL_RECEIVED = 1;
+    private final int TOTAL_SENT = 2;
 
     public ExtractMtnMomoInfo(Context c) {
         // if(shouldLoad()) {
@@ -27,7 +30,7 @@ class ExtractMtnMomoInfo {
         Data d = telephonyProvider.getSms(TelephonyProvider.Filter.INBOX);
         msgList = d.getList();
         msgList = getOnlyMomoSMS();
-        sharedPref.storeMomoMessages(msgList);
+        //sharedPref.storeMomoMessages(msgList);
 //        }else {
 //            msgList = sharedPref.getStoreMomoMessages();
 //            //todo dont repeat ur self
@@ -63,27 +66,41 @@ class ExtractMtnMomoInfo {
         return resList;
     }
 
-    public double getRemainingBalance() {
-        return 0;
-    }
 
     public double getTotalReceived() {
+        if (msgList == null) {
+            return 0;
+        }
         double amount = 0.00;
-        Sms sms;
-        for (int i = 0; i < msgList.size(); i++) {
-            sms = (Sms) msgList.get(i);
-            amount += getCashInReceivedAmount(sms) + getPaymentReceivedAmount(sms);
+        if (shouldLoad(TOTAL_RECEIVED)) {
+            Sms sms;
+            for (int i = 0; i < msgList.size(); i++) {
+                sms = (Sms) msgList.get(i);
+                amount += getCashInReceivedAmount(sms) + getPaymentReceivedAmount(sms);
+            }
+            sharedPref.storeTotalReceivedAmount(amount);
+        }
+        {
+            amount = sharedPref.getTotalReceived();
         }
 
         return amount;
     }
 
     public double getTotalSent() {
+        if (msgList == null) {
+            return 0;
+        }
         double amount = 0.00;
-        Sms sms;
-        for (int i = 0; i < msgList.size(); i++) {
-            sms = (Sms) msgList.get(i);
-            amount += getCashOutAmount(sms) + getPaymentSentAmount(sms);
+        if (shouldLoad(TOTAL_SENT)) {
+            Sms sms;
+            for (int i = 0; i < msgList.size(); i++) {
+                sms = (Sms) msgList.get(i);
+                amount += getCashOutAmount(sms) + getPaymentSentAmount(sms);
+            }
+            sharedPref.storeTotalSentAmount(amount);
+        } else {
+            amount = sharedPref.getTotalSent();
         }
         return amount;
     }
@@ -485,6 +502,7 @@ class ExtractMtnMomoInfo {
         return db;
     }
 
+
     //receive messages
     private String receivedMessage(Sms sms) {
         return isPaymentReceived(sms) ? sms.body : null;
@@ -548,8 +566,7 @@ class ExtractMtnMomoInfo {
             startStr = "Financial Transaction Id: ";
             int st = sms.body.indexOf(startStr);
             int end = sms.body.indexOf(".", st);
-            String ss = sms.body.substring(st + startStr.length(), end);
-            return ss;
+            return sms.body.substring(st + startStr.length(), end);
         }
         startStr = "Transaction ID: ";
         int st = sms.body.indexOf(startStr);
@@ -563,7 +580,7 @@ class ExtractMtnMomoInfo {
         boolean isPay = isPaymentReceived(sms);
         boolean isCashOut = isCashOut(sms);
         boolean isPaymentSentFor = isPaymentSentFor(sms);
-        if (!isPay && !isCashIn(sms) && !isCashOut && !isPaymentSent(sms) && !isPaymentSentMtn(sms)) {
+        if (!(isPay || isCashIn(sms) || isCashOut || isPaymentSent(sms) || isPaymentSentMtn(sms))) {
             return -1;
         }
         String firstPattern = "Current Balance";
@@ -591,7 +608,7 @@ class ExtractMtnMomoInfo {
 
     public double getLatestBalance() {
         double currentBal = 0;
-        if (shouldLoad()) {
+        if (shouldLoad(CUR_BALANCE)) {
             int msgSize = msgList.size();
             Sms sms;
             for (int i = 0; i < msgSize; i++) {
@@ -623,7 +640,25 @@ class ExtractMtnMomoInfo {
 
       }*/
 
-    private boolean shouldLoad() {
+    private boolean shouldLoad(int whichState) {
+
+        if (msgList == null) {
+            return true;
+        }
+        switch (whichState) {
+            case CUR_BALANCE: {
+                if (sharedPref.getLastCurrentBalAmount() == -1) return true;
+                break;
+            }
+            case TOTAL_RECEIVED: {
+                if (sharedPref.getTotalReceived() == -1) return true;
+                break;
+            }
+            case TOTAL_SENT: {
+                if (sharedPref.getTotalSent() == -1) return true;
+                break;
+            }
+        }
         Sms currentMessage = (Sms) msgList.get(0);
         Long currentMsgDate = currentMessage.receivedDate;
 

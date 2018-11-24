@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.provider.Telephony;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -18,7 +17,7 @@ import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity implements MomoDetailFragment.OnListFragmentInteractionListener {
-    SmsReceiver smsReceiver;
+    private SmsReceiver smsReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +29,8 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
         smsReceiver.setMomoReceivedListener(new SmsReceiver.OnMomoReceive() {
             @Override
             public void momoReceive(String body) {
-                Toast.makeText(MainActivity.this, body, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "IS MOMO MESSAGE", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, body, Toast.LENGTH_SHORT).show();
                 frag(new MomoDetailFragment());
             }
         });
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
 
         setSupportActionBar(toolbar);
 
-        CollapsingToolbarLayout ctl = findViewById(R.id.ctl_layout);
+        //  CollapsingToolbarLayout ctl = findViewById(R.id.ctl_layout);
 
         // pb.setVisibility(View.VISIBLE);
 
@@ -84,18 +84,18 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
         if (id == R.id.action_about) {
 
             final AlertDialog mzDialog = new AlertDialog.Builder(this).create();
-            mzDialog.setTitle("Mobile Money Expense Manager ");
+            mzDialog.setTitle("Mobile Money Manager ");
             mzDialog.setMessage(getString(R.string.about_msg));
 
             mzDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Contact Mazitek GH", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent i = new Intent(Intent.ACTION_SEND);
-                    i.setType("message/email");
+                    i.setType("message/rfc822");
                     i.putExtra(Intent.EXTRA_PHONE_NUMBER, "0541355996");
                     i.putExtra(Intent.EXTRA_CC, new String[]{"fatzak16@gmail.com"});
                     i.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@mazitekgh.com"});
-                    i.putExtra(Intent.EXTRA_SUBJECT, "About MOMO Records");
+                    i.putExtra(Intent.EXTRA_SUBJECT, "About MOMO Manager");
                     i.putExtra(Intent.EXTRA_TEXT, "Our website https://mazitekgh.com");
                     try {
                         startActivity(Intent.createChooser(i, "Send MaziTek GH email..."));

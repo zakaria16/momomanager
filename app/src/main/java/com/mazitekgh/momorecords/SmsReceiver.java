@@ -9,12 +9,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class SmsReceiver extends BroadcastReceiver {
-    OnMomoReceive mListener;
+    private OnMomoReceive mListener;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         // mListener = (OnMomoReceive) context;
-        // TODO: This method is called when the BroadcastReceiver is receiving
+
         // an Intent broadcast.
         if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
             Bundle bundle = intent.getExtras();           //---get the SMS message passed in---

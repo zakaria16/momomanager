@@ -74,12 +74,16 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
             }
             case MomoDetailFragment.SENT_MOMO: {
                 holder.sender.setBackgroundColor(c.getResources().getColor(R.color.colorSent));
+                holder.transactionFeeCaption.setText(""); //todo remove when tc fees is implemented
+                holder.transactionFee.setText("");
                 holder.amountCaption.setText("Amount Sent");
                 break;
             }
             case MomoDetailFragment.CREDIT_MOMO: {
                 holder.amountCaption.setText("Credit Bought");
                 holder.sender.setBackgroundColor(c.getResources().getColor(R.color.colorCredit));
+                holder.transactionFeeCaption.setText(""); //todo remove when tc fees is implemented
+                holder.transactionFee.setText("");
                 break;
             }
         }

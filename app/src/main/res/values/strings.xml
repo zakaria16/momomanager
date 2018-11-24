@@ -1,8 +1,6 @@
 <resources>
-    <string name="app_name">MoMo Records</string>
-
-
-    <string name="about_msg">MoMo Records Manager\nVersion 1.0\nSupports only mtn for now\nDeveloped by <b>MaziTek GH</b></string>
+    <string name="app_name">MoMo Manager</string>
+    <string name="about_msg">MoMo Manager\nVersion 1.1\nSupports only mtn for now\nDeveloped by <b>MaziTek GH</b></string>
     <string name="starting">STARTING…</string>
     <string name="balance">Balance</string>
     <string name="total_received">Total Received</string>
@@ -10,10 +8,10 @@
     <string name="message_title">MESSAGE TITLE</string>
     <string name="this_is_the_message_side">this is the message side</string>
     <string name="ok">OK</string>
-    <string name="all_nactivities">All\nActivities</string>
-    <string name="received_activities">Received Activities</string>
-    <string name="sent_activities">Sent Activities</string>
-    <string name="credit_activities">Credit\nActivities</string>
+    <string name="all_nactivities">All\nTransactions</string>
+    <string name="received_activities">Received Transactions</string>
+    <string name="sent_activities">Sent Transactions</string>
+    <string name="credit_activities">Airtime\nTransactions</string>
     <string name="permission_msg">The app uses mobile money sms messages to compute its data\n\nOn the next screen you have to grant this app the permission to access sms</string>
     <string name="info">Click any of the button above to load it Version 1 is for MTN Mobile money only</string>
 
