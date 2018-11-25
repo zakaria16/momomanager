@@ -1,6 +1,8 @@
 package com.mazitekgh.momorecords;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,15 +15,14 @@ import me.everything.providers.android.telephony.TelephonyProvider;
 import me.everything.providers.core.Data;
 
 /**
- * MtnMomo
  * Created by Zakaria on 01-Sep-18 at 4:03 PM.
  */
 class ExtractMtnMomoInfo {
-    private List msgList;
-    private SharedPref sharedPref;
-    private final int CUR_BALANCE = 0;
+    private final int CURRENT_BALANCE = 0;
     private final int TOTAL_RECEIVED = 1;
     private final int TOTAL_SENT = 2;
+    private List msgList;
+    private SharedPref sharedPref;
 
     public ExtractMtnMomoInfo(Context c) {
         // if(shouldLoad()) {
@@ -43,9 +44,6 @@ class ExtractMtnMomoInfo {
 //                sharedPref.storeMomoMessages(msgList);
 //            }
 //       }
-    }
-
-    public ExtractMtnMomoInfo() {
     }
 
     public ExtractMtnMomoInfo(Context context, List msgList) {
@@ -144,7 +142,11 @@ class ExtractMtnMomoInfo {
         return creditMessages;
     }
 
-
+    /**
+     * Get Received momo messages
+     *
+     * @return List<Momo>
+     */
     private List<Momo> getReceivedMessages() {
         List<Momo> receivedMsgs = new ArrayList<>();
         Sms sms;
@@ -311,6 +313,8 @@ class ExtractMtnMomoInfo {
 
     /**
      * Check whether the message is mm message
+     * @param sms message to check
+     * @return true if momo message or false if not momo message
      */
     private boolean isMobileMoneyMsg(Sms sms) {
         return (sms.address.equalsIgnoreCase("MobileMoney"));
@@ -391,8 +395,14 @@ class ExtractMtnMomoInfo {
             st = sms.body.indexOf(tt) + tt.length();
             end = sms.body.indexOf(" from", st);
         }
-        ss = sms.body.substring(st, end);
-        return Double.valueOf(ss);
+        ss = mSubstring(sms.body, st, end);
+        /*try {
+            ss = sms.body.substring(st, end);
+        } catch(IndexOutOfBoundsException e){
+            Log.d(ExtractMtnMomoInfo.class.getSimpleName(),"caused by sms:"+ sms+"\n"+ e.getMessage());
+            return 0;
+        }*/
+        return (ss == null) ? 0 : Double.valueOf(ss);
     }
 
     private double getPaymentReceivedAmount(Sms sms) {
@@ -403,14 +413,21 @@ class ExtractMtnMomoInfo {
         double db;
         String tt = "Payment received for";
         int st;
-        int end = -1;
+        int end;
         String ss;
         if (sms.body.contains(tt)) {
             st = sms.body.indexOf(tt) + tt.length() + 1;
             int sm = sms.body.indexOf("GHS ", st) + 4;
             end = sms.body.indexOf(" from", sm);
-            ss = sms.body.substring(sm, end);
-            db = Double.valueOf(ss);
+            ss = mSubstring(sms.body, sm, end);
+
+           /* try {
+                ss = sms.body.substring(sm, end);
+            } catch(IndexOutOfBoundsException e){
+                Log.d(ExtractMtnMomoInfo.class.getSimpleName(),"caused by sms:"+ sms+"\n"+ e.getMessage());
+                return 0;
+            }*/
+            db = (ss == null) ? 0 : Double.valueOf(ss);
         } else {
             db = 0;
         }
@@ -432,9 +449,10 @@ class ExtractMtnMomoInfo {
         st = sms.body.indexOf(tt) + tt.length() + 1;
         //int sm = sms.body.indexOf("GHS ", st) + 4;
         end = sms.body.indexOf(endString, st);
-        ss = sms.body.substring(st, end);
+        ss = mSubstring(sms.body, st, end);
+        //ss = sms.body.substring(st, end);
 
-        return ss;
+        return (ss == null) ? "error" : ss;
 
     }
 
@@ -453,8 +471,10 @@ class ExtractMtnMomoInfo {
             st = sms.body.indexOf(tt) + tt.length();
             end = sms.body.indexOf(" to", st);
         }
-        ss = sms.body.substring(st, end);
-        return Double.valueOf(ss);
+        // ss = sms.body.substring(st, end);
+        ss = mSubstring(sms.body, st, end);
+        return (ss == null) ? 0 : Double.valueOf(ss);
+
     }
 
     private double getPaymentSentAmount(Sms sms) {
@@ -472,8 +492,11 @@ class ExtractMtnMomoInfo {
             st = sms.body.indexOf(tt) + tt.length() + 1;
             int sm = sms.body.indexOf("GHS", st) + 3;
             end = sms.body.indexOf(" to", sm);
-            ss = sms.body.substring(sm, end);
-            db = Double.valueOf(ss);
+            //ss = sms.body.substring(sm, end);
+            ss = mSubstring(sms.body, sm, end);
+
+            db = (ss == null) ? 0 : Double.valueOf(ss);
+            // db = Double.valueOf(ss);
         } else {
             db = getPaymentSentAmountMtn(sms);
         }
@@ -495,8 +518,10 @@ class ExtractMtnMomoInfo {
             st = sms.body.indexOf(tt) + tt.length() + 1;
             int sm = sms.body.indexOf("GHS ", st) + 4;
             end = sms.body.indexOf(" to", sm);
-            ss = sms.body.substring(sm, end);
-            db = Double.valueOf(ss);
+            //ss = sms.body.substring(sm, end);
+            ss = mSubstring(sms.body, sm, end);
+            db = (ss == null) ? 0 : Double.valueOf(ss);
+            //db = Double.valueOf(ss);
 
         }
         return db;
@@ -532,10 +557,13 @@ class ExtractMtnMomoInfo {
         if (!(isPaymentReceived(sms)) && !(isCashIn(sms))) {
             return null;
         }
-
-        int st = sms.body.indexOf("from ");
-        int end = sms.body.indexOf("Current Balance");
-        return sms.body.substring(st + 5, end);
+        String startPattern = "from ";
+        String endPattern = "Current Balance";
+        int st = sms.body.indexOf(startPattern);
+        int end = sms.body.indexOf(endPattern);
+        String ss = mSubstring(sms.body, st + startPattern.length(), end);
+        return (ss == null) ? "error" : ss;
+        // return sms.body.substring(st + 5, end);
     }
 
     private String getReceiver(Sms sms) {
@@ -544,16 +572,22 @@ class ExtractMtnMomoInfo {
         }
         String ss;
         if (isPaymentSentMtn(sms)) {
-            int st = sms.body.indexOf("to ");
-            int end = sms.body.indexOf("has", st);
+            String startPattern = "to ";
+            String endPattern = "has";
+            int st = sms.body.indexOf(startPattern);
+            int end = sms.body.indexOf(endPattern, st);
+            ss = mSubstring(sms.body, st + startPattern.length(), end);
+            // ss = sms.body.substring(st + 3, end);
 
-            ss = sms.body.substring(st + 3, end);
         } else {
-            int st = sms.body.indexOf("to ");
-            int end = sms.body.indexOf("Current Balance");
-            ss = sms.body.substring(st + 3, end);
+            String startPattern = "to ";
+            String endPattern = "Current Balance";
+            int st = sms.body.indexOf(startPattern);
+            int end = sms.body.indexOf(endPattern);
+            // ss = sms.body.substring(st + startPattern.length(), end);
+            ss = mSubstring(sms.body, st + startPattern.length(), end);
         }
-        return ss;
+        return (ss == null) ? "error" : ss;
 
     }
 
@@ -566,13 +600,16 @@ class ExtractMtnMomoInfo {
             startStr = "Financial Transaction Id: ";
             int st = sms.body.indexOf(startStr);
             int end = sms.body.indexOf(".", st);
-            return sms.body.substring(st + startStr.length(), end);
+            // return sms.body.substring(st + startStr.length(), end);
+            String ss = mSubstring(sms.body, st + startStr.length(), end);
+            return (ss == null) ? "error" : ss;
         }
         startStr = "Transaction ID: ";
         int st = sms.body.indexOf(startStr);
         int end = sms.body.indexOf(".", st);
-        return sms.body.substring(st + startStr.length(), end);
-
+        //return sms.body.substring(st + startStr.length(), end);
+        String ss = mSubstring(sms.body, st + startStr.length(), end);
+        return (ss == null) ? "error" : ss;
 
     }
 
@@ -601,14 +638,17 @@ class ExtractMtnMomoInfo {
         int st = sms.body.indexOf(firstPattern) + firstPattern.length();
         int end = sms.body.indexOf(endPattern, st);
         int md = isCashOut ? sms.body.indexOf("GHS", st) - 1 : sms.body.indexOf("GHS ", st); //portable
-        String ss = sms.body.substring(md + 4, end);
-        ss = ss.trim();
-        return Double.valueOf(ss);
+        //String ss = sms.body.substring(md + 4, end);
+        String ss = mSubstring(sms.body, md + 4, end);
+
+        //ss = ss.trim();
+        // return Double.valueOf(ss`````);
+        return (ss == null) ? 0 : Double.valueOf(ss.trim());
     }
 
     public double getLatestBalance() {
         double currentBal = 0;
-        if (shouldLoad(CUR_BALANCE)) {
+        if (shouldLoad(CURRENT_BALANCE)) {
             int msgSize = msgList.size();
             Sms sms;
             for (int i = 0; i < msgSize; i++) {
@@ -640,13 +680,21 @@ class ExtractMtnMomoInfo {
 
       }*/
 
+    /**
+     * check whether there have been a new update from the last time
+     * @param whichState the state to check
+     *                   {@link #CURRENT_BALANCE}
+     *                   {@link #TOTAL_RECEIVED}
+     *                   {@link #TOTAL_SENT}
+     * @return true if we to load from db else false
+     */
     private boolean shouldLoad(int whichState) {
 
         if (msgList == null) {
             return true;
         }
         switch (whichState) {
-            case CUR_BALANCE: {
+            case CURRENT_BALANCE: {
                 if (sharedPref.getLastCurrentBalAmount() == -1) return true;
                 break;
             }
@@ -669,8 +717,16 @@ class ExtractMtnMomoInfo {
 
     }
 
-
-    public interface OnResultDone {
-        void resultDone(List<Momo> resList);
+    @Nullable
+    private String mSubstring(String str, int start, int end) {
+        String ss;
+        try {
+            ss = str.substring(start, end);
+        } catch (IndexOutOfBoundsException e) {
+            Log.d(ExtractMtnMomoInfo.class.getSimpleName(), "caused by sms:" + str + "\n" + e.getMessage());
+            return null;
+        }
+        return ss;
     }
+
 }
