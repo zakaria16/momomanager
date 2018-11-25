@@ -22,7 +22,8 @@ class SharedPref {
     private static final String CB_AMOUNT_KEY = "cb_amount";
     private static final String CB_DATE_KEY = "cb_date_key";
     private static final String BALANCE_KEY = "balance_key";
-    private static String SHARED_KEY = "com.mazitekgh.momorecords.total_received_amount";
+    private static final String SHARED_KEY = "com.mazitekgh.momorecords.total_received_amount";
+
     private Context c;
     private SharedPreferences sp;
 

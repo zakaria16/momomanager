@@ -43,14 +43,14 @@ public class MomoDetailFragment extends Fragment {
     public MomoDetailFragment() {
     }
 
-
+/*
     public static MomoDetailFragment newInstance(int whichType) {
         MomoDetailFragment fragment = new MomoDetailFragment();
         Bundle args = new Bundle();
         args.putInt(MOMO_TYPE, whichType);
         fragment.setArguments(args);
         return fragment;
-    }
+    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,7 +126,7 @@ public class MomoDetailFragment extends Fragment {
         List msgList = new ExtractMtnMomoInfo(getContext()).getMomoList();
         List oldList = new SharedPref(getContext()).getStoreMomoMessages();
         if (msgList == oldList) {
-            return;
+
         }
 
     }

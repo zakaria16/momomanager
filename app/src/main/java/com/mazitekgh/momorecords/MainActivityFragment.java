@@ -1,7 +1,7 @@
 package com.mazitekgh.momorecords;
 
-import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,18 +12,17 @@ import android.view.ViewGroup;
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
-    private Context c;
     public MainActivityFragment() {
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        c = getContext();
+        //Context c = getContext();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         // ListView lv =v.findViewById(R.id.list_item);

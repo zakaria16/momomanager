@@ -9,6 +9,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.Objects;
+
 
 /**
  * Smartnet
@@ -21,7 +23,7 @@ public class MessageDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         View v = getActivity().getLayoutInflater().inflate(R.layout.dialog_message, null);
         Button gotItButton = v.findViewById(R.id.got_it_bottom);
         // Inflate and set the layout for the dialog

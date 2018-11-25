@@ -8,6 +8,8 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.Objects;
+
 public class SmsReceiver extends BroadcastReceiver {
     private OnMomoReceive mListener;
 
@@ -16,9 +18,9 @@ public class SmsReceiver extends BroadcastReceiver {
         // mListener = (OnMomoReceive) context;
 
         // an Intent broadcast.
-        if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
+        if (Objects.requireNonNull(intent.getAction()).equals("android.provider.Telephony.SMS_RECEIVED")) {
             Bundle bundle = intent.getExtras();           //---get the SMS message passed in---
-            SmsMessage[] msgs = null;
+            SmsMessage[] msgs;
             String sender;
             if (bundle != null) {
                 //---retrieve the SMS message received---

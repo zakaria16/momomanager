@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
             final AlertDialog mzDialog = new AlertDialog.Builder(this).create();
             mzDialog.setTitle("Mobile Money Manager ");
             mzDialog.setMessage(getString(R.string.about_msg));
-
             mzDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Contact Mazitek GH", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

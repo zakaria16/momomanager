@@ -22,7 +22,7 @@ class ExtractMtnMomoInfo {
     private final int TOTAL_RECEIVED = 1;
     private final int TOTAL_SENT = 2;
     private List msgList;
-    private SharedPref sharedPref;
+    private final SharedPref sharedPref;
 
     public ExtractMtnMomoInfo(Context c) {
         // if(shouldLoad()) {
@@ -442,8 +442,8 @@ class ExtractMtnMomoInfo {
 
         String tt = "Reference:";
         String endString = ". Transaction";
-        int st = -1;
-        int end = -1;
+        int st;
+        int end;
         String ss;
 
         st = sms.body.indexOf(tt) + tt.length() + 1;
@@ -485,8 +485,8 @@ class ExtractMtnMomoInfo {
         double db;
         String tt = isPaymentSentMadeFor(sms) ? "Payment made for" : "Payment for";
 
-        int st = -1;
-        int end = -1;
+        int st;
+        int end;
         String ss;
         if (sms.body.contains(tt)) {
             st = sms.body.indexOf(tt) + tt.length() + 1;
@@ -511,8 +511,8 @@ class ExtractMtnMomoInfo {
 
         double db = 0.0;
         String tt = "Your payment of";
-        int st = -1;
-        int end = -1;
+        int st;
+        int end;
         String ss;
         if (sms.body.contains(tt)) {
             st = sms.body.indexOf(tt) + tt.length() + 1;
