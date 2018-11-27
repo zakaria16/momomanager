@@ -1,4 +1,4 @@
-package com.mazitekgh.momorecords;
+package com.mazitekgh.momorecords.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

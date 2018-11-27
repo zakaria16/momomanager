@@ -1,4 +1,4 @@
-package com.mazitekgh.momorecords;
+package com.mazitekgh.momorecords.adaptor;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,7 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.mazitekgh.momorecords.MomoDetailFragment.OnListFragmentInteractionListener;
+import com.mazitekgh.momorecords.R;
+import com.mazitekgh.momorecords.fragment.MomoDetailFragment;
+import com.mazitekgh.momorecords.fragment.MomoDetailFragment.OnListFragmentInteractionListener;
+import com.mazitekgh.momorecords.model.Momo;
 
 import java.util.List;
 

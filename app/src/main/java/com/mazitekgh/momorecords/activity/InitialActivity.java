@@ -1,4 +1,4 @@
-package com.mazitekgh.momorecords;
+package com.mazitekgh.momorecords.activity;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -15,6 +15,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.mazitekgh.momorecords.ExtractMtnMomoInfo;
+import com.mazitekgh.momorecords.R;
 
 import java.text.DecimalFormat;
 

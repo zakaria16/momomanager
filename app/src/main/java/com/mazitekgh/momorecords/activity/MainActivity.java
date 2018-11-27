@@ -1,4 +1,4 @@
-package com.mazitekgh.momorecords;
+package com.mazitekgh.momorecords.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +14,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.mazitekgh.momorecords.R;
+import com.mazitekgh.momorecords.SmsReceiver;
+import com.mazitekgh.momorecords.fragment.MomoDetailFragment;
 
 
 public class MainActivity extends AppCompatActivity implements MomoDetailFragment.OnListFragmentInteractionListener {

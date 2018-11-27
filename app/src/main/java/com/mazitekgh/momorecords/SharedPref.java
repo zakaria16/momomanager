@@ -14,7 +14,7 @@ import me.everything.providers.android.telephony.Sms;
  * MtnMomo
  * Created by Zakaria on 11-Oct-18 at 12:39 PM.
  */
-class SharedPref {
+public class SharedPref {
 
     private static final String MOMO_KEY = "momo_key";
     private static final String TOTAL_RECEIVED_KEY = "total_received_key";

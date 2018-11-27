@@ -10,7 +10,7 @@
 
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    tools:context=".MainActivityFragment"
+    tools:context=".fragment.MainActivityFragment"
     tools:showIn="@layout/fragment_momodetail_list">
 
     <LinearLayout

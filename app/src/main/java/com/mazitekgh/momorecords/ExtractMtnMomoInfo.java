@@ -4,6 +4,9 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.mazitekgh.momorecords.fragment.MomoDetailFragment;
+import com.mazitekgh.momorecords.model.Momo;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,7 +20,7 @@ import me.everything.providers.core.Data;
 /**
  * Created by Zakaria on 01-Sep-18 at 4:03 PM.
  */
-class ExtractMtnMomoInfo {
+public class ExtractMtnMomoInfo {
     private final int CURRENT_BALANCE = 0;
     private final int TOTAL_RECEIVED = 1;
     private final int TOTAL_SENT = 2;

@@ -6,8 +6,8 @@ android {
         applicationId "com.mazitekgh.momorecords"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 5
-        versionName "1.0b"
+        versionCode 6
+        versionName "1.1b"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

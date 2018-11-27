@@ -48,11 +48,11 @@ public class SmsReceiver extends BroadcastReceiver {
         }
     }
 
-    void setMomoReceivedListener(OnMomoReceive listener) {
+    public void setMomoReceivedListener(OnMomoReceive listener) {
         this.mListener = listener;
     }
 
-    interface OnMomoReceive {
+    public interface OnMomoReceive {
         void momoReceive(String body);
     }
 

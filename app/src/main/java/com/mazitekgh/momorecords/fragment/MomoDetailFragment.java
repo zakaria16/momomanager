@@ -1,4 +1,4 @@
-package com.mazitekgh.momorecords;
+package com.mazitekgh.momorecords.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -11,6 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.mazitekgh.momorecords.ExtractMtnMomoInfo;
+import com.mazitekgh.momorecords.R;
+import com.mazitekgh.momorecords.SharedPref;
+import com.mazitekgh.momorecords.adaptor.MomoDetailRecyclerViewAdapter;
+import com.mazitekgh.momorecords.model.Momo;
 
 import java.util.ArrayList;
 import java.util.List;
