@@ -35,7 +35,9 @@ public class SmsReceiver extends BroadcastReceiver {
 
 
                             //Pass the message text to interface
-                            mListener.momoReceive(msgBody);
+                            // mListener.momoReceive(msgBody);
+                            Toast.makeText(context, "is a mobile Message", Toast.LENGTH_SHORT).show();
+
 
                         } else {
                             Toast.makeText(context, "Not Momo Message", Toast.LENGTH_SHORT).show();
