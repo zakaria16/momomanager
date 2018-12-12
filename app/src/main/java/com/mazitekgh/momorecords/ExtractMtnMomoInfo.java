@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import me.everything.providers.android.telephony.Sms;
 import me.everything.providers.android.telephony.TelephonyProvider;
@@ -21,6 +23,39 @@ import me.everything.providers.core.Data;
  * Created by Zakaria on 01-Sep-18 at 4:03 PM.
  */
 public class ExtractMtnMomoInfo {
+    private static final String CASH_IN_RECEIVED_PATTERN = "\\s*[cC]ash\\s{1,3}[iI]n\\s{1,3}received\\s{0,3}for\\s{0,3}GHS\\s{0,3}([\\d]*[.]?[\\d]*)";
+    /**
+     * CASH IN PATTERN
+     * group 1: amount received
+     * group 2: sender
+     * group 3: current balance
+     */
+    private static final String CASH_IN_PATTERN =
+            "\\s*[cC]ash\\s{1,3}[iI]n\\s{1,3}[rR]eceived\\s{0,3}for\\s{0,3}GHS\\s{0,3}([\\d]*[\\.]?[\\d]*)\\s{0,3}from\\s{0,3}([\\w\\s.\\W]*)\\s{0,3}[cC]urrent\\s{0,3}[bB]alance[\\W]?\\s{0,3}GHS\\s{0,3}([\\d]*[\\.]?[\\d]*)\\s";
+    private static final int GROUP_CASH_IN_AMOUNT = 1;
+    private static final int GROUP_CASH_IN_SENDER = 2;
+    private static final int GROUP_CASH_IN_CURRENT_BAL = 3;
+    private static final String PAYMENT_RECEIVED_PATTERN = "\\s*[P]ayment\\s{1,3}[rR]eceived\\s{1,3}for";
+    /**
+     * RECEIVED PATTERN
+     * group 1: amount received
+     * group 2: sender
+     * group 3: current balance
+     * group 4: reference
+     * group 5: transaction id
+     * group 6: transaction fee
+     */
+    private static final String RECEIVED_PATTERN =
+            "\\s*[pP]ayment\\s{1,3}[rR]eceived\\s{0,3}for\\s{0,3}GHS\\s{0,3}([\\d]*[\\.]?[\\d]*)\\s{0,3}from\\s{0,3}([\\w\\s.\\W]*)\\s{0,3}[cC]urrent\\s{0,3}[bB]alance[\\W]?\\s{0,3}GHS\\s{0,3}([\\d]*[\\.]?[\\d]*)\\s{0,3}[\\w\\W]*[rR]eference[\\W]?\\s{0,3}([\\w\\W]*)\\s{0,3}[tT]ransaction\\s{0,3}[Ii][Dd]\\W?\\s{0,3}([\\d]*)[\\w\\W]*\\s[tT][rR][aA][nN][sS][aA][cC][tT][iI][oO][nN] [feeFEE]{3}\\W?([\\d.\\d]*)[\\w\\W]*";
+    private static final int GROUP_REC_AMOUNT = 1;
+    private static final int GROUP_REC_SENDER = 2;
+    private static final int GROUP_REC_CURRENT_BAL = 3;
+    private static final int GROUP_REC_REFERENCE = 4;
+    private static final int GROUP_REC_TX_ID = 5;
+    private static final int GROUP_REC_TX_FEE = 6;
+
+    private static final String CASH_OUT_PATTERN = "\\s*[cC]ash\\s{0,3}[oO]ut\\s{1,3}made";
+    private static final String PAYMENT_SENT_PATTERN = "\\s*[pP]ayment\\s{0,3}([mM]ade)?\\s{0,3}[fF]or";
     private final int CURRENT_BALANCE = 0;
     private final int TOTAL_RECEIVED = 1;
     private final int TOTAL_SENT = 2;
@@ -34,6 +69,7 @@ public class ExtractMtnMomoInfo {
         Data d = telephonyProvider.getSms(TelephonyProvider.Filter.INBOX);
         msgList = d.getList();
         msgList = getOnlyMomoSMS();
+
         //sharedPref.storeMomoMessages(msgList);
 //        }else {
 //            msgList = sharedPref.getStoreMomoMessages();
@@ -213,23 +249,38 @@ public class ExtractMtnMomoInfo {
         }
 
         if (receivedMessage(sms) != null) {
+            Matcher m = Pattern.compile(RECEIVED_PATTERN).matcher(sms.body);
+            m.find();
+            momo.setAmount(m.group(GROUP_REC_AMOUNT));
+            momo.setSender("FROM: " + m.group(GROUP_REC_SENDER));
+            momo.setCurrentBalance(m.group(GROUP_REC_CURRENT_BAL));
+            momo.setTxID(m.group(GROUP_REC_TX_ID));
+            momo.setContentStr(sms.body);
+            momo.setReference(m.group(GROUP_REC_REFERENCE));
+
             d.setTime(sms.receivedDate);
             momo.setDateStr(sdf.format(d));
-            momo.setContentStr(receivedMessage(sms));
-            momo.setAmount(String.valueOf(getPaymentReceivedAmount(sms)));
-            momo.setSender("FROM: " + getSender(sms));
-            momo.setTxID(getTxID(sms));
-            momo.setCurrentBalance(String.valueOf(getIndividualCB(sms)));
-            momo.setReference(getReference(sms));
+            // momo.setContentStr(receivedMessage(sms));
+            //momo.setAmount(String.valueOf(getPaymentReceivedAmount(sms)));
+            //momo.setSender("FROM: " + getSender(sms));
+            //momo.setTxID(getTxID(sms));
+            //momo.setCurrentBalance(String.valueOf(getIndividualCB(sms)));
+            // momo.setReference(getReference(sms));
             momo.setType(MomoDetailFragment.RECEIVED_MOMO);
         } else if (cashInMessage(sms) != null) {
+            Matcher m = Pattern.compile(CASH_IN_PATTERN).matcher(sms.body);
+            m.find();
+            momo.setAmount(m.group(GROUP_CASH_IN_AMOUNT));
+            momo.setSender("FROM: " + m.group(GROUP_CASH_IN_SENDER));
+            momo.setCurrentBalance(m.group(GROUP_CASH_IN_CURRENT_BAL));
+
             d.setTime(sms.receivedDate);
             momo.setDateStr(sdf.format(d));
-            momo.setContentStr(cashInMessage(sms));
-            momo.setAmount(String.valueOf(getCashInReceivedAmount(sms)));
-            momo.setSender("FROM: " + getSender(sms));
-            momo.setTxID(getTxID(sms));
-            momo.setCurrentBalance(String.valueOf(getIndividualCB(sms)));
+            momo.setContentStr(sms.body);
+            // momo.setAmount(String.valueOf(getCashInReceivedAmount(sms)));
+            // momo.setSender("FROM: " + getSender(sms));
+            momo.setTxID(getTxID(sms)); //none
+            //momo.setCurrentBalance(String.valueOf(getIndividualCB(sms)));
             momo.setType(MomoDetailFragment.RECEIVED_MOMO);
 
         } else {
@@ -244,7 +295,7 @@ public class ExtractMtnMomoInfo {
         Momo momo = new Momo();
         Date d = new Date();
         //Date date = new Date(dateStamp);
-        //TODO causing error here unknown patern character Y
+
         SimpleDateFormat sdf;
         try {
             sdf = new SimpleDateFormat("E d/M/y h:m:s a", Locale.getDefault());
@@ -325,48 +376,66 @@ public class ExtractMtnMomoInfo {
 
     private boolean isCashIn(Sms sms) {
         boolean res = false;
+        Pattern p = Pattern.compile(CASH_IN_RECEIVED_PATTERN);
+        Matcher m = p.matcher(sms.body);
+
         if (isMobileMoneyMsg(sms)) {
-            res = sms.body.contains("Cash In received");
+            //res = sms.body.contains("Cash In received");
+            res = m.find();
+
         }
         return res;
     }
 
     private boolean isPaymentReceived(Sms sms) {
         boolean res = false;
+        // Payment received for  GHS 200.00 from UMB Bank OVA Current Balance: GHS 1716.14 . Available Balance: GHS 1716.14. Reference: Credit MTN Customer. Transaction ID: 4772674558. TRANSACTION FEE: 0.00
+        Pattern p = Pattern.compile(PAYMENT_RECEIVED_PATTERN);
+        Matcher m = p.matcher(sms.body);
         if (isMobileMoneyMsg(sms)) {
-            res = sms.body.contains("Payment received");
+            // res = sms.body.contains("Payment received");
+            res = m.find();
         }
         return res;
     }
 
     private boolean isCashOut(Sms sms) {
+        //Cash Out made for GHS40.00 to IT TAKES GRACE  VENTURES, Current Balance: GHS1560.04 Financial Transaction Id: 4571767875. Cash-out fee is charged automatically from your MTN MobileMoney wallet. Please do not pay any fees to the merchant. Thank you for using MTN MobileMoney. Fee charged: GHS0.50.
         boolean res = false;
+        Matcher m = Pattern.compile(CASH_OUT_PATTERN).matcher(sms.body);
         if (isMobileMoneyMsg(sms)) {
-            res = sms.body.contains("Cash Out made");
+            //  res = sms.body.contains("Cash Out made");
+            res = m.find();
         }
         return res;
     }
 
     private boolean isPaymentSent(Sms sms) {
         boolean res = false;
+        Matcher m = Pattern.compile(PAYMENT_SENT_PATTERN).matcher(sms.body);
         if (isMobileMoneyMsg(sms)) {
-            res = isPaymentSentFor(sms) || isPaymentSentMadeFor(sms);
+            // res = isPaymentSentFor(sms) || isPaymentSentMadeFor(sms);
+            res= m.find();
         }
         return res;
     }
 
     private boolean isPaymentSentMadeFor(Sms sms) {
         boolean res = false;
+        Matcher m = Pattern.compile("\\s*[pP]ayment\\s{0,3}[mM]ade\\s{0,3}[fF]or").matcher(sms.body);
         if (isMobileMoneyMsg(sms)) {
-            res = sms.body.contains("Payment made for");
+            // res = sms.body.contains("Payment made for");
+            res = m.find();
         }
         return res;
     }
 
     private boolean isPaymentSentFor(Sms sms) {
         boolean res = false;
+        Matcher m = Pattern.compile("\\s*[pP]ayment\\s{0,3}[fF]or").matcher(sms.body);
         if (isMobileMoneyMsg(sms)) {
-            res = sms.body.contains("Payment for");
+            //res = sms.body.contains("Payment for");
+            res=m.find();
         }
         return res;
     }
@@ -374,8 +443,9 @@ public class ExtractMtnMomoInfo {
     private boolean isPaymentSentMtn(Sms sms) {
         boolean res = false;
         if (isMobileMoneyMsg(sms)) {
-
-            res = sms.body.contains("Your payment of");
+            Matcher m = Pattern.compile("\\s*[yY]our\\s[pP]ayment\\s{0,3}[oO][of]").matcher(sms.body);
+            //res = sms.body.contains("Your payment of");
+            res=m.find();
             if (res && sms.body.contains("failed")) {
                 res = false;
             }
@@ -389,23 +459,28 @@ public class ExtractMtnMomoInfo {
         if (!isCashIn(sms)) {
             return 0;
         }
-
-        String tt = "Cash In received for GHS ";
-        int st = -1;
-        int end = -1;
         String ss;
-        if (sms.body.contains(tt)) {
+        Pattern p = Pattern.compile(CASH_IN_RECEIVED_PATTERN);
+        Matcher m = p.matcher(sms.body);
+        m.find();
+        int count = m.groupCount();
+        ss = m.group(count);
+        //String tt = "Cash In received for GHS ";
+        //int st = -1;
+        //int end = -1;
+
+        /*if (sms.body.contains(tt)) {
             st = sms.body.indexOf(tt) + tt.length();
             end = sms.body.indexOf(" from", st);
         }
-        ss = mSubstring(sms.body, st, end);
+        ss = mSubstring(sms.body, st, end);*/
         /*try {
             ss = sms.body.substring(st, end);
         } catch(IndexOutOfBoundsException e){
             Log.d(ExtractMtnMomoInfo.class.getSimpleName(),"caused by sms:"+ sms+"\n"+ e.getMessage());
             return 0;
         }*/
-        return (ss == null) ? 0 : Double.valueOf(ss);
+        return (ss == null || ss.isEmpty()) ? 0 : Double.valueOf(ss);
     }
 
     private double getPaymentReceivedAmount(Sms sms) {
