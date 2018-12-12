@@ -201,4 +201,44 @@ public class MomoDetailFragment extends Fragment {
 
 
     }
+
+    /*private class bgrndLoad extends AsyncTask<Void, Integer, Void> {
+        private Intent intent;
+
+        @Override
+        protected Void doInBackground(Void[] objects) {
+            DecimalFormat df = new DecimalFormat("0.00");
+            ExtractMtnMomoInfo exi = new ExtractMtnMomoInfo(getContext());
+            msgList=exi.getMomoList();
+
+//            publishProgress(50);
+//            String totalReceived = df.format(exi.getTotalReceived());
+//            publishProgress(65);
+//            String totalSent = df.format(exi.getTotalSent());
+//            publishProgress(75);
+//            String currentBalance = df.format(exi.getLatestBalance());
+//            publishProgress(85);
+           // intent = new Intent(InitialActivity.this, MainActivity.class);
+            //intent.putExtra("totalReceived", totalReceived);
+            //intent.putExtra("totalSent", totalSent);
+            //intent.putExtra("currentBalance", currentBalance);
+         //   publishProgress(100);
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            String s = values[0] + "%";
+           // progressPercent.setText(s);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+           // startActivity(intent);
+            //InitialActivity.this.finish();
+
+        }
+    }*/
 }

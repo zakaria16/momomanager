@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.mazitekgh.momorecords.fragment.MomoDetailFragment;
 import com.mazitekgh.momorecords.model.Momo;
+import com.mazitekgh.momorecords.model.Sms;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,9 +16,6 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import me.everything.providers.android.telephony.Sms;
-import me.everything.providers.android.telephony.TelephonyProvider;
-import me.everything.providers.core.Data;
 
 /**
  * Created by Zakaria on 01-Sep-18 at 4:03 PM.
@@ -64,12 +62,12 @@ public class ExtractMtnMomoInfo {
 
     public ExtractMtnMomoInfo(Context c) {
         // if(shouldLoad()) {
-        TelephonyProvider telephonyProvider = new TelephonyProvider(c);
+        //TelephonyProvider telephonyProvider = new TelephonyProvider(c);
         sharedPref = new SharedPref(c);
-        Data d = telephonyProvider.getSms(TelephonyProvider.Filter.INBOX);
-        msgList = d.getList();
-        msgList = getOnlyMomoSMS();
-
+        //Data d = telephonyProvider.getSms(TelephonyProvider.Filter.INBOX);
+        //msgList = d.getList();
+        // msgList = getOnlyMomoSMS();
+        msgList = new SmsContent(c).getSmsList();
         //sharedPref.storeMomoMessages(msgList);
 //        }else {
 //            msgList = sharedPref.getStoreMomoMessages();
