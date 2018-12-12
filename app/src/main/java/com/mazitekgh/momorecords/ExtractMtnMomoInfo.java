@@ -59,7 +59,8 @@ public class ExtractMtnMomoInfo {
     private final int TOTAL_SENT = 2;
     private List msgList;
     private final SharedPref sharedPref;
-
+    private Pattern receivedPattern, cashInPattern, cashInReceivedPattern;
+    private Pattern paymentReceivedPattern, cashOutPattern;
     public ExtractMtnMomoInfo(Context c) {
         // if(shouldLoad()) {
         //TelephonyProvider telephonyProvider = new TelephonyProvider(c);
@@ -68,6 +69,11 @@ public class ExtractMtnMomoInfo {
         //msgList = d.getList();
         // msgList = getOnlyMomoSMS();
         msgList = new SmsContent(c).getSmsList();
+        receivedPattern = Pattern.compile(RECEIVED_PATTERN);
+        cashInPattern = Pattern.compile(CASH_IN_PATTERN);
+        cashInReceivedPattern = Pattern.compile(CASH_IN_RECEIVED_PATTERN);
+        paymentReceivedPattern = Pattern.compile(PAYMENT_RECEIVED_PATTERN);
+        cashOutPattern = Pattern.compile(CASH_OUT_PATTERN);
         //sharedPref.storeMomoMessages(msgList);
 //        }else {
 //            msgList = sharedPref.getStoreMomoMessages();
@@ -86,6 +92,11 @@ public class ExtractMtnMomoInfo {
     public ExtractMtnMomoInfo(Context context, List msgList) {
         this.msgList = msgList;
         sharedPref = new SharedPref(context);
+        receivedPattern = Pattern.compile(RECEIVED_PATTERN);
+        cashInPattern = Pattern.compile(CASH_IN_PATTERN);
+        cashInReceivedPattern = Pattern.compile(CASH_IN_RECEIVED_PATTERN);
+        paymentReceivedPattern = Pattern.compile(PAYMENT_RECEIVED_PATTERN);
+        cashOutPattern = Pattern.compile(CASH_OUT_PATTERN);
     }
 
     private List<Sms> getOnlyMomoSMS() {
@@ -247,7 +258,8 @@ public class ExtractMtnMomoInfo {
         }
 
         if (receivedMessage(sms) != null) {
-            Matcher m = Pattern.compile(RECEIVED_PATTERN).matcher(sms.body);
+
+            Matcher m = receivedPattern.matcher(sms.body);
             m.find();
             momo.setAmount(m.group(GROUP_REC_AMOUNT));
             momo.setSender("FROM: " + m.group(GROUP_REC_SENDER));
@@ -266,7 +278,8 @@ public class ExtractMtnMomoInfo {
             // momo.setReference(getReference(sms));
             momo.setType(MomoDetailFragment.RECEIVED_MOMO);
         } else if (cashInMessage(sms) != null) {
-            Matcher m = Pattern.compile(CASH_IN_PATTERN).matcher(sms.body);
+
+            Matcher m = cashInPattern.matcher(sms.body);
             m.find();
             momo.setAmount(m.group(GROUP_CASH_IN_AMOUNT));
             momo.setSender("FROM: " + m.group(GROUP_CASH_IN_SENDER));
@@ -374,8 +387,8 @@ public class ExtractMtnMomoInfo {
 
     private boolean isCashIn(Sms sms) {
         boolean res = false;
-        Pattern p = Pattern.compile(CASH_IN_RECEIVED_PATTERN);
-        Matcher m = p.matcher(sms.body);
+        //Pattern p = Pattern.compile(CASH_IN_RECEIVED_PATTERN);
+        Matcher m = cashInReceivedPattern.matcher(sms.body);
 
         if (isMobileMoneyMsg(sms)) {
             //res = sms.body.contains("Cash In received");
@@ -388,8 +401,8 @@ public class ExtractMtnMomoInfo {
     private boolean isPaymentReceived(Sms sms) {
         boolean res = false;
         // Payment received for  GHS 200.00 from UMB Bank OVA Current Balance: GHS 1716.14 . Available Balance: GHS 1716.14. Reference: Credit MTN Customer. Transaction ID: 4772674558. TRANSACTION FEE: 0.00
-        Pattern p = Pattern.compile(PAYMENT_RECEIVED_PATTERN);
-        Matcher m = p.matcher(sms.body);
+        //Pattern p = Pattern.compile(PAYMENT_RECEIVED_PATTERN);
+        Matcher m = paymentReceivedPattern.matcher(sms.body);
         if (isMobileMoneyMsg(sms)) {
             // res = sms.body.contains("Payment received");
             res = m.find();
@@ -400,7 +413,7 @@ public class ExtractMtnMomoInfo {
     private boolean isCashOut(Sms sms) {
         //Cash Out made for GHS40.00 to IT TAKES GRACE  VENTURES, Current Balance: GHS1560.04 Financial Transaction Id: 4571767875. Cash-out fee is charged automatically from your MTN MobileMoney wallet. Please do not pay any fees to the merchant. Thank you for using MTN MobileMoney. Fee charged: GHS0.50.
         boolean res = false;
-        Matcher m = Pattern.compile(CASH_OUT_PATTERN).matcher(sms.body);
+        Matcher m = cashOutPattern.matcher(sms.body);
         if (isMobileMoneyMsg(sms)) {
             //  res = sms.body.contains("Cash Out made");
             res = m.find();
