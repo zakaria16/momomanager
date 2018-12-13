@@ -34,6 +34,7 @@ public class ExtractMtnMomoInfo {
     private static final int GROUP_CASH_IN_SENDER = 2;
     private static final int GROUP_CASH_IN_CURRENT_BAL = 3;
     private static final String PAYMENT_RECEIVED_PATTERN = "\\s*[P]ayment\\s{1,3}[rR]eceived\\s{1,3}for";
+    public static final int CURRENT_BALANCE = 0;
     /**
      * RECEIVED PATTERN
      * group 1: amount received
@@ -53,14 +54,16 @@ public class ExtractMtnMomoInfo {
     private static final int GROUP_REC_TX_FEE = 6;
 
     private static final String CASH_OUT_PATTERN = "\\s*[cC]ash\\s{0,3}[oO]ut\\s{1,3}made";
+    public static final int TOTAL_RECEIVED = 1;
+    public static final int TOTAL_SENT = 2;
     private static final String PAYMENT_SENT_PATTERN = "\\s*[pP]ayment\\s{0,3}([mM]ade)?\\s{0,3}[fF]or";
-    private final int CURRENT_BALANCE = 0;
-    private final int TOTAL_RECEIVED = 1;
-    private final int TOTAL_SENT = 2;
+    private static final String PAYMENT_SENTFOR_PATTERN = "\\s*[pP]ayment\\s{0,3}([mM]ade)?\\s{0,3}[fF]or";
     private List msgList;
     private final SharedPref sharedPref;
-    private Pattern receivedPattern, cashInPattern, cashInReceivedPattern;
-    private Pattern paymentReceivedPattern, cashOutPattern;
+    private Pattern receivedPattern, cashInPattern, cashInReceivedPattern, paymentReceivedPattern;
+    private Pattern cashOutPattern, paymentSentPattern, sentMtnPattern, paymentMadeFor, paymentSentForPattern;
+
+
     public ExtractMtnMomoInfo(Context c) {
         // if(shouldLoad()) {
         //TelephonyProvider telephonyProvider = new TelephonyProvider(c);
@@ -69,11 +72,7 @@ public class ExtractMtnMomoInfo {
         //msgList = d.getList();
         // msgList = getOnlyMomoSMS();
         msgList = new SmsContent(c).getSmsList();
-        receivedPattern = Pattern.compile(RECEIVED_PATTERN);
-        cashInPattern = Pattern.compile(CASH_IN_PATTERN);
-        cashInReceivedPattern = Pattern.compile(CASH_IN_RECEIVED_PATTERN);
-        paymentReceivedPattern = Pattern.compile(PAYMENT_RECEIVED_PATTERN);
-        cashOutPattern = Pattern.compile(CASH_OUT_PATTERN);
+        compilePattern();
         //sharedPref.storeMomoMessages(msgList);
 //        }else {
 //            msgList = sharedPref.getStoreMomoMessages();
@@ -92,13 +91,20 @@ public class ExtractMtnMomoInfo {
     public ExtractMtnMomoInfo(Context context, List msgList) {
         this.msgList = msgList;
         sharedPref = new SharedPref(context);
+        compilePattern();
+    }
+
+    private void compilePattern() {
         receivedPattern = Pattern.compile(RECEIVED_PATTERN);
         cashInPattern = Pattern.compile(CASH_IN_PATTERN);
         cashInReceivedPattern = Pattern.compile(CASH_IN_RECEIVED_PATTERN);
         paymentReceivedPattern = Pattern.compile(PAYMENT_RECEIVED_PATTERN);
+        paymentSentPattern = Pattern.compile(PAYMENT_SENT_PATTERN);
         cashOutPattern = Pattern.compile(CASH_OUT_PATTERN);
+        sentMtnPattern = Pattern.compile("\\s*[yY]our\\s[pP]ayment\\s{0,3}[oO][of]");
+        paymentMadeFor = Pattern.compile("\\s*[pP]ayment\\s{0,3}[mM]ade\\s{0,3}[fF]or");
+        paymentSentForPattern = Pattern.compile("\\s*[pP]ayment\\s{0,3}[fF]or");
     }
-
     private List<Sms> getOnlyMomoSMS() {
         List<Sms> resList = new ArrayList<>();
         Sms sms;
@@ -125,7 +131,7 @@ public class ExtractMtnMomoInfo {
                 amount += getCashInReceivedAmount(sms) + getPaymentReceivedAmount(sms);
             }
             sharedPref.storeTotalReceivedAmount(amount);
-        }
+        } else
         {
             amount = sharedPref.getTotalReceived();
         }
@@ -228,7 +234,6 @@ public class ExtractMtnMomoInfo {
     private List<Momo> getAllMessages() {
         List<Momo> allMsgs = new ArrayList<>();
         Sms sms;
-
         for (int i = 0; i < msgList.size(); i++) {
             sms = (Sms) msgList.get(i);
             Momo momoSent = getSentMomo(sms);
@@ -423,7 +428,7 @@ public class ExtractMtnMomoInfo {
 
     private boolean isPaymentSent(Sms sms) {
         boolean res = false;
-        Matcher m = Pattern.compile(PAYMENT_SENT_PATTERN).matcher(sms.body);
+        Matcher m = paymentSentPattern.matcher(sms.body);
         if (isMobileMoneyMsg(sms)) {
             // res = isPaymentSentFor(sms) || isPaymentSentMadeFor(sms);
             res= m.find();
@@ -433,7 +438,7 @@ public class ExtractMtnMomoInfo {
 
     private boolean isPaymentSentMadeFor(Sms sms) {
         boolean res = false;
-        Matcher m = Pattern.compile("\\s*[pP]ayment\\s{0,3}[mM]ade\\s{0,3}[fF]or").matcher(sms.body);
+        Matcher m = paymentMadeFor.matcher(sms.body);
         if (isMobileMoneyMsg(sms)) {
             // res = sms.body.contains("Payment made for");
             res = m.find();
@@ -443,7 +448,7 @@ public class ExtractMtnMomoInfo {
 
     private boolean isPaymentSentFor(Sms sms) {
         boolean res = false;
-        Matcher m = Pattern.compile("\\s*[pP]ayment\\s{0,3}[fF]or").matcher(sms.body);
+        Matcher m = paymentSentForPattern.matcher(sms.body);
         if (isMobileMoneyMsg(sms)) {
             //res = sms.body.contains("Payment for");
             res=m.find();
@@ -454,7 +459,7 @@ public class ExtractMtnMomoInfo {
     private boolean isPaymentSentMtn(Sms sms) {
         boolean res = false;
         if (isMobileMoneyMsg(sms)) {
-            Matcher m = Pattern.compile("\\s*[yY]our\\s[pP]ayment\\s{0,3}[oO][of]").matcher(sms.body);
+            Matcher m = sentMtnPattern.matcher(sms.body);
             //res = sms.body.contains("Your payment of");
             res=m.find();
             if (res && sms.body.contains("failed")) {
@@ -782,28 +787,43 @@ public class ExtractMtnMomoInfo {
         if (msgList == null) {
             return true;
         }
+        long lastDate = 0;
         switch (whichState) {
             case CURRENT_BALANCE: {
-                if (sharedPref.getLastCurrentBalAmount() == -1) return true;
+                if (sharedPref.getLastCurrentBalAmount() == -1) {
+                    return true;
+                } else {
+                    lastDate = sharedPref.getLastCurentBalDate();
+                }
                 break;
             }
             case TOTAL_RECEIVED: {
-                if (sharedPref.getTotalReceived() == -1) return true;
+                if (sharedPref.getTotalReceived() == -1) {
+                    return true;
+                } else {
+                    lastDate = sharedPref.getLastTotalReceivedDate();
+                }
                 break;
             }
             case TOTAL_SENT: {
-                if (sharedPref.getTotalSent() == -1) return true;
+                if (sharedPref.getTotalSent() == -1) {
+                    return true;
+                } else {
+                    lastDate = sharedPref.getLastTotalSentDate();
+                }
                 break;
             }
         }
+        //get the latest momo message
         Sms currentMessage = (Sms) msgList.get(0);
         Long currentMsgDate = currentMessage.receivedDate;
 
-        long lastDate = sharedPref.getLastCurentBalDate();
-
         //new momo Msg is present reload curentBalance
-        return currentMsgDate > lastDate;
-
+        boolean isload = currentMsgDate > lastDate;
+        if (isload) {
+            sharedPref.storeCurrentMessageDate(whichState, currentMsgDate);
+        }
+        return isload;
     }
 
     @Nullable

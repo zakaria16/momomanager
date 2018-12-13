@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.mazitekgh.momorecords.model.Sms;
 
 import java.util.HashMap;
 import java.util.List;
 
-import me.everything.providers.android.telephony.Sms;
 
 /**
  * MtnMomo
@@ -23,6 +23,8 @@ public class SharedPref {
     private static final String CB_DATE_KEY = "cb_date_key";
     private static final String BALANCE_KEY = "balance_key";
     private static final String SHARED_KEY = "com.mazitekgh.momorecords.total_received_amount";
+    private static final String TOTAL_RECEIVED_DATE_KEY = "received-date";
+    private static final String TOTAL_SENT_DATE_KEY = "sent-date";
 
     private Context c;
     private SharedPreferences sp;
@@ -67,7 +69,7 @@ public class SharedPref {
         return gs.fromJson(gsonString, List.class);
     }
 
-    void StoreCurrentBalance(Double amount, long date) {
+    public void StoreCurrentBalance(Double amount, long date) {
 
         SharedPreferences.Editor editor = sp.edit();
         editor.putFloat(CB_AMOUNT_KEY, amount.floatValue());
@@ -75,9 +77,53 @@ public class SharedPref {
         editor.apply();
     }
 
+    private void storeCurrentBalanceDate(long date) {
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putLong(CB_DATE_KEY, date);
+        editor.apply();
+    }
+
+    private void storeLastReceivedDate(long date) {
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putLong(TOTAL_RECEIVED_DATE_KEY, date);
+        editor.apply();
+    }
+
+    private void storeLastSentDate(long date) {
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putLong(TOTAL_SENT_DATE_KEY, date);
+        editor.apply();
+    }
+
+    void storeCurrentMessageDate(int whichType, Long lastDate) {
+        switch (whichType) {
+            case ExtractMtnMomoInfo.CURRENT_BALANCE: {
+                storeCurrentBalanceDate(lastDate);
+                break;
+            }
+            case ExtractMtnMomoInfo.TOTAL_RECEIVED: {
+                storeLastReceivedDate(lastDate);
+                break;
+            }
+            case ExtractMtnMomoInfo.TOTAL_SENT: {
+                storeLastSentDate(lastDate);
+                break;
+            }
+        }
+    }
     public long getLastCurentBalDate() {
         return sp.getLong(CB_DATE_KEY, 0);
     }
+
+    public long getLastTotalReceivedDate() {
+        return sp.getLong(TOTAL_RECEIVED_DATE_KEY, 0);
+    }
+
+    public long getLastTotalSentDate() {
+        return sp.getLong(TOTAL_SENT_DATE_KEY, 0);
+    }
+
+
 
     public double getLastCurrentBalAmount() {
         return sp.getFloat(CB_AMOUNT_KEY, -1);

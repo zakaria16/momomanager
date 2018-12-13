@@ -29,15 +29,18 @@ public class SmsContent {
 
         Cursor cursor = cr.query(inboxUri, projections, "address=?", new String[]{"MobileMoney"}, null);
 
-        while (cursor.moveToNext()) {
-            Sms sms = new Sms();
-            number = cursor.getString(cursor.getColumnIndexOrThrow("address"));
-            body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
-            date = cursor.getLong(cursor.getColumnIndexOrThrow("date"));
-            sms.address = number;
-            sms.body = body;
-            sms.receivedDate = date;
-            smsList.add(sms);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Sms sms = new Sms();
+                //todo assign direct
+                number = cursor.getString(cursor.getColumnIndexOrThrow("address"));
+                body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
+                date = cursor.getLong(cursor.getColumnIndexOrThrow("date"));
+                sms.address = number;
+                sms.body = body;
+                sms.receivedDate = date;
+                smsList.add(sms);
+            }
         }
 
         cursor.close();
