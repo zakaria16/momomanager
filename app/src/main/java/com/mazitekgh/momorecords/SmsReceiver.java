@@ -26,6 +26,9 @@ public class SmsReceiver extends BroadcastReceiver {
                 //---retrieve the SMS message received---
                 try {
                     Object[] pdus = (Object[]) bundle.get("pdus");
+                    if (pdus == null) {
+                        return;
+                    }
                     msgs = new SmsMessage[pdus.length];
                     for (int i = 0; i < msgs.length; i++) {
                         msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);

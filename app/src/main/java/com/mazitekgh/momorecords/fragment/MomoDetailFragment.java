@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.mazitekgh.momorecords.ExtractMtnMomoInfo;
 import com.mazitekgh.momorecords.R;
-import com.mazitekgh.momorecords.SharedPref;
 import com.mazitekgh.momorecords.adaptor.MomoDetailRecyclerViewAdapter;
 import com.mazitekgh.momorecords.model.Momo;
 
@@ -128,14 +127,14 @@ public class MomoDetailFragment extends Fragment {
         mListener = null;
     }
 
-    void checkNewAddition() {
+    /*void checkNewAddition() {
         List msgList = new ExtractMtnMomoInfo(getContext()).getMomoList();
         List oldList = new SharedPref(getContext()).getStoreMomoMessages();
         if (msgList == oldList) {
 
         }
 
-    }
+    }*/
 
     /**
      * This interface must be implemented by activities that contain this

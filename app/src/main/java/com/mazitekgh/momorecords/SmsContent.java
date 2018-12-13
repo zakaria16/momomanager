@@ -41,9 +41,9 @@ public class SmsContent {
                 sms.receivedDate = date;
                 smsList.add(sms);
             }
+            cursor.close();
         }
 
-        cursor.close();
 
     }
 
