@@ -1,6 +1,7 @@
 package com.mazitekgh.momorecords.fragment;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,8 +12,6 @@ import android.widget.Button;
 
 import com.mazitekgh.momorecords.R;
 
-import java.util.Objects;
-
 
 /**
  * Smartnet
@@ -20,13 +19,17 @@ import java.util.Objects;
  */
 
 public class MessageDialogFragment extends DialogFragment {
+    private Activity activity;
 
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
-        View v = getActivity().getLayoutInflater().inflate(R.layout.dialog_message, null);
+        activity = getActivity();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        View v = activity.getLayoutInflater().inflate(R.layout.dialog_message, null);
+
         Button gotItButton = v.findViewById(R.id.got_it_bottom);
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout

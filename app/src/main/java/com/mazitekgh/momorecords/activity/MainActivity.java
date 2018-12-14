@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,8 +21,9 @@ import com.mazitekgh.momorecords.SmsReceiver;
 import com.mazitekgh.momorecords.fragment.MomoDetailFragment;
 
 
-public class MainActivity extends AppCompatActivity implements MomoDetailFragment.OnListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements MomoDetailFragment.OnListFragmentInteractionListener, SmsReceiver.OnMomoReceive {
     private SmsReceiver smsReceiver;
+    private View view;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,14 +32,16 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
         // pb = findViewById(R.id.progress);
         smsReceiver = new SmsReceiver();
         registerReceiver(smsReceiver, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
-        smsReceiver.setMomoReceivedListener(new SmsReceiver.OnMomoReceive() {
-            @Override
-            public void momoReceive(String body) {
-                Toast.makeText(MainActivity.this, "IS a MOMO MESSAGE", Toast.LENGTH_SHORT).show();
-                //Toast.makeText(MainActivity.this, body, Toast.LENGTH_SHORT).show();
-                frag(new MomoDetailFragment());
-            }
-        });
+        smsReceiver.setMomoReceivedListener(this);
+//        smsReceiver.setMomoReceivedListener(new SmsReceiver.OnMomoReceive() {
+//            @Override
+//            public void momoReceive(String body) {
+//                //Toast.makeText(MainActivity.this, "It's a MOMO MESSAGE", Toast.LENGTH_SHORT).show();
+//                //Toast.makeText(MainActivity.this, body, Toast.LENGTH_SHORT).show();
+//                frag(new MomoDetailFragment());
+//               // startActivity(new Intent(MainActivity.this,MainActivity.class));
+//            }
+//        });
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
 
@@ -117,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
             mzDialog.show();
         } else if (id == R.id.action_mtn) {
             //toast will be here
-            Toast.makeText(this, "other networks comming soon", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "other networks coming soon", Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -158,4 +162,11 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
     }
 
 
+    @Override
+    public void momoReceive(String body) {
+        //Toast.makeText(MainActivity.this, "It's a MOMO MESSAGE", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, body, Toast.LENGTH_SHORT).show();
+        frag(new MomoDetailFragment());
+        // startActivity(new Intent(MainActivity.this,MainActivity.class));
+    }
 }

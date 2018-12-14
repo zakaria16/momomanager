@@ -8,8 +8,6 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.util.Objects;
-
 public class SmsReceiver extends BroadcastReceiver {
     private OnMomoReceive mListener;
 
@@ -18,7 +16,7 @@ public class SmsReceiver extends BroadcastReceiver {
         // mListener = (OnMomoReceive) context;
 
         // an Intent broadcast.
-        if (Objects.requireNonNull(intent.getAction()).equals("android.provider.Telephony.SMS_RECEIVED")) {
+        if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
             Bundle bundle = intent.getExtras();           //---get the SMS message passed in---
             SmsMessage[] msgs;
             String sender;
@@ -39,12 +37,15 @@ public class SmsReceiver extends BroadcastReceiver {
 
                             //Pass the message text to interface
                             // mListener.momoReceive(msgBody);
-                            Toast.makeText(context, "is a mobile Message", Toast.LENGTH_SHORT).show();
-
+                            Toast.makeText(context, "It's a mobile Message", Toast.LENGTH_SHORT).show();
+                            if (mListener != null) {
+                                mListener.momoReceive(msgBody);
+                            }
 
                         } else {
                             Toast.makeText(context, "Not Momo Message", Toast.LENGTH_SHORT).show();
                         }
+                        //mListener.momoReceive(msgBody);
                     }
                 } catch (Exception e) {
                     Log.d("Exception caught", e.getMessage());

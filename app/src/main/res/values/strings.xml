@@ -14,6 +14,7 @@
     <string name="credit_activities">Airtime\nTransactions</string>
     <string name="permission_msg">The app uses mobile money sms messages to compute its data\n\nOn the next screen you have to grant this app the permission to access sms</string>
     <string name="info">Click any of the button above to load it Version 1 is for MTN Mobile money only</string>
+    <string name="transaction_id">transaction ID</string>
 
 
 </resources>

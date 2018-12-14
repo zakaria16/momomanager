@@ -71,10 +71,8 @@ public class MomoDetailFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-
                 // Gson gs = new Gson();
                 // if(gsonString==null) {
-
                 msgList = new ExtractMtnMomoInfo(getContext()).getMomoList();
 
                 pd.dismiss();
