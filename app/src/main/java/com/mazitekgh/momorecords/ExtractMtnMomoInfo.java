@@ -120,7 +120,7 @@ public class ExtractMtnMomoInfo {
 
 
     public double getTotalReceived() {
-        if (msgList == null) {
+        if (msgList == null || msgList.size() <= 0) {
             return 0;
         }
         double amount = 0.00;
@@ -140,7 +140,7 @@ public class ExtractMtnMomoInfo {
     }
 
     public double getTotalSent() {
-        if (msgList == null) {
+        if (msgList == null || msgList.size() <= 0) {
             return 0;
         }
         double amount = 0.00;
@@ -265,14 +265,14 @@ public class ExtractMtnMomoInfo {
         if (receivedMessage(sms) != null) {
 
             Matcher m = receivedPattern.matcher(sms.body);
-            m.find();
-            momo.setAmount(m.group(GROUP_REC_AMOUNT));
-            momo.setSender("FROM: " + m.group(GROUP_REC_SENDER));
-            momo.setCurrentBalance(m.group(GROUP_REC_CURRENT_BAL));
-            momo.setTxID(m.group(GROUP_REC_TX_ID));
-            momo.setContentStr(sms.body);
-            momo.setReference(m.group(GROUP_REC_REFERENCE));
-
+            if (m.find()) {
+                momo.setAmount(m.group(GROUP_REC_AMOUNT));
+                momo.setSender("FROM: " + m.group(GROUP_REC_SENDER));
+                momo.setCurrentBalance(m.group(GROUP_REC_CURRENT_BAL));
+                momo.setTxID(m.group(GROUP_REC_TX_ID));
+                momo.setContentStr(sms.body);
+                momo.setReference(m.group(GROUP_REC_REFERENCE));
+            }
             d.setTime(sms.receivedDate);
             momo.setDateStr(sdf.format(d));
             // momo.setContentStr(receivedMessage(sms));
@@ -285,11 +285,11 @@ public class ExtractMtnMomoInfo {
         } else if (cashInMessage(sms) != null) {
 
             Matcher m = cashInPattern.matcher(sms.body);
-            m.find();
-            momo.setAmount(m.group(GROUP_CASH_IN_AMOUNT));
-            momo.setSender("FROM: " + m.group(GROUP_CASH_IN_SENDER));
-            momo.setCurrentBalance(m.group(GROUP_CASH_IN_CURRENT_BAL));
-
+            if (m.find()) {
+                momo.setAmount(m.group(GROUP_CASH_IN_AMOUNT));
+                momo.setSender("FROM: " + m.group(GROUP_CASH_IN_SENDER));
+                momo.setCurrentBalance(m.group(GROUP_CASH_IN_CURRENT_BAL));
+            }
             d.setTime(sms.receivedDate);
             momo.setDateStr(sdf.format(d));
             momo.setContentStr(sms.body);
@@ -475,12 +475,13 @@ public class ExtractMtnMomoInfo {
         if (!isCashIn(sms)) {
             return 0;
         }
-        String ss;
+        String ss = null;
         Pattern p = Pattern.compile(CASH_IN_RECEIVED_PATTERN);
         Matcher m = p.matcher(sms.body);
-        m.find();
-        int count = m.groupCount();
-        ss = m.group(count);
+        if (m.find()) {
+            int count = m.groupCount();
+            ss = m.group(count);
+        }
         //String tt = "Cash In received for GHS ";
         //int st = -1;
         //int end = -1;
@@ -742,6 +743,9 @@ public class ExtractMtnMomoInfo {
 
     public double getLatestBalance() {
         double currentBal = 0;
+        if (msgList == null || msgList.size() <= 0) {
+            return 0;
+        }
         if (shouldLoad(CURRENT_BALANCE)) {
             int msgSize = msgList.size();
             Sms sms;
@@ -780,7 +784,7 @@ public class ExtractMtnMomoInfo {
      *                   {@link #CURRENT_BALANCE}
      *                   {@link #TOTAL_RECEIVED}
      *                   {@link #TOTAL_SENT}
-     * @return true if we to load from db else false
+     * @return true if it should load from db else false
      */
     private boolean shouldLoad(int whichState) {
 
@@ -813,6 +817,9 @@ public class ExtractMtnMomoInfo {
                 }
                 break;
             }
+        }
+        if (msgList.size() <= 0) {
+            return true;
         }
         //get the latest momo message
         Sms currentMessage = (Sms) msgList.get(0);

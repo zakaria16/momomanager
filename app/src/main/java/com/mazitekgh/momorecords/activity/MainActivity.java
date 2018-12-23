@@ -3,6 +3,7 @@ package com.mazitekgh.momorecords.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.support.v4.app.Fragment;
@@ -30,9 +31,13 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
         setContentView(R.layout.activity_main);
 
         // pb = findViewById(R.id.progress);
-        smsReceiver = new SmsReceiver();
-        registerReceiver(smsReceiver, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
-        smsReceiver.setMomoReceivedListener(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            smsReceiver = new SmsReceiver();
+            registerReceiver(smsReceiver, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
+            smsReceiver.setMomoReceivedListener(this);
+        }
+
 //        smsReceiver.setMomoReceivedListener(new SmsReceiver.OnMomoReceive() {
 //            @Override
 //            public void momoReceive(String body) {
