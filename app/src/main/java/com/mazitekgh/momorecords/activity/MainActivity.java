@@ -1,8 +1,10 @@
 package com.mazitekgh.momorecords.activity;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Telephony;
@@ -18,13 +20,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mazitekgh.momorecords.R;
+import com.mazitekgh.momorecords.SharedPref;
 import com.mazitekgh.momorecords.SmsReceiver;
 import com.mazitekgh.momorecords.fragment.MomoDetailFragment;
+import com.mazitekgh.momorecords.fragment.RateUsDialogFragment;
 
 
 public class MainActivity extends AppCompatActivity implements MomoDetailFragment.OnListFragmentInteractionListener, SmsReceiver.OnMomoReceive {
     private SmsReceiver smsReceiver;
     private View view;
+    private boolean isFirst = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +132,12 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
         } else if (id == R.id.action_mtn) {
             //toast will be here
             Toast.makeText(this, "other networks coming soon", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.action_rate_app) {
+            try {
+                startActivity(new Intent("android.intent.action.VIEW", Uri.parse("market://details?id=" + getPackageName())));
+            } catch (ActivityNotFoundException e) {
+                startActivity(new Intent("android.intent.action.VIEW", Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName())));
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -162,10 +173,23 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         unregisterReceiver(smsReceiver);
+        super.onDestroy();
+
     }
 
+    @Override
+    public void onBackPressed() {
+
+        if (isFirst && new SharedPref(this).showRatingDialog()) {
+            new RateUsDialogFragment().show(getSupportFragmentManager(), "rate_us");
+
+            isFirst = false;
+        } else {
+            super.onBackPressed();
+        }
+
+    }
 
     @Override
     public void momoReceive(String body) {

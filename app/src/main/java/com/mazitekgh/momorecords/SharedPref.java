@@ -25,6 +25,7 @@ public class SharedPref {
     private static final String SHARED_KEY = "com.mazitekgh.momorecords.total_received_amount";
     private static final String TOTAL_RECEIVED_DATE_KEY = "received-date";
     private static final String TOTAL_SENT_DATE_KEY = "sent-date";
+    private static final String RATING_KEY = "rating-key";
 
     private Context c;
     private SharedPreferences sp;
@@ -146,6 +147,16 @@ public class SharedPref {
     public void storeTotalReceivedAmount(Double amount) {
         SharedPreferences.Editor editor = sp.edit();
         editor.putFloat(TOTAL_RECEIVED_KEY, amount.floatValue());
+        editor.apply();
+    }
+
+    public boolean showRatingDialog() {
+        return sp.getBoolean(RATING_KEY, true);
+    }
+
+    public void disableRatingDialog() {
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(RATING_KEY, false);
         editor.apply();
     }
 }
