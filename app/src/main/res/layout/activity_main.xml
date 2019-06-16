@@ -7,12 +7,12 @@
     android:orientation="vertical"
     tools:context=".activity.MainActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="100dp">
 
-        <android.support.design.widget.CollapsingToolbarLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/ctl_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -22,7 +22,7 @@
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="exitUntilCollapsed|scroll">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
@@ -103,10 +103,10 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
             </GridLayout>
-        </android.support.design.widget.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
 
     <LinearLayout

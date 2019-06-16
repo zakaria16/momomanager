@@ -8,16 +8,17 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Telephony;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.mazitekgh.momorecords.R;
 import com.mazitekgh.momorecords.SharedPref;
@@ -43,15 +44,6 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
             smsReceiver.setMomoReceivedListener(this);
         }
 
-//        smsReceiver.setMomoReceivedListener(new SmsReceiver.OnMomoReceive() {
-//            @Override
-//            public void momoReceive(String body) {
-//                //Toast.makeText(MainActivity.this, "It's a MOMO MESSAGE", Toast.LENGTH_SHORT).show();
-//                //Toast.makeText(MainActivity.this, body, Toast.LENGTH_SHORT).show();
-//                frag(new MomoDetailFragment());
-//               // startActivity(new Intent(MainActivity.this,MainActivity.class));
-//            }
-//        });
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
 
@@ -65,12 +57,6 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
         TextView totalReceivedView = findViewById(R.id.total_received);
         TextView lastBalance = findViewById(R.id.last_balance);
 
-        // DecimalFormat df = new DecimalFormat("0.00");
-        //ExtractMtnMomoInfo exi = new ExtractMtnMomoInfo(this);
-
-        //String totalReceived = df.format(exi.getTotalReceived());
-        //String totalSent = df.format(exi.getTotalSent());
-        //String currentBalance = df.format(exi.getLatestBalance());
 
         String totalReceived = getIntent().getStringExtra("totalReceived");
         String totalSent = getIntent().getStringExtra("totalSent");
@@ -98,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_about) {
 
             final AlertDialog mzDialog = new AlertDialog.Builder(this).create();
@@ -168,7 +153,9 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(smsReceiver, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            registerReceiver(smsReceiver, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
+        }
     }
 
     @Override

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
-import com.mazitekgh.momorecords.model.Sms;
 
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +52,7 @@ public class SharedPref {
         return hs;
     }
 
-    public void storeMomoMessages(List<Sms> list) {
+    public void storeMomoMessages(List list) {
         Gson gs = new Gson();
         String gsonForm = gs.toJson(list);
         SharedPreferences.Editor editor = sp.edit();

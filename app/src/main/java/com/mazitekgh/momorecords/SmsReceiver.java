@@ -8,6 +8,9 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.mazitekgh.momorecords.model.Momo;
+import com.mazitekgh.momorecords.model.Sms;
+
 public class SmsReceiver extends BroadcastReceiver {
     private OnMomoReceive mListener;
 
@@ -20,6 +23,7 @@ public class SmsReceiver extends BroadcastReceiver {
             Bundle bundle = intent.getExtras();           //---get the SMS message passed in---
             SmsMessage[] msgs;
             String sender;
+            ExtractMtnMomoInfo momoExi = new ExtractMtnMomoInfo(context);
             if (bundle != null) {
                 //---retrieve the SMS message received---
                 try {
@@ -32,12 +36,20 @@ public class SmsReceiver extends BroadcastReceiver {
                         msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
                         sender = msgs[i].getOriginatingAddress();
                         String msgBody = msgs[i].getMessageBody();
-                        if (sender.equals("MobileMoney")) {
+                        Long date = msgs[i].getTimestampMillis();
+                        Sms sms = new Sms(sender, msgBody, date);
 
-
+                        if (momoExi.isMobileMoneyMsg(sms)) {
+                            Momo momo = new Momo();
+                            if (momoExi.isReceivedMomo(sms)) {
+                                momo = momoExi.getReceivedMomo(sms);
+                            }
                             //Pass the message text to interface
                             // mListener.momoReceive(msgBody);
-                            Toast.makeText(context, "It's a mobile Message", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "It's a mobile Message\n" +
+                                    "amount: " + momo.getAmount() + "\n" +
+                                    "sender: " + momo.getSender() + "\n" +
+                                    "reference: " + momo.getReference() + "\n", Toast.LENGTH_SHORT).show();
                             if (mListener != null) {
                                 mListener.momoReceive(msgBody);
                             }
