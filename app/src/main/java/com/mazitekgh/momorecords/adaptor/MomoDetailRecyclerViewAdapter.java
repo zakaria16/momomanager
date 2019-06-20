@@ -4,7 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,18 +27,20 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
 
     private final List<Momo> mValues;
     private final OnListFragmentInteractionListener mListener;
+    private boolean isServerMomo = false;
 
-    public MomoDetailRecyclerViewAdapter(int whichMomo, List<Momo> items, OnListFragmentInteractionListener listener) {
+    public MomoDetailRecyclerViewAdapter(boolean isServerMomo, List<Momo> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
-
+        this.isServerMomo = isServerMomo;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_momodetail, parent, false);
+                .inflate(isServerMomo ? R.layout.fragment_momo_server : R.layout.fragment_momodetail,
+                        parent, false);
         return new ViewHolder(view);
     }
 
@@ -111,6 +115,9 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
         final TextView amountCaption;
         final TextView transactionFee;
         final TextView transactionFeeCaption;
+        TextView serverSentTime;
+        ToggleButton isSent2ServerView;
+        Button retryButton;
         //public final TextView momoTextView;
 
         Momo mItem;
@@ -118,6 +125,11 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
         ViewHolder(View view) {
             super(view);
             mView = view;
+            if (isServerMomo) {
+                serverSentTime = view.findViewById(R.id.time_to_server);
+                isSent2ServerView = view.findViewById(R.id.sent_to_server);
+                retryButton = view.findViewById(R.id.retry_button);
+            }
             momo_date = view.findViewById(R.id.momo_date);
             // momoTextView = (TextView) view.findViewById(R.id.momo_text);
             sender = view.findViewById(R.id.sender);

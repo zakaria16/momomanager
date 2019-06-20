@@ -25,7 +25,7 @@ public class Momo implements Parcelable {
     private String sender;
     private String txID;
     private String currentBalance;
-    private String amount;
+    private double amount;
     private int type;
     private String reference;
 
@@ -34,7 +34,7 @@ public class Momo implements Parcelable {
     }
 
 
-    public Momo(int type, String dateStr, String contentStr, String senderReceiver, String txID, String currentBalance, String amount, String reference) {
+    public Momo(int type, String dateStr, String contentStr, String senderReceiver, String txID, String currentBalance, double amount, String reference) {
         this.type = type;
         this.dateStr = dateStr;
         this.contentStr = contentStr;
@@ -111,13 +111,14 @@ public class Momo implements Parcelable {
         this.currentBalance = currentBalance;
     }
 
-    public String getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
+
 
     public String getReference() {
         return reference;

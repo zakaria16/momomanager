@@ -123,6 +123,8 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
             } catch (ActivityNotFoundException e) {
                 startActivity(new Intent("android.intent.action.VIEW", Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName())));
             }
+        } else if (id == R.id.action_view_momo) {
+            frag(MomoDetailFragment.newInstance(true));
         }
 
         return super.onOptionsItemSelected(item);
@@ -145,9 +147,7 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
-                })
-
-                .show();
+                }).show();
     }
 
     @Override

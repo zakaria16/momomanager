@@ -8,12 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mazitekgh.momorecords.ExtractMtnMomoInfo;
+import com.mazitekgh.momorecords.MomoDB;
 import com.mazitekgh.momorecords.R;
 import com.mazitekgh.momorecords.adaptor.MomoDetailRecyclerViewAdapter;
 import com.mazitekgh.momorecords.model.Momo;
@@ -37,7 +39,7 @@ public class MomoDetailFragment extends Fragment {
     private static final String MOMO_TYPE = "momo-type";
     private RecyclerView recyclerView;
     private List msgList;
-    private int momoType = 1;
+    private int isSaved = 0;
     private OnListFragmentInteractionListener mListener;
     private ProgressDialog pd;
     private TextView infoView;
@@ -49,42 +51,50 @@ public class MomoDetailFragment extends Fragment {
     public MomoDetailFragment() {
     }
 
-/*
-    public static MomoDetailFragment newInstance(int whichType) {
+
+    public static MomoDetailFragment newInstance(boolean isSavedList) {
         MomoDetailFragment fragment = new MomoDetailFragment();
         Bundle args = new Bundle();
-        args.putInt(MOMO_TYPE, whichType);
+        args.putInt(MOMO_TYPE, isSavedList ? 1 : 0);
         fragment.setArguments(args);
         return fragment;
-    }*/
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            momoType = getArguments().getInt(MOMO_TYPE);
+            isSaved = getArguments().getInt(MOMO_TYPE);
         }
 
         pd = ProgressDialog.show(getContext(), "LOADING", "Please Wait...");
-        //todo make it async task
-        //todo if list is not empty dont load new one
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // Gson gs = new Gson();
-                // if(gsonString==null) {
-                msgList = new ExtractMtnMomoInfo(getContext()).getMomoList();
 
-                pd.dismiss();
-//                    String st = gs.toJson(msgList);
-//                    new SharedPref(getContext()).storeMomoMessages(st);
-                // }else{
-                //  msgList = gs.fromJson(gsonString,List.class);
-                //msgList   = new SharedPref(getContext()).getStoreMomoMessages();
-                // }
-            }
-        }).start();
+        if (isSaved == 1) {
+            msgList = new MomoDB(getContext()).LoadSavedNews();
+
+
+            pd.dismiss();
+        }
+        if (isSaved == 0 || msgList.isEmpty()) {
+            //if we came here to view saved momo nd the list is empty the alert user
+            if (isSaved == 1)
+                Toast.makeText(getContext(), "None captured yet", Toast.LENGTH_SHORT).show();
+            msgList = new ExtractMtnMomoInfo(getContext()).getMomoMsgList();
+            isSaved = 0;
+            //todo make it async task
+            //todo if list is not empty dont load new one
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+
+                    msgList = new ExtractMtnMomoInfo(getContext()).getMomoMsgList();
+
+                    pd.dismiss();
+                }
+            }).start();
+        }
     }
 
     @Override
@@ -103,7 +113,12 @@ public class MomoDetailFragment extends Fragment {
         sentViewClick.setOnClickListener(new mClickListener());
         receivedViewClick.setOnClickListener(new mClickListener());
         creditViewClick.setOnClickListener(new mClickListener());
+        if (isSaved == 1) {
+            infoView.setVisibility(View.GONE);
+            recyclerView.setAdapter(new MomoDetailRecyclerViewAdapter(isSaved > 0,
+                    msgList, mListener));
 
+        }
         return view;
     }
 
@@ -127,7 +142,7 @@ public class MomoDetailFragment extends Fragment {
     }
 
     /*void checkNewAddition() {
-        List msgList = new ExtractMtnMomoInfo(getContext()).getMomoList();
+        List msgList = new ExtractMtnMomoInfo(getContext()).getMomoMsgList();
         List oldList = new SharedPref(getContext()).getStoreMomoMessages();
         if (msgList == oldList) {
 
@@ -155,6 +170,10 @@ public class MomoDetailFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
+            if (isSaved == 1) {
+                msgList = new ExtractMtnMomoInfo(getContext()).getMomoMsgList();
+                isSaved = 0;
+            }
             List<Momo> resList = new ArrayList<>();
             switch (v.getId()) {
                 case R.id.all_activities: {
@@ -193,7 +212,7 @@ public class MomoDetailFragment extends Fragment {
             } else {
                 infoView.setVisibility(View.VISIBLE);
             }
-            recyclerView.setAdapter(new MomoDetailRecyclerViewAdapter(momoType,
+            recyclerView.setAdapter(new MomoDetailRecyclerViewAdapter(isSaved > 0,
                     resList, mListener));
         }
 
@@ -207,7 +226,7 @@ public class MomoDetailFragment extends Fragment {
         protected Void doInBackground(Void[] objects) {
             DecimalFormat df = new DecimalFormat("0.00");
             ExtractMtnMomoInfo exi = new ExtractMtnMomoInfo(getContext());
-            msgList=exi.getMomoList();
+            msgList=exi.getMomoMsgList();
 
 //            publishProgress(50);
 //            String totalReceived = df.format(exi.getTotalReceived());

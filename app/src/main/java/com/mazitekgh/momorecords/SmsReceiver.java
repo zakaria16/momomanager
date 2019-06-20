@@ -41,15 +41,17 @@ public class SmsReceiver extends BroadcastReceiver {
 
                         if (momoExi.isMobileMoneyMsg(sms)) {
                             Momo momo = new Momo();
-                            if (momoExi.isReceivedMomo(sms)) {
-                                momo = momoExi.getReceivedMomo(sms);
-                            }
+                            //if (momoExi.isReceivedMomo(sms)) {
+                            momo = momoExi.getMomo(sms);
+                            //}
                             //Pass the message text to interface
                             // mListener.momoReceive(msgBody);
+
                             Toast.makeText(context, "It's a mobile Message\n" +
                                     "amount: " + momo.getAmount() + "\n" +
                                     "sender: " + momo.getSender() + "\n" +
                                     "reference: " + momo.getReference() + "\n", Toast.LENGTH_SHORT).show();
+                            new MomoDB(context).saveNewsItem(momo);
                             if (mListener != null) {
                                 mListener.momoReceive(msgBody);
                             }

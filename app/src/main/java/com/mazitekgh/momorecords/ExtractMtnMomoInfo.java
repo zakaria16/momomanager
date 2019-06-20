@@ -106,7 +106,7 @@ public class ExtractMtnMomoInfo {
             Sms sms;
             for (int i = 0; i < msgList.size(); i++) {
                 sms = (Sms) msgList.get(i);
-                getReference(sms);
+
                 //  amount += getCashInReceivedAmount(sms) + getPaymentReceivedAmount(sms);
                 amount += getReceivedAmount(sms);
             }
@@ -207,16 +207,9 @@ public class ExtractMtnMomoInfo {
         Sms sms;
         for (int i = 0; i < msgList.size(); i++) {
             sms = (Sms) msgList.get(i);
-            Momo momoSent = getSentMomo(sms);
-            Momo momoReceived = getReceivedMomo(sms);
-            Momo momoCredit = getCreditMomo(sms);
-            if (momoSent != null) {
-                allMsgs.add(momoSent);
-            } else if (momoReceived != null) {
-                allMsgs.add(momoReceived);
-            } else if (momoCredit != null) {
-                allMsgs.add(momoCredit);
-            }
+            Momo momo = getMomo(sms);
+            if (momo == null) continue;
+            allMsgs.add(momo);
         }
 
         return allMsgs;
@@ -235,6 +228,7 @@ public class ExtractMtnMomoInfo {
         return creditMessages;
     }
 
+    //todo tweak to select the of momo to get
     public Momo getMomo(Sms sms) {
         Momo momoSent = getSentMomo(sms);
         Momo momoReceived = getReceivedMomo(sms);
@@ -264,7 +258,7 @@ public class ExtractMtnMomoInfo {
 
             Matcher m = receivedPattern.matcher(sms.body);
             if (m.find()) {
-                momo.setAmount(m.group(ReceivePattern.GROUP_AMOUNT));
+                momo.setAmount(Double.valueOf(m.group(ReceivePattern.GROUP_AMOUNT).trim()));
                 momo.setSender("FROM: " + m.group(ReceivePattern.GROUP_SENDER));
                 momo.setCurrentBalance(m.group(ReceivePattern.GROUP_CURRENT_BAL));
                 momo.setTxID(m.group(ReceivePattern.GROUP_TXID));
@@ -278,7 +272,7 @@ public class ExtractMtnMomoInfo {
 
             Matcher m = cashInPattern.matcher(sms.body);
             if (m.find()) {
-                momo.setAmount(m.group(CashInPattern.GROUP_CASH_IN_AMOUNT));
+                momo.setAmount(Double.valueOf(m.group(CashInPattern.GROUP_CASH_IN_AMOUNT).trim()));
                 momo.setSender("FROM: " + m.group(CashInPattern.GROUP_CASH_IN_SENDER));
                 momo.setCurrentBalance(m.group(CashInPattern.GROUP_CASH_IN_CURRENT_BAL));
             }
@@ -369,7 +363,7 @@ public class ExtractMtnMomoInfo {
             d.setTime(sms.receivedDate);
             momo.setDateStr(sdf.format(d));
             momo.setContentStr(paymentSentMessage(sms));
-            momo.setAmount(String.valueOf(getPaymentSentAmount(sms)));
+            momo.setAmount(getPaymentSentAmount(sms));
             momo.setSender("To: " + getReceiver(sms));
             momo.setTxID(getTxID(sms));
             momo.setCurrentBalance(String.valueOf(getIndividualCB(sms)));
@@ -379,7 +373,7 @@ public class ExtractMtnMomoInfo {
             d.setTime(sms.receivedDate);
             momo.setDateStr(sdf.format(d));
             momo.setContentStr(cashOutMessage(sms));
-            momo.setAmount(String.valueOf(getCashOutAmount(sms)));
+            momo.setAmount(getCashOutAmount(sms));
             momo.setSender("To: " + getReceiver(sms));
             momo.setTxID(getTxID(sms));
             momo.setCurrentBalance(String.valueOf(getIndividualCB(sms)));
@@ -407,7 +401,7 @@ public class ExtractMtnMomoInfo {
             d.setTime(sms.receivedDate);
             momo.setDateStr(sdf.format(d));
             momo.setContentStr(paymentSentMessageMtn(sms));
-            momo.setAmount(String.valueOf(getPaymentSentAmountMtn(sms)));
+            momo.setAmount(getPaymentSentAmountMtn(sms));
             momo.setSender("For: " + getReceiver(sms));
             momo.setTxID(getTxID(sms));
             momo.setCurrentBalance(String.valueOf(getIndividualCB(sms)));
@@ -899,7 +893,7 @@ public class ExtractMtnMomoInfo {
         return currentBal;
     }
 
-    public List getMomoList() {
+    public List getMomoMsgList() {
         return msgList;
     }
 
