@@ -14,8 +14,41 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.LoginButton" parent="Base.TextAppearance.AppCompat.Button">
+        <item name="android:background">@drawable/login_button</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="AppTheme.TextInput" parent="Widget.AppCompat.AutoCompleteTextView">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColorHint">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+
+    </style>
+
+    <style name="AppTheme.TextViewSummary" parent="">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textAllCaps">true</item>
+
+    </style>
+
+    <style name="AppTheme.Seperator" parent="Widget.AppCompat.AutoCompleteTextView">
+        <item name="android:layout_marginLeft">@dimen/seperator_margin</item>
+        <item name="android:layout_marginStart">@dimen/seperator_margin</item>
+        <item name="android:layout_marginRight">@dimen/seperator_margin</item>
+        <item name="android:layout_marginEnd">@dimen/seperator_margin</item>
+        <item name="android:background">@drawable/seperator</item>
+        <item name="android:layout_width">3dp</item>
+        <item name="android:layout_height">30dp</item>
+
+    </style>
 
     <style name="AppTheme.PopupOverlay" parent="Base.Theme.AppCompat.Light.DarkActionBar" />
 
 
+    <dimen name="seperator_margin">60dp</dimen>
 </resources>

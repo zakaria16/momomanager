@@ -28,7 +28,8 @@ public class Momo implements Parcelable {
     private double amount;
     private int type;
     private String reference;
-
+    private boolean serverStatus;
+    private String serverSentDate;
 
     public Momo() {
     }
@@ -128,5 +129,21 @@ public class Momo implements Parcelable {
         this.reference = reference;
     }
 
+
+    public boolean isServerStatus() {
+        return serverStatus;
+    }
+
+    public void setServerStatus(boolean serverStatus) {
+        this.serverStatus = serverStatus;
+    }
+
+    public String getServerSentDate() {
+        return serverSentDate;
+    }
+
+    public void setServerSentDate(String serverSentDate) {
+        this.serverSentDate = serverSentDate;
+    }
 
 }

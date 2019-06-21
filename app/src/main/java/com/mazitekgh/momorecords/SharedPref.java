@@ -25,6 +25,7 @@ public class SharedPref {
     private static final String TOTAL_RECEIVED_DATE_KEY = "received-date";
     private static final String TOTAL_SENT_DATE_KEY = "sent-date";
     private static final String RATING_KEY = "rating-key";
+    private static final String COOKIE_KEY = "cookies-key";
 
     private Context c;
     private SharedPreferences sp;
@@ -158,5 +159,18 @@ public class SharedPref {
         editor.putBoolean(RATING_KEY, false);
         editor.apply();
     }
+
+
+    public void saveCookie(String cookie) {
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(COOKIE_KEY, cookie);
+        editor.apply();
+    }
+
+    public String getCookie() {
+        return sp.getString(COOKIE_KEY, null);
+    }
+
+
 }
 

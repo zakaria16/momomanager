@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.mazitekgh.momorecords.R;
+import com.mazitekgh.momorecords.Server;
 import com.mazitekgh.momorecords.SharedPref;
 import com.mazitekgh.momorecords.SmsReceiver;
 import com.mazitekgh.momorecords.fragment.MomoDetailFragment;
@@ -124,7 +125,22 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
                 startActivity(new Intent("android.intent.action.VIEW", Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName())));
             }
         } else if (id == R.id.action_view_momo) {
-            frag(MomoDetailFragment.newInstance(true));
+            Toast.makeText(this, "Checking Credentials...", Toast.LENGTH_LONG);
+            new Server(this, new Server.ServerActionComplete() {
+                @Override
+                public void onActionComplete(Server.ServerAction serverAction, boolean isError, String response) {
+                    if (serverAction.equals(Server.ServerAction.ACTION_CHECK_LOGIN) && !isError) {
+                        // still logged in
+                        frag(MomoDetailFragment.newInstance(true));
+                    } else {
+                        // have to login again
+                        Toast.makeText(MainActivity.this, "Login again. Error: " + response, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(intent);
+
+                    }
+                }
+            }).checkLogin();
         }
 
         return super.onOptionsItemSelected(item);
