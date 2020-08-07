@@ -2,6 +2,7 @@ package com.mazitekgh.momorecords;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -13,6 +14,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.mazitekgh.momorecords.model.Momo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,21 +24,22 @@ import java.util.Map;
  * Created by Zakaria on 6/20/2019 at 7:18 PM.
  */
 public class Server {
-    public static final String URL_ADDRESS = "http://192.168.43.180/momo/api/login-auth.php";
+    public static final String HOST  ="http://192.168.43.180/momo/api/";
+    public static final String LOGIN_ADDRESS = HOST+"login-auth.php";
+    public static final String DATA_ADDRESS = HOST+"data.php";
     private static final String TAG = "Server";
     private Context context;
     private ServerActionComplete mlistener;
-
+   private RequestQueue queue;
     public Server(Context context, ServerActionComplete onServerActionComplete) {
         this.context = context;
         mlistener = onServerActionComplete;
+         queue = MyRequestQueue.getInstance(context).getRequestQueue();
     }
 
     public void attemptLogin(final String username, final String password) {
 
-        RequestQueue queue = Volley.newRequestQueue(context);
-
-        StringRequest sr = new StringRequest(Request.Method.POST, URL_ADDRESS, new Response.Listener<String>() {
+        StringRequest sr = new StringRequest(Request.Method.POST, LOGIN_ADDRESS, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -83,15 +86,14 @@ public class Server {
 
         };
 
-
-        queue.add(sr);
+       queue.add(sr);
     }
 
     public void checkLogin() {
 
-        RequestQueue queue = Volley.newRequestQueue(context);
+        //RequestQueue queue = Volley.newRequestQueue(context);
 
-        StringRequest sr = new StringRequest(Request.Method.POST, URL_ADDRESS, new Response.Listener<String>() {
+        StringRequest sr = new StringRequest(Request.Method.POST, LOGIN_ADDRESS, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -130,6 +132,50 @@ public class Server {
         queue.add(sr);
 
     }
+
+    public void sendData(final Momo momo){
+        StringRequest sr = new StringRequest(Request.Method.POST,
+                Server.DATA_ADDRESS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d(TAG, "onResponse: "+response);
+                        Toast.makeText(context, "success: "+response, Toast.LENGTH_SHORT).show();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: "+error);
+            }
+        }){
+
+            @Override
+            protected Map<String, String> getParams() {
+                HashMap<String, String> hs = new HashMap<>(1);
+                hs.put("data", momo.toString());
+                return hs;
+            }
+
+            /**
+             * Returns a list of extra HTTP headers to go along with this request. Can
+             * throw {@link AuthFailureError} as authentication may be required to
+             * provide these values.
+             *
+             * @throws AuthFailureError In the event of auth failure
+             */
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> mp = new HashMap<>(1);
+                String loginCookie=new SharedPref(context).getCookie();
+                mp.put("Cookie",loginCookie );
+                return mp;
+            }
+        };
+
+        queue.add(sr);
+
+    }
+
 
 
     public enum ServerAction {

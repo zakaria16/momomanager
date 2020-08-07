@@ -259,7 +259,7 @@ public class ExtractMtnMomoInfo {
             Matcher m = receivedPattern.matcher(sms.body);
             if (m.find()) {
                 momo.setAmount(Double.valueOf(m.group(ReceivePattern.GROUP_AMOUNT).trim()));
-                momo.setSender("FROM: " + m.group(ReceivePattern.GROUP_SENDER));
+                momo.setSender(m.group(ReceivePattern.GROUP_SENDER));
                 momo.setCurrentBalance(m.group(ReceivePattern.GROUP_CURRENT_BAL));
                 momo.setTxID(m.group(ReceivePattern.GROUP_TXID));
                 momo.setContentStr(sms.body);
@@ -364,7 +364,7 @@ public class ExtractMtnMomoInfo {
             momo.setDateStr(sdf.format(d));
             momo.setContentStr(paymentSentMessage(sms));
             momo.setAmount(getPaymentSentAmount(sms));
-            momo.setSender("To: " + getReceiver(sms));
+            momo.setSender(getReceiver(sms));
             momo.setTxID(getTxID(sms));
             momo.setCurrentBalance(String.valueOf(getIndividualCB(sms)));
             momo.setType(MomoDetailFragment.SENT_MOMO);
@@ -374,7 +374,7 @@ public class ExtractMtnMomoInfo {
             momo.setDateStr(sdf.format(d));
             momo.setContentStr(cashOutMessage(sms));
             momo.setAmount(getCashOutAmount(sms));
-            momo.setSender("To: " + getReceiver(sms));
+            momo.setSender(getReceiver(sms));
             momo.setTxID(getTxID(sms));
             momo.setCurrentBalance(String.valueOf(getIndividualCB(sms)));
             momo.setType(MomoDetailFragment.SENT_MOMO);  //todo distinguish it from above one
@@ -402,7 +402,7 @@ public class ExtractMtnMomoInfo {
             momo.setDateStr(sdf.format(d));
             momo.setContentStr(paymentSentMessageMtn(sms));
             momo.setAmount(getPaymentSentAmountMtn(sms));
-            momo.setSender("For: " + getReceiver(sms));
+            momo.setSender(getReceiver(sms));
             momo.setTxID(getTxID(sms));
             momo.setCurrentBalance(String.valueOf(getIndividualCB(sms)));
             momo.setType(MomoDetailFragment.CREDIT_MOMO);
@@ -832,25 +832,27 @@ public class ExtractMtnMomoInfo {
         INTEREST
     }
 
-
+    /**
+     * get the transaction id from the momo sms
+     * @param sms {@link Sms} the sms you want to get txid from
+     * @return {@link String} if contains txid or {@code null} if none found
+     */
     private String getTxID(Sms sms) {
         String startStr;
         if (isCashIn(sms)) {
-            return "none";
+            return null;
         } else if (isPaymentSentMtn(sms) || isCashOut(sms)) {
             startStr = "Financial Transaction Id: ";
             int st = sms.body.indexOf(startStr);
             int end = sms.body.indexOf(".", st);
             // return sms.body.substring(st + startStr.length(), end);
-            String ss = mSubstring(sms.body, st + startStr.length(), end);
-            return (ss == null) ? "error" : ss;
+            return mSubstring(sms.body, st + startStr.length(), end);
         }
         startStr = "Transaction ID: ";
         int st = sms.body.indexOf(startStr);
         int end = sms.body.indexOf(".", st);
         //return sms.body.substring(st + startStr.length(), end);
-        String ss = mSubstring(sms.body, st + startStr.length(), end);
-        return (ss == null) ? "error" : ss;
+        return mSubstring(sms.body, st + startStr.length(), end);
 
     }
 
@@ -897,8 +899,7 @@ public class ExtractMtnMomoInfo {
         return msgList;
     }
 
-    /**
-     * RECEIVED PATTERN
+    /** RECEIVED PATTERN
      * group 1: amount received
      * group 2: sender
      * group 3: current balance

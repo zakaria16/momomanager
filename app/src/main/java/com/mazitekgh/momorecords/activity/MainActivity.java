@@ -20,6 +20,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.mazitekgh.momorecords.R;
 import com.mazitekgh.momorecords.Server;
 import com.mazitekgh.momorecords.SharedPref;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
     private SmsReceiver smsReceiver;
     private View view;
     private boolean isFirst = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,22 +127,36 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
                 startActivity(new Intent("android.intent.action.VIEW", Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName())));
             }
         } else if (id == R.id.action_view_momo) {
-            Toast.makeText(this, "Checking Credentials...", Toast.LENGTH_LONG);
+            frag(MomoDetailFragment.newInstance(true));
             new Server(this, new Server.ServerActionComplete() {
                 @Override
                 public void onActionComplete(Server.ServerAction serverAction, boolean isError, String response) {
                     if (serverAction.equals(Server.ServerAction.ACTION_CHECK_LOGIN) && !isError) {
                         // still logged in
-                        frag(MomoDetailFragment.newInstance(true));
+                        Toast.makeText(MainActivity.this, "Credentials is Valid", Toast.LENGTH_SHORT).show();
                     } else {
                         // have to login again
-                        Toast.makeText(MainActivity.this, "Login again. Error: " + response, Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(intent);
+                        final Snackbar snb = Snackbar.make(findViewById(R.id.main_activity), "Your login is expired\nLogin Again?", Snackbar.LENGTH_INDEFINITE);
+                        snb.setAction("Later", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                snb.dismiss();
+                            }
+                        });
+                        snb.setAction("OK", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                                MainActivity.this.finish();
+                            }
+                        });
 
+                        snb.show();
                     }
                 }
             }).checkLogin();
+
         }
 
         return super.onOptionsItemSelected(item);

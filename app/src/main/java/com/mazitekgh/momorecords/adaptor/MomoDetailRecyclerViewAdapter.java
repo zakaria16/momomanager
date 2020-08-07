@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mazitekgh.momorecords.R;
+import com.mazitekgh.momorecords.Server;
 import com.mazitekgh.momorecords.fragment.MomoDetailFragment;
 import com.mazitekgh.momorecords.fragment.MomoDetailFragment.OnListFragmentInteractionListener;
 import com.mazitekgh.momorecords.model.Momo;
@@ -28,11 +29,12 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
     private final List<Momo> mValues;
     private final OnListFragmentInteractionListener mListener;
     private boolean isServerMomo = false;
-
+    Context context;
     public MomoDetailRecyclerViewAdapter(boolean isServerMomo, List<Momo> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
         this.isServerMomo = isServerMomo;
+        context = (Context) mListener;
     }
 
     @NonNull
@@ -50,14 +52,14 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
         holder.mItem = mValues.get(pos);
         holder.momo_date.setText(mValues.get(pos).getDateStr());
         // holder.momoTextView.setText(mValues.get(position).getContentStr());
-        holder.sender.setText(mValues.get(pos).getSender());
-        holder.amountReceived.setText("GHS " + mValues.get(pos).getAmount());
+        holder.amountReceived.setText(context.getString(R.string.amount,mValues.get(pos).getAmount()));
         holder.txID.setText(mValues.get(pos).getTxID());
         holder.currentBalance.setText(mValues.get(pos).getCurrentBalance());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                new Server(context,null).sendData(mValues.get(pos));
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
@@ -66,31 +68,34 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
             }
         });
 
-        Context c = (Context) mListener;
+
         switch (mValues.get(position).getType()) {
             /*case MomoDetailFragment.ALL_MOMO:{
-                titleView.setBackgroundColor(c.getResources().getColor(R.color.colorAll));
+                titleView.setBackgroundColor(context.getResources().getColor(R.color.colorAll));
                 break;
             }*/
             case MomoDetailFragment.RECEIVED_MOMO: {
-                holder.sender.setBackgroundColor(c.getResources().getColor(R.color.colorReceived));
-                holder.amountCaption.setText("Amount Received");
-                holder.transactionFeeCaption.setText("Reference");
+                holder.sender.setText(context.getString(R.string.sender,"FROM",mValues.get(pos).getSender()));
+                holder.sender.setBackgroundColor(context.getResources().getColor(R.color.colorReceived));
+                holder.amountCaption.setText(context.getString(R.string.amount_received));
+                holder.transactionFeeCaption.setText(context.getString(R.string.reference));
                 holder.transactionFee.setText(mValues.get(position).getReference());
 
                 break;
             }
             case MomoDetailFragment.SENT_MOMO: {
-                holder.sender.setBackgroundColor(c.getResources().getColor(R.color.colorSent));
-                holder.transactionFeeCaption.setText(""); //todo remove when tc fees is implemented
+                holder.sender.setText(context.getString(R.string.sender,"TO",mValues.get(pos).getSender()));
+                holder.sender.setBackgroundColor(context.getResources().getColor(R.color.colorSent));
+                holder.transactionFeeCaption.setText(""); //todo remove when "tc" fees is implemented
                 holder.transactionFee.setText("");
-                holder.amountCaption.setText("Amount Sent");
+                holder.amountCaption.setText(context.getString(R.string.amount_sent));
                 break;
             }
             case MomoDetailFragment.CREDIT_MOMO: {
-                holder.amountCaption.setText("Credit Bought");
-                holder.sender.setBackgroundColor(c.getResources().getColor(R.color.colorCredit));
-                holder.transactionFeeCaption.setText(""); //todo remove when tc fees is implemented
+                holder.sender.setText(context.getString(R.string.sender,"FOR",mValues.get(pos).getSender()));
+                holder.amountCaption.setText(context.getString(R.string.credit_bought));
+                holder.sender.setBackgroundColor(context.getResources().getColor(R.color.colorCredit));
+                holder.transactionFeeCaption.setText(""); //todo remove when "tc" fees is implemented
                 holder.transactionFee.setText("");
                 break;
             }

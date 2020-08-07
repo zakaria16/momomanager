@@ -24,5 +24,11 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_field_required">This field is required</string>
     <string name="app_logo">app Logo</string>
+    <string name="amount_received">Amount Received</string>
+    <string name="reference">Reference</string>
+    <string name="amount_sent">Amount Sent</string>
+    <string name="credit_bought">Credit Bought</string>
+    <string name="amount">GHS %.2f</string>
+    <string name="sender">%s: %s</string>
 
 </resources>

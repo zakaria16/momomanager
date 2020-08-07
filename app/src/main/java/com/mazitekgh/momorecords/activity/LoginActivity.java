@@ -176,58 +176,6 @@ public class LoginActivity extends AppCompatActivity implements Server.ServerAct
     }
 
 
-    private void attemptLogin(final String indexNo, final String password) {
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-        StringRequest sr = new StringRequest(Request.Method.POST, Server.URL_ADDRESS, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-
-                Log.d(TAG, "onResponse: " + response);
-                processResponse(response);
-                showProgress(false);
-
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "onErrorResponse: " + error);
-                Toast.makeText(LoginActivity.this, "Error occurred: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                showProgress(false);
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                HashMap<String, String> hs = new HashMap<>(1);
-                hs.put("username", indexNo);
-                hs.put("password", password);
-                hs.put("rememberme", "1");
-                return hs;
-            }
-
-
-            @Override
-            protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                Map<String, String> hs = response.headers;
-                String cookie = hs.get("Set-Cookie");
-                Log.d(TAG, "parseNetworkResponse: " + hs);
-                Log.d(TAG, "parseNetworkResponse: cookies == " + cookie);
-                if (cookie != null && !cookie.equals("")) {
-                    new SharedPref(getApplicationContext()).saveCookie(cookie);
-                }
-                return super.parseNetworkResponse(response);
-
-            }
-
-
-        };
-
-
-        queue.add(sr);
-    }
 
     private void hideKeyboard(View view) {
         if (view != null) {

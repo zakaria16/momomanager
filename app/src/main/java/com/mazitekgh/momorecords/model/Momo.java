@@ -3,6 +3,10 @@ package com.mazitekgh.momorecords.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
+import com.google.gson.Gson;
+
 /**
  * MtnMomo
  * Created by Zakaria on 03-Sep-18 at 7:02 PM.
@@ -146,4 +150,9 @@ public class Momo implements Parcelable {
         this.serverSentDate = serverSentDate;
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
+    }
 }
