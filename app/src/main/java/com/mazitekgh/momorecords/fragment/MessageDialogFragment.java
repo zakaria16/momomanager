@@ -20,14 +20,12 @@ import com.mazitekgh.momorecords.R;
  */
 
 public class MessageDialogFragment extends DialogFragment {
-    private Activity activity;
 
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        activity = getActivity();
-
+        Activity activity = getActivity();
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         View v = activity.getLayoutInflater().inflate(R.layout.dialog_message, null);
 

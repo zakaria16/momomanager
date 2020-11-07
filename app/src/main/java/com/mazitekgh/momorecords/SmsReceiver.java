@@ -8,17 +8,9 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.mazitekgh.momorecords.model.Momo;
-import com.mazitekgh.momorecords.model.Sms;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.mazitekgh.momomanager.ExtractMtnMomoInfo;
+import com.mazitekgh.momomanager.model.Momo;
+import com.mazitekgh.momomanager.model.Sms;
 
 public class SmsReceiver extends BroadcastReceiver {
     private OnMomoReceive mListener;
@@ -66,7 +58,7 @@ public class SmsReceiver extends BroadcastReceiver {
         if (momoExi.isMobileMoneyMsg(sms)) {
             Momo momo = momoExi.getMomo(sms);
             if (momoExi.isReceivedMomo(sms)) {
-                new Server(context, null).sendData(momo);
+                // new Server(context, null).sendData(momo);
             }
 
 
@@ -77,7 +69,7 @@ public class SmsReceiver extends BroadcastReceiver {
                     "amount: " + momo.getAmount() + "\n" +
                     "sender: " + momo.getSender() + "\n" +
                     "reference: " + momo.getReference() + "\n", Toast.LENGTH_LONG).show();
-            new MomoDB(context).saveNewsItem(momo);
+            //  new MomoDB(context).saveNewsItem(momo);
 
         } else {
             Toast.makeText(context, "Not Momo Message", Toast.LENGTH_LONG).show();

@@ -1,4 +1,4 @@
-package com.mazitekgh.momorecords.model;
+package com.mazitekgh.momomanager.model;
 
 /**
  * MtnMomo
@@ -7,9 +7,9 @@ package com.mazitekgh.momorecords.model;
 public class Sms {
     //todo access to private
     //did this to for compatibility with old everythingme sms lib
-    public String address;
-    public String body;
-    public Long receivedDate;
+    private String address;
+    private String body;
+    private Long receivedDate;
 
     public Sms() {
 

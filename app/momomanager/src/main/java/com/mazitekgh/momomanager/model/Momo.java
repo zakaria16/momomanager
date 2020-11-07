@@ -1,4 +1,4 @@
-package com.mazitekgh.momorecords.model;
+package com.mazitekgh.momomanager.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
+import com.mazitekgh.momomanager.ExtractMtnMomoInfo;
 
 /**
  * MtnMomo
@@ -72,7 +73,7 @@ public class Momo implements Parcelable {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(@ExtractMtnMomoInfo.MomoType int type) {
         this.type = type;
     }
 

@@ -8,17 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.mazitekgh.momorecords.ExtractMtnMomoInfo;
-import com.mazitekgh.momorecords.MomoDB;
+import com.mazitekgh.momomanager.ExtractMtnMomoInfo;
+import com.mazitekgh.momomanager.model.Momo;
 import com.mazitekgh.momorecords.R;
 import com.mazitekgh.momorecords.adaptor.MomoDetailRecyclerViewAdapter;
-import com.mazitekgh.momorecords.model.Momo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +28,6 @@ import java.util.List;
  * interface.
  */
 public class MomoDetailFragment extends Fragment {
-
-    public static final int ALL_MOMO = 1;
-    public static final int RECEIVED_MOMO = 2;
-    public static final int SENT_MOMO = 3;
-    public static final int CREDIT_MOMO = 5;
 
     private static final String MOMO_TYPE = "momo-type";
     private RecyclerView recyclerView;
@@ -70,32 +63,23 @@ public class MomoDetailFragment extends Fragment {
 
         pd = ProgressDialog.show(getContext(), "LOADING", "Please Wait...");
 
-        if (isSaved == 1) {
-            msgList = new MomoDB(getContext()).LoadSavedNews();
+
+        msgList = new ExtractMtnMomoInfo(getContext()).getMomoMsgList();
+        pd.dismiss();
+//            //todo make it async task
+//            //todo if list is not empty dont load new one
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    msgList = new ExtractMtnMomoInfo(getContext()).getMomoMsgList();
+//
+//                    pd.dismiss();
+//                }
+//            }).start();
 
 
-            pd.dismiss();
-        }
-        if (isSaved == 0 || msgList.isEmpty()) {
-            //if we came here to view saved momo nd the list is empty the alert user
-            if (isSaved == 1)
-                Toast.makeText(getContext(), "None captured yet", Toast.LENGTH_SHORT).show();
-            msgList = new ExtractMtnMomoInfo(getContext()).getMomoMsgList();
-            isSaved = 0;
-            //todo make it async task
-            //todo if list is not empty dont load new one
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-
-                    msgList = new ExtractMtnMomoInfo(getContext()).getMomoMsgList();
-
-                    pd.dismiss();
-                }
-            }).start();
-        }
     }
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -175,37 +159,24 @@ public class MomoDetailFragment extends Fragment {
                 isSaved = 0;
             }
             List<Momo> resList = new ArrayList<>();
-            switch (v.getId()) {
-                case R.id.all_activities: {
-                    //ctl.setBackgroundColor(getResources().getColor(R.color.colorAll));
-                    //frag(MomoDetailFragment.newInstance(MomoDetailFragment.ALL_MOMO));
+            int id = v.getId();
+            if (id == R.id.all_activities) {//ctl.setBackgroundColor(getResources().getColor(R.color.colorAll));
+                //frag(MomoDetailFragment.newInstance(MomoDetailFragment.ALL_MOMO));
 
+                resList = new ExtractMtnMomoInfo(getContext(), msgList).getMessages(ExtractMtnMomoInfo.ALL_MOMO);
+            } else if (id == R.id.received_activities) {//pb.setVisibility(View.VISIBLE);
+                //ctl.setBackgroundColor(getResources().getColor(R.color.colorReceived));
+                // frag(MomoDetailFragment.newInstance(MomoDetailFragment.RECEIVED_MOMO));
 
-                    resList = new ExtractMtnMomoInfo(getContext(), msgList).getMessages(MomoDetailFragment.ALL_MOMO);
-                    break;
-                }
-                case R.id.received_activities: {
-                    //pb.setVisibility(View.VISIBLE);
-                    //ctl.setBackgroundColor(getResources().getColor(R.color.colorReceived));
-                    // frag(MomoDetailFragment.newInstance(MomoDetailFragment.RECEIVED_MOMO));
+                resList = new ExtractMtnMomoInfo(getContext(), msgList).getMessages(ExtractMtnMomoInfo.RECEIVED_MOMO);
+            } else if (id == R.id.sent_activities) {//pb.setVisibility(View.VISIBLE);
+                //ctl.setBackgroundColor(getResources().getColor(R.color.colorSent));
+                //frag(MomoDetailFragment.newInstance(MomoDetailFragment.SENT_MOMO));
 
-                    resList = new ExtractMtnMomoInfo(getContext(), msgList).getMessages(MomoDetailFragment.RECEIVED_MOMO);
-                    break;
-                }
-                case R.id.sent_activities: {
-                    //pb.setVisibility(View.VISIBLE);
-                    //ctl.setBackgroundColor(getResources().getColor(R.color.colorSent));
-                    //frag(MomoDetailFragment.newInstance(MomoDetailFragment.SENT_MOMO));
+                resList = new ExtractMtnMomoInfo(getContext(), msgList).getMessages(ExtractMtnMomoInfo.SENT_MOMO);
+            } else if (id == R.id.credit_activities) {// ctl.setBackgroundColor(getResources().getColor(R.color.colorCredit));
 
-                    resList = new ExtractMtnMomoInfo(getContext(), msgList).getMessages(MomoDetailFragment.SENT_MOMO);
-                    break;
-                }
-                case R.id.credit_activities: {
-                    // ctl.setBackgroundColor(getResources().getColor(R.color.colorCredit));
-
-                    resList = new ExtractMtnMomoInfo(getContext(), msgList).getMessages(MomoDetailFragment.CREDIT_MOMO);
-                    break;
-                }
+                resList = new ExtractMtnMomoInfo(getContext(), msgList).getMessages(ExtractMtnMomoInfo.CREDIT_MOMO);
             }
             if (resList != null) {
                 infoView.setVisibility(View.GONE);

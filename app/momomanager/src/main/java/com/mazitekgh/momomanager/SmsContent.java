@@ -1,11 +1,11 @@
-package com.mazitekgh.momorecords;
+package com.mazitekgh.momomanager;
 
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.mazitekgh.momorecords.model.Sms;
+import com.mazitekgh.momomanager.model.Sms;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +16,7 @@ import java.util.List;
  * Created by Zakaria on 11-Dec-18 at 11:44 PM.
  */
 public class SmsContent {
-    private List<Sms> smsList;
-
+    private final List<Sms> smsList;
     public SmsContent(Context c) {
         Uri inboxUri = Uri.parse("content://sms/inbox");
         smsList = new ArrayList<>();
@@ -36,9 +35,9 @@ public class SmsContent {
                 number = cursor.getString(cursor.getColumnIndexOrThrow("address"));
                 body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
                 date = cursor.getLong(cursor.getColumnIndexOrThrow("date"));
-                sms.address = number;
-                sms.body = body;
-                sms.receivedDate = date;
+                sms.setAddress(number);
+                sms.setBody(body);
+                sms.setReceivedDate(date);
                 smsList.add(sms);
             }
             cursor.close();

@@ -11,10 +11,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.mazitekgh.momorecords.model.Momo;
+import com.mazitekgh.momomanager.model.Momo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,17 +23,18 @@ import java.util.Map;
  * Created by Zakaria on 6/20/2019 at 7:18 PM.
  */
 public class Server {
-    public static final String HOST  ="http://192.168.43.180/momo/api/";
-    public static final String LOGIN_ADDRESS = HOST+"login-auth.php";
-    public static final String DATA_ADDRESS = HOST+"data.php";
+    public static final String HOST = "http://192.168.43.180/momo/api/";
+    public static final String LOGIN_ADDRESS = HOST + "login-auth.php";
+    public static final String DATA_ADDRESS = HOST + "data.php";
     private static final String TAG = "Server";
-    private Context context;
-    private ServerActionComplete mlistener;
-   private RequestQueue queue;
+    private final Context context;
+    private final ServerActionComplete mlistener;
+    private final RequestQueue queue;
+
     public Server(Context context, ServerActionComplete onServerActionComplete) {
         this.context = context;
         mlistener = onServerActionComplete;
-         queue = MyRequestQueue.getInstance(context).getRequestQueue();
+        queue = MyRequestQueue.getInstance(context).getRequestQueue();
     }
 
     public void attemptLogin(final String username, final String password) {

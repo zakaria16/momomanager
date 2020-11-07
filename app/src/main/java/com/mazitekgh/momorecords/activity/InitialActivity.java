@@ -17,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.mazitekgh.momorecords.ExtractMtnMomoInfo;
+import com.mazitekgh.momomanager.ExtractMtnMomoInfo;
 import com.mazitekgh.momorecords.R;
 
 import java.text.DecimalFormat;
@@ -67,14 +67,14 @@ public class InitialActivity extends AppCompatActivity {
 //            }
 //        }).start();
         progressPercent.setText("20%");
-        new bgrndLoad().execute();
+        new BackgroundLoad().execute();
     }
 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
         //Checking the request code of our request
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == SMS_PERMISION_CODE) {
 
             //If permission is granted
@@ -122,7 +122,8 @@ public class InitialActivity extends AppCompatActivity {
     }
 
 
-    private class bgrndLoad extends AsyncTask<Void, Integer, Void> {
+    // TODO: 06-Nov-20 fix this
+    private class BackgroundLoad extends AsyncTask<Void, Integer, Void> {
         private Intent intent;
 
         @Override

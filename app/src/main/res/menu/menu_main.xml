@@ -10,13 +10,13 @@
         android:orderInCategory="99"
         android:title="MTN MoMo" />
 
-    <item
-        android:id="@+id/action_view_momo"
-        android:checked="true"
-        android:icon="@android:drawable/ic_menu_view"
-        android:orderInCategory="100"
-        android:title="View Saved Momo"
-        app:showAsAction="ifRoom" />
+    <!--    <item-->
+    <!--        android:id="@+id/action_view_momo"-->
+    <!--        android:checked="true"-->
+    <!--        android:icon="@android:drawable/ic_menu_view"-->
+    <!--        android:orderInCategory="100"-->
+    <!--        android:title="View Saved Momo"-->
+    <!--        app:showAsAction="ifRoom" />-->
 
     <item
         android:id="@+id/action_rate_app"

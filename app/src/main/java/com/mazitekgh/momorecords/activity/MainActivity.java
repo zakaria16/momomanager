@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.provider.Telephony;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,9 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.mazitekgh.momorecords.R;
-import com.mazitekgh.momorecords.Server;
 import com.mazitekgh.momorecords.SharedPref;
 import com.mazitekgh.momorecords.SmsReceiver;
 import com.mazitekgh.momorecords.fragment.MomoDetailFragment;
@@ -31,7 +28,7 @@ import com.mazitekgh.momorecords.fragment.RateUsDialogFragment;
 
 public class MainActivity extends AppCompatActivity implements MomoDetailFragment.OnListFragmentInteractionListener, SmsReceiver.OnMomoReceive {
     private SmsReceiver smsReceiver;
-    private View view;
+   // private View view;
     private boolean isFirst = true;
 
     @Override
@@ -51,11 +48,6 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
         toolbar.setTitle("");
 
         setSupportActionBar(toolbar);
-
-        //  CollapsingToolbarLayout ctl = findViewById(R.id.ctl_layout);
-
-        // pb.setVisibility(View.VISIBLE);
-
         TextView totalSentView = findViewById(R.id.total_sent);
         TextView totalReceivedView = findViewById(R.id.total_received);
         TextView lastBalance = findViewById(R.id.last_balance);
@@ -69,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
         totalSentView.setText(totalSent);
         lastBalance.setText(currentBalance);
         frag(new MomoDetailFragment());
-        // pb.setVisibility(View.GONE);
+
     }
 
 
@@ -126,37 +118,6 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
             } catch (ActivityNotFoundException e) {
                 startActivity(new Intent("android.intent.action.VIEW", Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName())));
             }
-        } else if (id == R.id.action_view_momo) {
-            frag(MomoDetailFragment.newInstance(true));
-            new Server(this, new Server.ServerActionComplete() {
-                @Override
-                public void onActionComplete(Server.ServerAction serverAction, boolean isError, String response) {
-                    if (serverAction.equals(Server.ServerAction.ACTION_CHECK_LOGIN) && !isError) {
-                        // still logged in
-                        Toast.makeText(MainActivity.this, "Credentials is Valid", Toast.LENGTH_SHORT).show();
-                    } else {
-                        // have to login again
-                        final Snackbar snb = Snackbar.make(findViewById(R.id.main_activity), "Your login is expired\nLogin Again?", Snackbar.LENGTH_INDEFINITE);
-                        snb.setAction("Later", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                snb.dismiss();
-                            }
-                        });
-                        snb.setAction("OK", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                                startActivity(intent);
-                                MainActivity.this.finish();
-                            }
-                        });
-
-                        snb.show();
-                    }
-                }
-            }).checkLogin();
-
         }
 
         return super.onOptionsItemSelected(item);

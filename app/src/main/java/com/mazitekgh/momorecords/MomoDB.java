@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.mazitekgh.momorecords.model.Momo;
+import com.mazitekgh.momomanager.model.Momo;
 
 import java.util.ArrayList;
 import java.util.List;
