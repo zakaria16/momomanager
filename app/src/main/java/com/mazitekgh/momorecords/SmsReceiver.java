@@ -20,10 +20,12 @@ public class SmsReceiver extends BroadcastReceiver {
         // mListener = (OnMomoReceive) context;
 
         // an Intent broadcast.
-        if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
+        String intentActionString = intent.getAction();
+        if (intentActionString == null) return;
+
+        if (intentActionString.equals("android.provider.Telephony.SMS_RECEIVED")) {
             Bundle bundle = intent.getExtras();           //---get the SMS message passed in---
             SmsMessage[] msgs;
-
 
             if (bundle != null) {
                 //---retrieve the SMS message received---
@@ -57,13 +59,6 @@ public class SmsReceiver extends BroadcastReceiver {
         //check if it is mobile money msg
         if (momoExi.isMobileMoneyMsg(sms)) {
             Momo momo = momoExi.getMomo(sms);
-//            if (momoExi.isReceivedMomo(sms)) {
-//                // new Server(context, null).sendData(momo);
-//            }
-
-
-            //Pass the message text to interface
-            // mListener.momoReceive(msgBody);
 
             Toast.makeText(context, "It's a mobile Money Message\n" +
                     "amount: " + momo.getAmount() + "\n" +
@@ -74,16 +69,7 @@ public class SmsReceiver extends BroadcastReceiver {
         } else {
             Toast.makeText(context, "Not Momo Message", Toast.LENGTH_LONG).show();
         }
-        //mListener.momoReceive(msgBody);
+
     }
-
-//    public void setMomoReceivedListener(OnMomoReceive listener) {
-//        this.mListener = listener;
-//    }
-
-//    public interface OnMomoReceive {
-//        void momoReceive(String body);
-//    }
-
 
 }

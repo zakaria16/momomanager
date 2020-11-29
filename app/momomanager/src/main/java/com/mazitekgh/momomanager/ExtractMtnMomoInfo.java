@@ -77,7 +77,7 @@ public class ExtractMtnMomoInfo {
 
 
     public ExtractMtnMomoInfo(Context c) {
-        smsList = new SmsContent(c).getSmsList();
+        smsList = new SmsContent(c, "MobileMoney").getSmsList();
         compilePattern();
     }
 
