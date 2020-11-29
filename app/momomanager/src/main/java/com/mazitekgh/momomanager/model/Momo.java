@@ -1,8 +1,5 @@
 package com.mazitekgh.momomanager.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -12,38 +9,40 @@ import com.mazitekgh.momomanager.ExtractMtnMomoInfo;
  * MtnMomo
  * Created by Zakaria on 03-Sep-18 at 7:02 PM.
  */
-public class Momo implements Parcelable {
+public class Momo {
 
-    public static final Creator<Momo> CREATOR = new Creator<Momo>() {
-        @Override
-        public Momo createFromParcel(Parcel in) {
-            return new Momo(in);
-        }
+//    public static final Creator<Momo> CREATOR = new Creator<Momo>() {
+//        @Override
+//        public Momo createFromParcel(Parcel in) {
+//            return new Momo(in);
+//        }
+//
+//        @Override
+//        public Momo[] newArray(int size) {
+//            return new Momo[size];
+//        }
+//    };
 
-        @Override
-        public Momo[] newArray(int size) {
-            return new Momo[size];
-        }
-    };
-    private String dateStr;
-    private String contentStr;
+
+    private String date;
+    private String content;
     private String sender;
     private String txID;
     private String currentBalance;
     private double amount;
     private int type;
     private String reference;
-    private boolean serverStatus;
-    private String serverSentDate;
+    //private boolean serverStatus;
+    //private String serverSentDate;
 
     public Momo() {
     }
 
 
-    public Momo(int type, String dateStr, String contentStr, String senderReceiver, String txID, String currentBalance, double amount, String reference) {
+    public Momo(int type, String date, String content, String senderReceiver, String txID, String currentBalance, double amount, String reference) {
         this.type = type;
-        this.dateStr = dateStr;
-        this.contentStr = contentStr;
+        this.date = date;
+        this.content = content;
         this.sender = senderReceiver;
         this.txID = txID;
         this.currentBalance = currentBalance;
@@ -52,21 +51,21 @@ public class Momo implements Parcelable {
 
     }
 
-    private Momo(Parcel in) {
-        dateStr = in.readString();
-        contentStr = in.readString();
-    }
+//    private Momo(Parcel in) {
+//        dateStr = in.readString();
+//        contentStr = in.readString();
+//    }
+//
+//    @Override
+//    public int describeContents() {
+//        return 0;
+//    }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(dateStr);
-        dest.writeString(contentStr);
-    }
+//    @Override
+//    public void writeToParcel(Parcel dest, int flags) {
+//        dest.writeString(dateStr);
+//        dest.writeString(contentStr);
+//    }
 
 
     public int getType() {
@@ -77,20 +76,20 @@ public class Momo implements Parcelable {
         this.type = type;
     }
 
-    public String getDateStr() {
-        return dateStr;
+    public String getDate() {
+        return date;
     }
 
-    public void setDateStr(String dateStr) {
-        this.dateStr = dateStr;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public String getContentStr() {
-        return contentStr;
+    public String getContent() {
+        return content;
     }
 
-    public void setContentStr(String contentStr) {
-        this.contentStr = contentStr;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getSender() {
@@ -135,25 +134,35 @@ public class Momo implements Parcelable {
     }
 
 
-    public boolean isServerStatus() {
-        return serverStatus;
+//    public boolean isServerStatus() {
+//        return serverStatus;
+//    }
+
+//    public void setServerStatus(boolean serverStatus) {
+//        this.serverStatus = serverStatus;
+//    }
+
+//    public String getServerSentDate() {
+//        return serverSentDate;
+//    }
+//
+//    public void setServerSentDate(String serverSentDate) {
+//        this.serverSentDate = serverSentDate;
+//    }
+
+    public String toJson() {
+        return new Gson().toJson(this);
     }
 
-    public void setServerStatus(boolean serverStatus) {
-        this.serverStatus = serverStatus;
-    }
+    public static Momo fromJson(String jsonString) {
 
-    public String getServerSentDate() {
-        return serverSentDate;
-    }
-
-    public void setServerSentDate(String serverSentDate) {
-        this.serverSentDate = serverSentDate;
+        return new Gson().fromJson(jsonString, Momo.class);
     }
 
     @NonNull
     @Override
     public String toString() {
-        return new Gson().toJson(this);
+        //in case it is null
+        return "" + toJson();
     }
 }

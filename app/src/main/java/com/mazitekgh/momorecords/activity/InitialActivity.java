@@ -50,22 +50,7 @@ public class InitialActivity extends AppCompatActivity {
     }
 
     private void showApp() {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                DecimalFormat df = new DecimalFormat("0.00");
-//                ExtractMtnMomoInfo exi = new ExtractMtnMomoInfo(InitialActivity.this);
-//                String totalReceived = df.format(exi.getTotalReceived());
-//                String totalSent = df.format(exi.getTotalSent());
-//                String currentBalance = df.format(exi.getLatestBalance());
-//                Intent intent = new Intent(InitialActivity.this, MainActivity.class);
-//                intent.putExtra("totalReceived", totalReceived);
-//                intent.putExtra("totalSent", totalSent);
-//                intent.putExtra("currentBalance", currentBalance);
-//                startActivity(intent);
-//                InitialActivity.this.finish();
-//            }
-//        }).start();
+
         progressPercent.setText("20%");
         new BackgroundLoad().execute();
     }
@@ -157,7 +142,6 @@ public class InitialActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
             startActivity(intent);
             InitialActivity.this.finish();
-
         }
     }
 

@@ -19,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.mazitekgh.momorecords.BuildConfig;
 import com.mazitekgh.momorecords.R;
 import com.mazitekgh.momorecords.SharedPref;
 import com.mazitekgh.momorecords.SmsReceiver;
@@ -26,9 +27,10 @@ import com.mazitekgh.momorecords.fragment.MomoDetailFragment;
 import com.mazitekgh.momorecords.fragment.RateUsDialogFragment;
 
 
-public class MainActivity extends AppCompatActivity implements MomoDetailFragment.OnListFragmentInteractionListener, SmsReceiver.OnMomoReceive {
+public class MainActivity extends AppCompatActivity implements
+        MomoDetailFragment.OnListFragmentInteractionListener {
     private SmsReceiver smsReceiver;
-   // private View view;
+    // private View view;
     private boolean isFirst = true;
 
     @Override
@@ -36,12 +38,10 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // pb = findViewById(R.id.progress);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             smsReceiver = new SmsReceiver();
             registerReceiver(smsReceiver, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
-            smsReceiver.setMomoReceivedListener(this);
+            // smsReceiver.setMomoReceivedListener(this);
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
         TextView totalReceivedView = findViewById(R.id.total_received);
         TextView lastBalance = findViewById(R.id.last_balance);
 
-
         String totalReceived = getIntent().getStringExtra("totalReceived");
         String totalSent = getIntent().getStringExtra("totalSent");
         String currentBalance = getIntent().getStringExtra("currentBalance");
@@ -61,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
         totalSentView.setText(totalSent);
         lastBalance.setText(currentBalance);
         frag(new MomoDetailFragment());
-
     }
 
 
@@ -80,24 +78,19 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
         int id = item.getItemId();
 
         if (id == R.id.action_about) {
-
             final AlertDialog mzDialog = new AlertDialog.Builder(this).create();
-            mzDialog.setTitle("Mobile Money Manager ");
-            mzDialog.setMessage(getString(R.string.about_msg));
+            mzDialog.setTitle(getString(R.string.app_name));
+            // TODO: 24-Nov-20 find a way to link lib version
+            mzDialog.setMessage(getString(R.string.about_msg, BuildConfig.VERSION_NAME, "1.0.0"));
             mzDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Contact Mazitek GH", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent i = new Intent(Intent.ACTION_SEND);
-                    i.setType("message/rfc822");
-                    i.putExtra(Intent.EXTRA_PHONE_NUMBER, "0541355996");
-                    i.putExtra(Intent.EXTRA_CC, new String[]{"fatzak16@gmail.com"});
-                    i.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@mazitekgh.com"});
-                    i.putExtra(Intent.EXTRA_SUBJECT, "About MOMO Manager");
-                    i.putExtra(Intent.EXTRA_TEXT, "Our website https://mazitekgh.com");
+                    String payload = "https://api.whatsapp.com/send?phone=233207062250&text=About_" + getString(R.string.app_name);
+
                     try {
-                        startActivity(Intent.createChooser(i, "Send MaziTek GH email..."));
+                        startActivity(new Intent("android.intent.action.VIEW", Uri.parse(payload)));
                     } catch (android.content.ActivityNotFoundException ex) {
-                        Toast.makeText(getApplicationContext(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -109,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
                 }
             });
             mzDialog.show();
+
         } else if (id == R.id.action_mtn) {
             //toast will be here
             Toast.makeText(this, "other networks coming soon", Toast.LENGTH_SHORT).show();
@@ -163,19 +157,18 @@ public class MainActivity extends AppCompatActivity implements MomoDetailFragmen
 
         if (isFirst && new SharedPref(this).showRatingDialog()) {
             new RateUsDialogFragment().show(getSupportFragmentManager(), "rate_us");
-
             isFirst = false;
         } else {
             super.onBackPressed();
         }
 
     }
-
-    @Override
-    public void momoReceive(String body) {
-        //Toast.makeText(MainActivity.this, "It's a MOMO MESSAGE", Toast.LENGTH_SHORT).show();
-        //Toast.makeText(MainActivity.this, body, Toast.LENGTH_SHORT).show();
-        frag(new MomoDetailFragment());
-        // startActivity(new Intent(MainActivity.this,MainActivity.class));
-    }
+//
+//    @Override
+//    public void momoReceive(String body) {
+//        //Toast.makeText(MainActivity.this, "It's a MOMO MESSAGE", Toast.LENGTH_SHORT).show();
+//        //Toast.makeText(MainActivity.this, body, Toast.LENGTH_SHORT).show();
+//        frag(new MomoDetailFragment());
+//        // startActivity(new Intent(MainActivity.this,MainActivity.class));
+//    }
 }

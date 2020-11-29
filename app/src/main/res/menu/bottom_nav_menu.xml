@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_all"
+        android:icon="@drawable/ic_money_24dp"
+        android:title="@string/all_activities" />
+
+    <item
+        android:id="@+id/navigation_received"
+        android:icon="@drawable/ic_arrow_downward_24dp"
+        android:title="@string/received_activities" />
+
+    <item
+        android:id="@+id/navigation_sent"
+        android:icon="@drawable/ic_arrow_upward_24dp"
+        android:title="@string/sent_activities" />
+
+    <item
+        android:id="@+id/navigation_credit"
+        android:icon="@drawable/ic_perm_phone_msg_24dp"
+        android:title="@string/credit_activities" />
+
+</menu>

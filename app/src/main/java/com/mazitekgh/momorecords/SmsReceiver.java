@@ -13,7 +13,7 @@ import com.mazitekgh.momomanager.model.Momo;
 import com.mazitekgh.momomanager.model.Sms;
 
 public class SmsReceiver extends BroadcastReceiver {
-    private OnMomoReceive mListener;
+    //private OnMomoReceive mListener;
     private static final String TAG = "SmsReceiver";
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -57,9 +57,9 @@ public class SmsReceiver extends BroadcastReceiver {
         //check if it is mobile money msg
         if (momoExi.isMobileMoneyMsg(sms)) {
             Momo momo = momoExi.getMomo(sms);
-            if (momoExi.isReceivedMomo(sms)) {
-                // new Server(context, null).sendData(momo);
-            }
+//            if (momoExi.isReceivedMomo(sms)) {
+//                // new Server(context, null).sendData(momo);
+//            }
 
 
             //Pass the message text to interface
@@ -77,13 +77,13 @@ public class SmsReceiver extends BroadcastReceiver {
         //mListener.momoReceive(msgBody);
     }
 
-    public void setMomoReceivedListener(OnMomoReceive listener) {
-        this.mListener = listener;
-    }
+//    public void setMomoReceivedListener(OnMomoReceive listener) {
+//        this.mListener = listener;
+//    }
 
-    public interface OnMomoReceive {
-        void momoReceive(String body);
-    }
+//    public interface OnMomoReceive {
+//        void momoReceive(String body);
+//    }
 
 
 }

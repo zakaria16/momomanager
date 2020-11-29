@@ -22,13 +22,17 @@
         android:id="@+id/action_rate_app"
         android:checked="true"
         android:icon="@android:drawable/star_on"
-        android:orderInCategory="101"
-        app:showAsAction="ifRoom|withText"
+        android:orderInCategory="103"
         android:title="Rate Us" />
+    <item
+        android:id="@+id/action_export"
+        android:checked="true"
+        android:orderInCategory="102"
+        android:title="Export" />
 
     <item
         android:id="@+id/action_about"
-        android:orderInCategory="102"
+        android:orderInCategory="104"
 
         android:title="About"
         app:showAsAction="never" />

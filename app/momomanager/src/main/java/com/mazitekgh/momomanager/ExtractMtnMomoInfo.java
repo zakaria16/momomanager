@@ -38,7 +38,6 @@ public class ExtractMtnMomoInfo {
     @IntDef({ALL_MOMO, RECEIVED_MOMO, SENT_MOMO, CREDIT_MOMO})
     public @interface MomoType {
     }
-
     public static final int ALL_MOMO = 0;
     public static final int RECEIVED_MOMO = 1;
     public static final int SENT_MOMO = 2;
@@ -73,20 +72,20 @@ public class ExtractMtnMomoInfo {
     private static final String CASH_OUT_PATTERN = "\\s*[cC]ash\\s{0,3}[oO]ut\\s{1,3}made";
 
     private static final String PAYMENT_SENT_PATTERN = "\\s*[pP]ayment\\s{0,3}([mM]ade)?\\s{0,3}[fF]or";
-    private static final String PAYMENT_SENTFOR_PATTERN = "\\s*[pP]ayment\\s{0,3}([mM]ade)?\\s{0,3}[fF]or";
-    private final List<Sms> msgList;
+    //private static final String PAYMENT_SENTFOR_PATTERN = "\\s*[pP]ayment\\s{0,3}([mM]ade)?\\s{0,3}[fF]or";
+    private final List<Sms> smsList;
 
 
     public ExtractMtnMomoInfo(Context c) {
-        msgList = new SmsContent(c).getSmsList();
+        smsList = new SmsContent(c).getSmsList();
         compilePattern();
     }
 
-    public ExtractMtnMomoInfo(Context context, List msgList) {
-        this.msgList = msgList;
-        // sharedPref = new SharedPref(context);
-        compilePattern();
-    }
+//    public ExtractMtnMomoInfo(Context context, List msgList) {
+//        this.msgList = msgList;
+//        // sharedPref = new SharedPref(context);
+//        compilePattern();
+//    }
 
 
     private void compilePattern() {
@@ -123,13 +122,19 @@ public class ExtractMtnMomoInfo {
 //    }
 
 
-    // TODO: 06-Nov-20 add doc
+    /**
+     * Get Total amount received so far
+     * sums all the received momo amount
+     *
+     * @return double the total amount
+     */
     public double getTotalReceived() {
-        if (msgList == null || msgList.size() <= 0) {
+        //TODO: 25-Nov-20 remove duplicate sms that is sms with the same txID
+        if (smsList == null || smsList.size() <= 0) {
             return 0;
         }
         double amount = 0.00;
-        for (Sms sms : msgList) {
+        for (Sms sms : smsList) {
             amount += getReceivedAmount(sms);
         }
         return amount;
@@ -143,29 +148,29 @@ public class ExtractMtnMomoInfo {
      * @return List<Momo> list of momo messages
      */
     public List<Momo> getMessages(@MomoType int whichMomo) {
-        List<Momo> myResList = new ArrayList<>();
+        List<Momo> momoList;
         switch (whichMomo) {
             case ALL_MOMO: {
-                myResList = getAllMomoMessages();
+                momoList = getAllMomoMessages();
                 break;
             }
             case RECEIVED_MOMO: {
-                myResList = getReceivedMomoMessages();
+                momoList = getReceivedMomoMessages();
                 break;
             }
             case SENT_MOMO: {
-                myResList = getSentMomoMessages();
+                momoList = getSentMomoMessages();
                 break;
             }
             case CREDIT_MOMO: {
-                myResList = getCreditMessages();
+                momoList = getCreditMessages();
                 break;
             }
             default: {
-                myResList = null;
+                momoList = null;
             }
         }
-        return myResList;
+        return momoList;
     }
 
     /**
@@ -174,19 +179,19 @@ public class ExtractMtnMomoInfo {
      * @return List<Momo>
      */
     public List<Momo> getReceivedMomoMessages() {
-        List<Momo> receivedMsgs = new ArrayList<>();
-        for (Sms sms : msgList) {
+        List<Momo> receivedMomoList = new ArrayList<>();
+        for (Sms sms : smsList) {
             Momo momo = getReceivedMomo(sms);
             if (momo != null) {
-                receivedMsgs.add(momo);
+                receivedMomoList.add(momo);
             }
         }
-        return receivedMsgs;
+        return receivedMomoList;
     }
 
     public List<Momo> getSentMomoMessages() {
         List<Momo> sentMessages = new ArrayList<>();
-        for (Sms sms : msgList) {
+        for (Sms sms : smsList) {
 
             Momo momo = getSentMomo(sms);
             if (momo != null) {
@@ -197,14 +202,14 @@ public class ExtractMtnMomoInfo {
     }
 
     public double getTotalSent() {
-        if (msgList == null || msgList.size() <= 0) {
+        if (smsList == null || smsList.size() <= 0) {
             return 0;
         }
         double amount = 0.00;
 
         Sms sms;
-        for (int i = 0; i < msgList.size(); i++) {
-            sms = (Sms) msgList.get(i);
+        for (int i = 0; i < smsList.size(); i++) {
+            sms = smsList.get(i);
             amount += getCashOutAmount(sms) + getPaymentSentAmount(sms);
         }
 
@@ -216,7 +221,7 @@ public class ExtractMtnMomoInfo {
     public List<Momo> getAllMomoMessages() {
         List<Momo> allMsgs = new ArrayList<>();
 
-        for (Sms sms : msgList) {
+        for (Sms sms : smsList) {
 
             Momo momo = getMomo(sms);
             if (momo == null) continue;
@@ -229,8 +234,8 @@ public class ExtractMtnMomoInfo {
     private List<Momo> getCreditMessages() {
         List<Momo> creditMessages = new ArrayList<>();
         Sms sms;
-        for (int i = 0; i < msgList.size(); i++) {
-            sms = (Sms) msgList.get(i);
+        for (int i = 0; i < smsList.size(); i++) {
+            sms = smsList.get(i);
             Momo momo = getCreditMomo(sms);
             if (momo != null) {
                 creditMessages.add(momo);
@@ -239,7 +244,7 @@ public class ExtractMtnMomoInfo {
         return creditMessages;
     }
 
-    //todo tweak to select the of momo to get
+    //todo tweak to select the type of momo to get
     public Momo getMomo(Sms sms) {
         Momo momoSent = getSentMomo(sms);
         Momo momoReceived = getReceivedMomo(sms);
@@ -251,6 +256,12 @@ public class ExtractMtnMomoInfo {
         } else return momoCredit;
     }
 
+    /**
+     * Parse sms and check if it is a received momo and return it else return null
+     *
+     * @param sms the sms to parse
+     * @return receive Momo or null if is not receive momo
+     */
     public Momo getReceivedMomo(Sms sms) {
         Momo momo = new Momo();
         Date d = new Date();
@@ -259,34 +270,43 @@ public class ExtractMtnMomoInfo {
         try {
             sdf = new SimpleDateFormat("E d/M/y h:m:s a", Locale.getDefault());
         } catch (IllegalArgumentException e) {
+            //let's try again with old constructor
             sdf = new SimpleDateFormat();
         }
-
+        // TODO: 25-Nov-20 is this check really important
         if (receivedMessage(sms) != null) {
 
             Matcher m = receivedPattern.matcher(sms.getBody());
             if (m.find()) {
-                momo.setAmount(Double.parseDouble(m.group(ReceivePattern.GROUP_AMOUNT).trim()));
+                String amountStr = m.group(ReceivePattern.GROUP_AMOUNT);
+                if (amountStr != null) {
+                    // TODO: 25-Nov-20 catch null pointer of parseDouble
+                    momo.setAmount(Double.parseDouble(amountStr.trim()));
+                }
                 momo.setSender(m.group(ReceivePattern.GROUP_SENDER));
                 momo.setCurrentBalance(m.group(ReceivePattern.GROUP_CURRENT_BAL));
                 momo.setTxID(m.group(ReceivePattern.GROUP_TXID));
-                momo.setContentStr(sms.getBody());
+                momo.setContent(sms.getBody());
                 momo.setReference(m.group(ReceivePattern.GROUP_REFERENCE));
             }
             d.setTime(sms.getReceivedDate());
-            momo.setDateStr(sdf.format(d));
+            momo.setDate(sdf.format(d));
             momo.setType(RECEIVED_MOMO);
         } else if (cashInMessage(sms) != null) {
 
             Matcher m = cashInPattern.matcher(sms.getBody());
             if (m.find()) {
-                momo.setAmount(Double.parseDouble(m.group(CashInPattern.GROUP_CASH_IN_AMOUNT).trim()));
+                String amountStr = m.group(CashInPattern.GROUP_CASH_IN_AMOUNT);
+                if (amountStr != null) {
+                    // TODO: 25-Nov-20 catch null pointer of parseDouble
+                    momo.setAmount(Double.parseDouble(amountStr.trim()));
+                }
                 momo.setSender("FROM: " + m.group(CashInPattern.GROUP_CASH_IN_SENDER));
                 momo.setCurrentBalance(m.group(CashInPattern.GROUP_CASH_IN_CURRENT_BAL));
             }
             d.setTime(sms.getReceivedDate());
-            momo.setDateStr(sdf.format(d));
-            momo.setContentStr(sms.getBody());
+            momo.setDate(sdf.format(d));
+            momo.setContent(sms.getBody());
 
             momo.setTxID(getTxID(sms)); //none
             //momo.setCurrentBalance(String.valueOf(getIndividualCB(sms)));
@@ -318,11 +338,13 @@ public class ExtractMtnMomoInfo {
      * and the type of momo message it is
      *
      * @param sms  the sms message to check
-     * @param type int type of momo message <br/>
-     *             0. check for all
-     *             1.payment received<br/>
-     *             2.cash in received<br/>
-     *             3.you have received
+     * @param type type of momo message one of MomoType <br/>
+     *             <ol>
+     *             <li>check for all</li>
+     *             <li>payment received</li>
+     *             <li>cash in received</li>
+     *             <li>you have received</li>
+     *             </ol>
      * @return boolean true if it is a momo received message
      */
     public boolean isReceivedMomo(Sms sms, @MomoType int type) {
@@ -359,8 +381,8 @@ public class ExtractMtnMomoInfo {
         //todo make use one var to test and extract
         if (paymentSentMessage(sms) != null) {
             d.setTime(sms.getReceivedDate());
-            momo.setDateStr(sdf.format(d));
-            momo.setContentStr(paymentSentMessage(sms));
+            momo.setDate(sdf.format(d));
+            momo.setContent(paymentSentMessage(sms));
             momo.setAmount(getPaymentSentAmount(sms));
             momo.setSender(getReceiver(sms));
             momo.setTxID(getTxID(sms));
@@ -369,8 +391,8 @@ public class ExtractMtnMomoInfo {
 
         } else if (cashOutMessage(sms) != null) {
             d.setTime(sms.getReceivedDate());
-            momo.setDateStr(sdf.format(d));
-            momo.setContentStr(cashOutMessage(sms));
+            momo.setDate(sdf.format(d));
+            momo.setContent(cashOutMessage(sms));
             momo.setAmount(getCashOutAmount(sms));
             momo.setSender(getReceiver(sms));
             momo.setTxID(getTxID(sms));
@@ -397,8 +419,8 @@ public class ExtractMtnMomoInfo {
         //todo make use one var to test and extract
         if (paymentSentMessageMtn(sms) != null) {
             d.setTime(sms.getReceivedDate());
-            momo.setDateStr(sdf.format(d));
-            momo.setContentStr(paymentSentMessageMtn(sms));
+            momo.setDate(sdf.format(d));
+            momo.setContent(paymentSentMessageMtn(sms));
             momo.setAmount(getPaymentSentAmountMtn(sms));
             momo.setSender(getReceiver(sms));
             momo.setTxID(getTxID(sms));
@@ -477,7 +499,7 @@ public class ExtractMtnMomoInfo {
         if (m.find()) {
             ss = m.group(1);
         }
-        return Double.valueOf(ss.trim());
+        return Double.parseDouble(ss.trim());
     }
 
     /**
@@ -485,25 +507,12 @@ public class ExtractMtnMomoInfo {
      *
      * @param sms the sms to check
      * @return the reference or null ii cant find
+     * @TODO: 24-Nov-20 it includes the dot at the end of reference remove it
      */
     public String getReference(Sms sms) {
         if (!isPaymentReceived(sms)) {
             return null;
         }
-//
-//        String tt = "Reference:";
-//        String endString = ". Transaction";
-//        int st;
-//        int end;
-//        String ss;
-//
-//        st = sms.getBody().indexOf(tt) + tt.length() + 1;
-//        //int sm = sms.getBody().indexOf("GHS ", st) + 4;
-//        end = sms.getBody().indexOf(endString, st);
-//        ss = mSubstring(sms.getBody(), st, end);
-//        //ss = sms.getBody().substring(st, end);
-//
-//        return (ss == null) ? "error" : ss;
         String ss = null;
         Matcher m = referencePattern.matcher(sms.getBody());
         if (m.find()) {
@@ -531,8 +540,8 @@ public class ExtractMtnMomoInfo {
             end = sms.getBody().indexOf(" to", st);
         }
 
-        ss = mSubstring(sms.getBody(), st, end);
-        return (ss == null) ? 0 : Double.valueOf(ss);
+        ss = mSubString(sms.getBody(), st, end);
+        return (ss == null) ? 0 : Double.parseDouble(ss);
 
     }
 
@@ -612,7 +621,7 @@ public class ExtractMtnMomoInfo {
     /**
      * get momo sender from given sms
      * @param sms the sms to check
-     * @return String of the sender
+     * @return the sender
      */
     private String getSender(Sms sms) {
         if (!(isPaymentReceived(sms)) && !(isCashIn(sms))) {
@@ -622,9 +631,8 @@ public class ExtractMtnMomoInfo {
         String endPattern = "Current Balance";
         int st = sms.getBody().indexOf(startPattern);
         int end = sms.getBody().indexOf(endPattern);
-        String ss = mSubstring(sms.getBody(), st + startPattern.length(), end);
+        String ss = mSubString(sms.getBody(), st + startPattern.length(), end);
         return (ss == null) ? "error" : ss;
-        // return sms.getBody().substring(st + 5, end);
     }
 
     /**
@@ -642,7 +650,7 @@ public class ExtractMtnMomoInfo {
             String endPattern = "has";
             int st = sms.getBody().indexOf(startPattern);
             int end = sms.getBody().indexOf(endPattern, st);
-            ss = mSubstring(sms.getBody(), st + startPattern.length(), end);
+            ss = mSubString(sms.getBody(), st + startPattern.length(), end);
             // ss = sms.getBody().substring(st + 3, end);
 
         } else {
@@ -651,7 +659,7 @@ public class ExtractMtnMomoInfo {
             int st = sms.getBody().indexOf(startPattern);
             int end = sms.getBody().indexOf(endPattern);
             // ss = sms.getBody().substring(st + startPattern.length(), end);
-            ss = mSubstring(sms.getBody(), st + startPattern.length(), end);
+            ss = mSubString(sms.getBody(), st + startPattern.length(), end);
         }
         return (ss == null) ? "error" : ss;
 
@@ -662,6 +670,7 @@ public class ExtractMtnMomoInfo {
         boolean isCashOut = isCashOut(sms);
         // boolean isPaymentSentFor = isPaymentSentFor(sms);
         if (!(isPay || isCashIn(sms) || isCashOut || isPaymentSent(sms) || isPaymentSentMtn(sms))) {
+            // TODO: 25-Nov-20 why are using -1
             return -1;
         }
         String amountStr = "0.0";
@@ -690,7 +699,7 @@ public class ExtractMtnMomoInfo {
         if (m.find()) {
             amountStr = m.group(1);
         }
-
+        // FIXME: 25-Nov-20 check if amountStr is null
         return Double.parseDouble(amountStr.trim());
     }
 
@@ -699,7 +708,7 @@ public class ExtractMtnMomoInfo {
             return 0;
         }
 
-        double db;
+        double sentAmount;
         String tt = isPaymentSentMadeFor(sms) ? "Payment made for" : "Payment for";
 
         int st;
@@ -710,15 +719,15 @@ public class ExtractMtnMomoInfo {
             int sm = sms.getBody().indexOf("GHS", st) + 3;
             end = sms.getBody().indexOf(" to", sm);
             //ss = sms.getBody().substring(sm, end);
-            ss = mSubstring(sms.getBody(), sm, end);
+            ss = mSubString(sms.getBody(), sm, end);
 
-            db = (ss == null) ? 0 : Double.valueOf(ss);
+            sentAmount = (ss == null) ? 0 : Double.parseDouble(ss);
             // db = Double.valueOf(ss);
         } else {
-            db = getPaymentSentAmountMtn(sms);
+            sentAmount = getPaymentSentAmountMtn(sms);
         }
 
-        return db;
+        return sentAmount;
     }
 
     private double getPaymentSentAmountMtn(Sms sms) {
@@ -736,8 +745,8 @@ public class ExtractMtnMomoInfo {
             int sm = sms.getBody().indexOf("GHS ", st) + 4;
             end = sms.getBody().indexOf(" to", sm);
             //ss = sms.getBody().substring(sm, end);
-            ss = mSubstring(sms.getBody(), sm, end);
-            db = (ss == null) ? 0 : Double.valueOf(ss);
+            ss = mSubString(sms.getBody(), sm, end);
+            db = (ss == null) ? 0 : Double.parseDouble(ss);
             //db = Double.valueOf(ss);
 
         }
@@ -848,13 +857,13 @@ public class ExtractMtnMomoInfo {
             int st = sms.getBody().indexOf(startStr);
             int end = sms.getBody().indexOf(".", st);
             // return sms.getBody().substring(st + startStr.length(), end);
-            return mSubstring(sms.getBody(), st + startStr.length(), end);
+            return mSubString(sms.getBody(), st + startStr.length(), end);
         }
         startStr = "Transaction ID: ";
         int st = sms.getBody().indexOf(startStr);
         int end = sms.getBody().indexOf(".", st);
         //return sms.getBody().substring(st + startStr.length(), end);
-        return mSubstring(sms.getBody(), st + startStr.length(), end);
+        return mSubString(sms.getBody(), st + startStr.length(), end);
 
     }
 
@@ -874,14 +883,14 @@ public class ExtractMtnMomoInfo {
 
     public double getLatestBalance() {
         double currentBal = 0;
-        if (msgList == null || msgList.size() <= 0) {
+        if (smsList == null || smsList.size() <= 0) {
             return 0;
         }
 
-            int msgSize = msgList.size();
-            Sms sms;
+        int msgSize = smsList.size();
+        Sms sms;
             for (int i = 0; i < msgSize; i++) {
-                sms = (Sms) msgList.get(i);
+                sms = (Sms) smsList.get(i);
                 if (isMobileMoneyMsg(sms)) {
                     currentBal = getIndividualCB(sms);
                     if (currentBal >= 0.0) {
@@ -894,8 +903,8 @@ public class ExtractMtnMomoInfo {
         return currentBal;
     }
 
-    public List getMomoMsgList() {
-        return msgList;
+    public List<Sms> getMomoMsgList() {
+        return smsList;
     }
 
     /** RECEIVED PATTERN
@@ -919,7 +928,7 @@ public class ExtractMtnMomoInfo {
     }
 
     @Nullable
-    private String mSubstring(String str, int start, int end) {
+    private String mSubString(String str, int start, int end) {
         String ss;
         try {
             ss = str.substring(start, end);

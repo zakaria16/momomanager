@@ -4,15 +4,16 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.mazitekgh.momomanager.ExtractMtnMomoInfo;
 import com.mazitekgh.momomanager.model.Momo;
 import com.mazitekgh.momorecords.R;
@@ -31,11 +32,13 @@ public class MomoDetailFragment extends Fragment {
 
     private static final String MOMO_TYPE = "momo-type";
     private RecyclerView recyclerView;
-    private List msgList;
-    private int isSaved = 0;
+    // private List msgList;
+    // private int isSaved = 0;
     private OnListFragmentInteractionListener mListener;
-    private ProgressDialog pd;
     private TextView infoView;
+    private Context context;
+    ExtractMtnMomoInfo exi;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -56,15 +59,16 @@ public class MomoDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = getContext();
+        exi = new ExtractMtnMomoInfo(context);
+//        if (getArguments() != null) {
+//            isSaved = getArguments().getInt(MOMO_TYPE);
+//        }
 
-        if (getArguments() != null) {
-            isSaved = getArguments().getInt(MOMO_TYPE);
-        }
-
-        pd = ProgressDialog.show(getContext(), "LOADING", "Please Wait...");
+        ProgressDialog pd = ProgressDialog.show(context, "LOADING", "Please Wait...");
 
 
-        msgList = new ExtractMtnMomoInfo(getContext()).getMomoMsgList();
+        //msgList = new ExtractMtnMomoInfo(getContext()).getMomoMsgList();
         pd.dismiss();
 //            //todo make it async task
 //            //todo if list is not empty dont load new one
@@ -85,31 +89,23 @@ public class MomoDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_momodetail_list, container, false);
-        LinearLayout allViewClick = view.findViewById(R.id.all_activities);
-        LinearLayout receivedViewClick = view.findViewById(R.id.received_activities);
-        LinearLayout sentViewClick = view.findViewById(R.id.sent_activities);
-        LinearLayout creditViewClick = view.findViewById(R.id.credit_activities);
         infoView = view.findViewById(R.id.info_textview);
         recyclerView = view.findViewById(R.id.list);
 
-        allViewClick.setOnClickListener(new mClickListener());
-        receivedViewClick.setOnClickListener(new mClickListener());
-        sentViewClick.setOnClickListener(new mClickListener());
-        receivedViewClick.setOnClickListener(new mClickListener());
-        creditViewClick.setOnClickListener(new mClickListener());
-        if (isSaved == 1) {
-            infoView.setVisibility(View.GONE);
-            recyclerView.setAdapter(new MomoDetailRecyclerViewAdapter(isSaved > 0,
-                    msgList, mListener));
+        BottomNavigationView bottomNavigationView = view.findViewById(R.id.nav_view);
+        bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
+        //select all momo at first
+        bottomNavigationView.setSelectedItemId(R.id.navigation_all);
 
-        }
+
         return view;
     }
 
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        this.context = getContext();
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {
@@ -150,45 +146,60 @@ public class MomoDetailFragment extends Fragment {
 
     }
 
-    private class mClickListener implements View.OnClickListener {
+//    private class mClickListener implements View.OnClickListener {
+//
+//        @Override
+//        public void onClick(View v) {
+//            List<Momo> resList = new ArrayList<>();
+//
+//            int id = v.getId();
+//            if (id == R.id.all_activities) {
+//                resList = exi.getMessages(ExtractMtnMomoInfo.ALL_MOMO);
+//            } else if (id == R.id.received_activities) {//pb.setVisibility(View.VISIBLE);
+//                resList = exi.getMessages(ExtractMtnMomoInfo.RECEIVED_MOMO);
+//            } else if (id == R.id.sent_activities) {
+//                resList = exi.getMessages(ExtractMtnMomoInfo.SENT_MOMO);
+//            } else if (id == R.id.credit_activities) {// ctl.setBackgroundColor(getResources().getColor(R.color.colorCredit));
+//                resList = exi.getMessages(ExtractMtnMomoInfo.CREDIT_MOMO);
+//            }
+//            if (resList != null) {
+//                infoView.setVisibility(View.GONE);
+//            } else {
+//                infoView.setVisibility(View.VISIBLE);
+//            }
+//            recyclerView.setAdapter(new MomoDetailRecyclerViewAdapter(resList, mListener));
+//        }
+//
+//
+//    }
 
+    private final BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
-        public void onClick(View v) {
-            if (isSaved == 1) {
-                msgList = new ExtractMtnMomoInfo(getContext()).getMomoMsgList();
-                isSaved = 0;
-            }
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             List<Momo> resList = new ArrayList<>();
-            int id = v.getId();
-            if (id == R.id.all_activities) {//ctl.setBackgroundColor(getResources().getColor(R.color.colorAll));
-                //frag(MomoDetailFragment.newInstance(MomoDetailFragment.ALL_MOMO));
 
-                resList = new ExtractMtnMomoInfo(getContext(), msgList).getMessages(ExtractMtnMomoInfo.ALL_MOMO);
-            } else if (id == R.id.received_activities) {//pb.setVisibility(View.VISIBLE);
-                //ctl.setBackgroundColor(getResources().getColor(R.color.colorReceived));
-                // frag(MomoDetailFragment.newInstance(MomoDetailFragment.RECEIVED_MOMO));
-
-                resList = new ExtractMtnMomoInfo(getContext(), msgList).getMessages(ExtractMtnMomoInfo.RECEIVED_MOMO);
-            } else if (id == R.id.sent_activities) {//pb.setVisibility(View.VISIBLE);
-                //ctl.setBackgroundColor(getResources().getColor(R.color.colorSent));
-                //frag(MomoDetailFragment.newInstance(MomoDetailFragment.SENT_MOMO));
-
-                resList = new ExtractMtnMomoInfo(getContext(), msgList).getMessages(ExtractMtnMomoInfo.SENT_MOMO);
-            } else if (id == R.id.credit_activities) {// ctl.setBackgroundColor(getResources().getColor(R.color.colorCredit));
-
-                resList = new ExtractMtnMomoInfo(getContext(), msgList).getMessages(ExtractMtnMomoInfo.CREDIT_MOMO);
+            int id = item.getItemId();
+            if (id == R.id.navigation_all) {
+                resList = exi.getMessages(ExtractMtnMomoInfo.ALL_MOMO);
+            } else if (id == R.id.navigation_received) {//pb.setVisibility(View.VISIBLE);
+                resList = exi.getMessages(ExtractMtnMomoInfo.RECEIVED_MOMO);
+            } else if (id == R.id.navigation_sent) {
+                resList = exi.getMessages(ExtractMtnMomoInfo.SENT_MOMO);
+            } else if (id == R.id.navigation_credit) {// ctl.setBackgroundColor(getResources().getColor(R.color.colorCredit));
+                resList = exi.getMessages(ExtractMtnMomoInfo.CREDIT_MOMO);
             }
             if (resList != null) {
                 infoView.setVisibility(View.GONE);
             } else {
                 infoView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
             }
-            recyclerView.setAdapter(new MomoDetailRecyclerViewAdapter(isSaved > 0,
-                    resList, mListener));
+            recyclerView.setAdapter(new MomoDetailRecyclerViewAdapter(resList, mListener));
+            return true;
         }
 
-
-    }
+    };
 
     /*private class bgrndLoad extends AsyncTask<Void, Integer, Void> {
         private Intent intent;

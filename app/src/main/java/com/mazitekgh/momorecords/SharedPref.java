@@ -28,12 +28,10 @@ public class SharedPref {
     private static final String RATING_KEY = "rating-key";
     private static final String COOKIE_KEY = "cookies-key";
 
-    private final Context c;
     private final SharedPreferences sp;
 
     public SharedPref(Context context) {
-        this.c = context;
-        sp = c.getSharedPreferences(SHARED_KEY, Context.MODE_PRIVATE);
+        sp = context.getSharedPreferences(SHARED_KEY, Context.MODE_PRIVATE);
     }
 
     public void storeTotalAmount(String totalReceivedAmount, String totalSentAmount, String balance) {

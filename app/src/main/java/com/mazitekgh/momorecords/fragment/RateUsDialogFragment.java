@@ -33,6 +33,7 @@ public class RateUsDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         activity = getActivity();
 
+        assert activity != null;
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         View v = activity.getLayoutInflater().inflate(R.layout.dialog_rate_us, null);
 

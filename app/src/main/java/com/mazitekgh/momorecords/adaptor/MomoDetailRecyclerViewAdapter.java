@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mazitekgh.momomanager.ExtractMtnMomoInfo;
 import com.mazitekgh.momomanager.model.Momo;
 import com.mazitekgh.momorecords.R;
-import com.mazitekgh.momorecords.Server;
 import com.mazitekgh.momorecords.fragment.MomoDetailFragment.OnListFragmentInteractionListener;
 
 import java.util.List;
@@ -28,12 +27,13 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
 
     private final List<Momo> mValues;
     private final OnListFragmentInteractionListener mListener;
-    private boolean isServerMomo = false;
+   // private boolean isServerMomo = false;
     Context context;
-    public MomoDetailRecyclerViewAdapter(boolean isServerMomo, List<Momo> items, OnListFragmentInteractionListener listener) {
+
+    public MomoDetailRecyclerViewAdapter(List<Momo> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
-        this.isServerMomo = isServerMomo;
+
         context = (Context) mListener;
     }
 
@@ -41,7 +41,7 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(isServerMomo ? R.layout.fragment_momo_server : R.layout.fragment_momodetail,
+                .inflate(R.layout.fragment_momodetail,
                         parent, false);
         return new ViewHolder(view);
     }
@@ -50,7 +50,7 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final int pos = position;
         holder.mItem = mValues.get(pos);
-        holder.momo_date.setText(mValues.get(pos).getDateStr());
+        holder.momo_date.setText(mValues.get(pos).getDate());
         // holder.momoTextView.setText(mValues.get(position).getContentStr());
         holder.amountReceived.setText(context.getString(R.string.amount,mValues.get(pos).getAmount()));
         holder.txID.setText(mValues.get(pos).getTxID());
@@ -59,11 +59,11 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Server(context,null).sendData(mValues.get(pos));
+                //  new Server(context,null).sendData(mValues.get(pos));
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(mValues.get(pos).getContentStr());
+                    mListener.onListFragmentInteraction(mValues.get(pos).getContent());
                 }
             }
         });
@@ -130,11 +130,11 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
         ViewHolder(View view) {
             super(view);
             mView = view;
-            if (isServerMomo) {
-                serverSentTime = view.findViewById(R.id.time_to_server);
-                isSent2ServerView = view.findViewById(R.id.sent_to_server);
-                retryButton = view.findViewById(R.id.retry_button);
-            }
+//            if (isServerMomo) {
+//                serverSentTime = view.findViewById(R.id.time_to_server);
+//                isSent2ServerView = view.findViewById(R.id.sent_to_server);
+//                retryButton = view.findViewById(R.id.retry_button);
+//            }
             momo_date = view.findViewById(R.id.momo_date);
             // momoTextView = (TextView) view.findViewById(R.id.momo_text);
             sender = view.findViewById(R.id.sender);

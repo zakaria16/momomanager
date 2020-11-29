@@ -81,8 +81,8 @@ public class MomoDB extends SQLiteOpenHelper {
         cv.put(COL_TXID, momoToSave.getTxID());
         cv.put(COL_CURRENT_BALANCE, Double.valueOf(momoToSave.getCurrentBalance()));
         cv.put(COL_MOMO_TYPE, momoToSave.getType());
-        cv.put(COL_CONTENT, momoToSave.getContentStr());
-        cv.put(COL_DATE, momoToSave.getDateStr());
+        cv.put(COL_CONTENT, momoToSave.getContent());
+        cv.put(COL_DATE, momoToSave.getDate());
 
         long res = this.getWritableDatabase().insert(TABLE_NAME, null, cv);
         return res != -1;
@@ -97,11 +97,11 @@ public class MomoDB extends SQLiteOpenHelper {
             momo.setAmount(Double.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(COL_AMOUNT)).trim()));
             momo.setCurrentBalance(cursor.getString(cursor.getColumnIndexOrThrow(COL_CURRENT_BALANCE)));
             momo.setTxID(cursor.getString(cursor.getColumnIndexOrThrow(COL_TXID)));
-            momo.setDateStr(cursor.getString(cursor.getColumnIndexOrThrow(COL_DATE)));
+            momo.setDate(cursor.getString(cursor.getColumnIndexOrThrow(COL_DATE)));
             momo.setSender(cursor.getString(cursor.getColumnIndexOrThrow(COL_SENDER)));
             momo.setReference(cursor.getString(cursor.getColumnIndexOrThrow(COL_REFERENCE)));
             momo.setType(cursor.getInt(cursor.getColumnIndexOrThrow(COL_MOMO_TYPE)));
-            momo.setContentStr((cursor.getString(cursor.getColumnIndexOrThrow(COL_CONTENT))));
+            momo.setContent((cursor.getString(cursor.getColumnIndexOrThrow(COL_CONTENT))));
             momoList.add(momo);
         }
         cursor.close();
