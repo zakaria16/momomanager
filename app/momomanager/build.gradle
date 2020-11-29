@@ -52,7 +52,7 @@ def getVersionName = { ->
 }
 
 def getArtificatId = { ->
-    return "com.mazitekgh.momomanager" // Replace with library name ID
+    return "momomanager" // Replace with library name ID
 }
 
 publishing {
