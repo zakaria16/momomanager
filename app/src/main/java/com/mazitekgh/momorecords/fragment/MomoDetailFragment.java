@@ -7,17 +7,16 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.mazitekgh.momomanager.ExtractMtnMomoInfo;
 import com.mazitekgh.momomanager.model.Momo;
 import com.mazitekgh.momorecords.R;
 import com.mazitekgh.momorecords.adaptor.MomoDetailRecyclerViewAdapter;
+import com.mazitekgh.momorecords.databinding.FragmentMomodetailListBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +28,13 @@ import java.util.List;
  * interface.
  */
 public class MomoDetailFragment extends Fragment {
-
+    private FragmentMomodetailListBinding binding;
     private static final String MOMO_TYPE = "momo-type";
-    private RecyclerView recyclerView;
+    // private RecyclerView recyclerView;
     // private List msgList;
     // private int isSaved = 0;
     private OnListFragmentInteractionListener mListener;
-    private TextView infoView;
+    // private TextView infoView;
     private Context context;
     ExtractMtnMomoInfo exi;
 
@@ -88,9 +87,11 @@ public class MomoDetailFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_momodetail_list, container, false);
-        infoView = view.findViewById(R.id.info_textview);
-        recyclerView = view.findViewById(R.id.list);
+        binding = FragmentMomodetailListBinding.inflate(inflater, container, false);
+        //View view = inflater.inflate(R.layout.fragment_momodetail_list, container, false);
+        View view = binding.getRoot();
+        //  infoView = view.findViewById(R.id.info_textview);
+        //recyclerView = view.findViewById(R.id.list);
 
         BottomNavigationView bottomNavigationView = view.findViewById(R.id.nav_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
@@ -190,12 +191,12 @@ public class MomoDetailFragment extends Fragment {
                 resList = exi.getMessages(ExtractMtnMomoInfo.CREDIT_MOMO);
             }
             if (resList != null) {
-                infoView.setVisibility(View.GONE);
+                binding.infoTextview.setVisibility(View.GONE);
             } else {
-                infoView.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
+                binding.infoTextview.setVisibility(View.VISIBLE);
+                binding.recyclerView.setVisibility(View.GONE);
             }
-            recyclerView.setAdapter(new MomoDetailRecyclerViewAdapter(resList, mListener));
+            binding.recyclerView.setAdapter(new MomoDetailRecyclerViewAdapter(resList, mListener));
             return true;
         }
 

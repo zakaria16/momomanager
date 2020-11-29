@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mazitekgh.momomanager.ExtractMtnMomoInfo;
 import com.mazitekgh.momomanager.model.Momo;
 import com.mazitekgh.momorecords.R;
+import com.mazitekgh.momorecords.databinding.FragmentMomodetailBinding;
 import com.mazitekgh.momorecords.fragment.MomoDetailFragment.OnListFragmentInteractionListener;
 
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.List;
  */
 public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDetailRecyclerViewAdapter.ViewHolder> {
 
+    private FragmentMomodetailBinding momoDetailBinding;
     private final List<Momo> mValues;
     private final OnListFragmentInteractionListener mListener;
    // private boolean isServerMomo = false;
@@ -40,9 +42,12 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_momodetail,
-                        parent, false);
+        momoDetailBinding = FragmentMomodetailBinding
+                .inflate(LayoutInflater.from(parent.getContext()), parent, false);
+//        View view = LayoutInflater.from(parent.getContext())
+//                .inflate(R.layout.fragment_momodetail,
+//                        parent, false);
+        View view = momoDetailBinding.getRoot();
         return new ViewHolder(view);
     }
 
@@ -108,6 +113,7 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
         return mValues.size();
     }
 
+    // TODO: 29-Nov-20 is view binding necessary here
     public class ViewHolder extends RecyclerView.ViewHolder {
         final View mView;
         final TextView momo_date;
@@ -130,23 +136,29 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
         ViewHolder(View view) {
             super(view);
             mView = view;
-//            if (isServerMomo) {
-//                serverSentTime = view.findViewById(R.id.time_to_server);
-//                isSent2ServerView = view.findViewById(R.id.sent_to_server);
-//                retryButton = view.findViewById(R.id.retry_button);
-//            }
-            momo_date = view.findViewById(R.id.momo_date);
-            // momoTextView = (TextView) view.findViewById(R.id.momo_text);
-            sender = view.findViewById(R.id.sender);
-            amountReceived = view.findViewById(R.id.amount_received);
-            amountCaption = view.findViewById(R.id.amount_received_text);
-            txID = view.findViewById(R.id.tx_id);
-            currentBalance = view.findViewById(R.id.current_balance);
-            transactionFee = view.findViewById(R.id.tx_fee);
-            transactionFeeCaption = view.findViewById(R.id.tx_fee_caption);
+
+//            momo_date = view.findViewById(R.id.momo_date);
+//
+//            sender = view.findViewById(R.id.sender);
+//            amountReceived = view.findViewById(R.id.amount_received);
+//            amountCaption = view.findViewById(R.id.amount_received_text);
+//            txID = view.findViewById(R.id.tx_id);
+//            currentBalance = view.findViewById(R.id.current_balance);
+//            transactionFee = view.findViewById(R.id.tx_fee);
+//            transactionFeeCaption = view.findViewById(R.id.tx_fee_caption);
+
+            momo_date = momoDetailBinding.momoDate;
+            sender = momoDetailBinding.sender;
+            amountReceived = momoDetailBinding.amountReceived;
+            amountCaption = momoDetailBinding.amountReceivedText;
+            txID = momoDetailBinding.txId;
+            currentBalance = momoDetailBinding.currentBalance;
+            transactionFee = momoDetailBinding.txFee;
+            transactionFeeCaption = momoDetailBinding.txFeeCaption;
 
         }
 
+        @NonNull
         @Override
         public String toString() {
             return super.toString() + " '" + "'";

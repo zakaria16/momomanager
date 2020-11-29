@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.provider.Telephony;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -23,12 +23,14 @@ import com.mazitekgh.momorecords.BuildConfig;
 import com.mazitekgh.momorecords.R;
 import com.mazitekgh.momorecords.SharedPref;
 import com.mazitekgh.momorecords.SmsReceiver;
+import com.mazitekgh.momorecords.databinding.ActivityMainBinding;
 import com.mazitekgh.momorecords.fragment.MomoDetailFragment;
 import com.mazitekgh.momorecords.fragment.RateUsDialogFragment;
 
 
 public class MainActivity extends AppCompatActivity implements
         MomoDetailFragment.OnListFragmentInteractionListener {
+    private ActivityMainBinding binding;
     private SmsReceiver smsReceiver;
     // private View view;
     private boolean isFirst = true;
@@ -36,7 +38,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             smsReceiver = new SmsReceiver();
@@ -48,17 +52,17 @@ public class MainActivity extends AppCompatActivity implements
         toolbar.setTitle("");
 
         setSupportActionBar(toolbar);
-        TextView totalSentView = findViewById(R.id.total_sent);
-        TextView totalReceivedView = findViewById(R.id.total_received);
-        TextView lastBalance = findViewById(R.id.last_balance);
+//        TextView totalSentView = binding.totalSent;
+//        TextView totalReceivedView = findViewById(R.id.total_received);
+//        TextView lastBalance = findViewById(R.id.last_balance);
 
         String totalReceived = getIntent().getStringExtra("totalReceived");
         String totalSent = getIntent().getStringExtra("totalSent");
         String currentBalance = getIntent().getStringExtra("currentBalance");
 
-        totalReceivedView.setText(totalReceived);
-        totalSentView.setText(totalSent);
-        lastBalance.setText(currentBalance);
+        binding.totalReceived.setText(totalReceived);
+        binding.totalSent.setText(totalSent);
+        binding.lastBalance.setText(currentBalance);
         frag(new MomoDetailFragment());
     }
 
@@ -80,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements
         if (id == R.id.action_about) {
             final AlertDialog mzDialog = new AlertDialog.Builder(this).create();
             mzDialog.setTitle(getString(R.string.app_name));
-            // TODO: 24-Nov-20 find a way to link lib version
+            // todo 24 NOV find a way to link lib version
             mzDialog.setMessage(getString(R.string.about_msg, BuildConfig.VERSION_NAME, "1.0.0"));
             mzDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Contact Mazitek GH", new DialogInterface.OnClickListener() {
                 @Override

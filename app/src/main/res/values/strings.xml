@@ -30,5 +30,9 @@
     <string name="credit_bought">Credit Bought</string>
     <string name="amount">GHS %.2f</string>
     <string name="sender">%s: %s</string>
+    <string name="rate_us">Rate Us</string>
+    <string name="export">Export</string>
+    <string name="about">About</string>
+    <string name="mtn_momo">MTN MoMo</string>
 
 </resources>

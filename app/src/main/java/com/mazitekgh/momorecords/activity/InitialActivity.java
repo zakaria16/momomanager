@@ -7,8 +7,6 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,22 +17,25 @@ import androidx.core.content.ContextCompat;
 
 import com.mazitekgh.momomanager.ExtractMtnMomoInfo;
 import com.mazitekgh.momorecords.R;
+import com.mazitekgh.momorecords.databinding.ActivityInitialBinding;
 
 import java.text.DecimalFormat;
 
 public class InitialActivity extends AppCompatActivity {
 
     private static final int SMS_PERMISION_CODE = 232;
-    private ProgressBar pb;
-    private TextView progressPercent;
+    // private ProgressBar pb;
+    //private TextView progressPercent;
+    private ActivityInitialBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_initial);
-        pb = findViewById(R.id.progressBar);
+        binding = ActivityInitialBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        // pb = findViewById(R.id.progressBar);
 
-        progressPercent = findViewById(R.id.progress_percent);
+        //  progressPercent = findViewById(R.id.progress_percent);
 
         //First checking if the app is already having the permission 
         if (isSmsPermissionGranted()) {
@@ -51,7 +52,7 @@ public class InitialActivity extends AppCompatActivity {
 
     private void showApp() {
 
-        progressPercent.setText("20%");
+        binding.progressPercent.setText("20%");
         new BackgroundLoad().execute();
     }
 
@@ -71,8 +72,8 @@ public class InitialActivity extends AppCompatActivity {
                 //Displaying another toast if permission is not granted
                 Toast.makeText(this, "App cannot work without sms permission",
                         Toast.LENGTH_LONG).show();
-                pb.setVisibility(View.GONE);
-                progressPercent.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
+                binding.progressPercent.setVisibility(View.GONE);
             }
         }
     }
@@ -107,7 +108,7 @@ public class InitialActivity extends AppCompatActivity {
     }
 
 
-    // TODO: 06-Nov-20 fix this
+    // FIXME: 06-Nov-20 fix this
     private class BackgroundLoad extends AsyncTask<Void, Integer, Void> {
         private Intent intent;
 
@@ -134,7 +135,7 @@ public class InitialActivity extends AppCompatActivity {
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             String s = values[0] + "%";
-            progressPercent.setText(s);
+            binding.progressPercent.setText(s);
         }
 
         @Override
