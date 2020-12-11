@@ -1,5 +1,7 @@
 # momomanager
 
+!!! Work in progress, can change anytime
+
 Easily read your mobile money transaction records and detect Momo fraud messages
 
 The app allows you to know your current balance, the total amount you have received so far and the total amount you have spent.
