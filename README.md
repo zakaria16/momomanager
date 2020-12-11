@@ -48,5 +48,14 @@ double receivedAmount = exi.getTotalReceived());
 double totalSent = exi.getTotalSent();
 double currentBalance = exi.getLatestBalance();
 
+List<Momo> resList;
+//all momo data
+resList = exi.getMomoData(ExtractMtnMomoInfo.ALL_MOMO);
+//received momo data
+resList = exi.getMomoData(ExtractMtnMomoInfo.RECEIVED_MOMO);
+//sent momo data
+resList = exi.getMomoData(ExtractMtnMomoInfo.SENT_MOMO);
+//momo used to buy airtime
+resList = exi.getMomoData(ExtractMtnMomoInfo.CREDIT_MOMO);
 
 ```
