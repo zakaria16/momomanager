@@ -1,6 +1,5 @@
 package com.mazitekgh.momorecords.fragment;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,7 +28,7 @@ import java.util.List;
  */
 public class MomoDetailFragment extends Fragment {
     private FragmentMomodetailListBinding binding;
-    private static final String MOMO_TYPE = "momo-type";
+    //private static final String MOMO_TYPE = "momo-type";
     // private RecyclerView recyclerView;
     // private List msgList;
     // private int isSaved = 0;
@@ -47,30 +46,26 @@ public class MomoDetailFragment extends Fragment {
     }
 
 
-    public static MomoDetailFragment newInstance(boolean isSavedList) {
-        MomoDetailFragment fragment = new MomoDetailFragment();
-        Bundle args = new Bundle();
-        args.putInt(MOMO_TYPE, isSavedList ? 1 : 0);
-        fragment.setArguments(args);
-        return fragment;
-    }
+//    public static MomoDetailFragment newInstance(boolean isSavedList) {
+//        MomoDetailFragment fragment = new MomoDetailFragment();
+//        Bundle args = new Bundle();
+//        args.putInt(MOMO_TYPE, isSavedList ? 1 : 0);
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getContext();
         exi = new ExtractMtnMomoInfo(context);
-//        if (getArguments() != null) {
-//            isSaved = getArguments().getInt(MOMO_TYPE);
-//        }
 
-        ProgressDialog pd = ProgressDialog.show(context, "LOADING", "Please Wait...");
+        //  ProgressDialog pd = ProgressDialog.show(context, "LOADING", "Please Wait...");
 
 
         //msgList = new ExtractMtnMomoInfo(getContext()).getMomoMsgList();
-        pd.dismiss();
-//            //todo make it async task
-//            //todo if list is not empty dont load new one
+        //  pd.dismiss();
+//
 //            new Thread(new Runnable() {
 //                @Override
 //                public void run() {

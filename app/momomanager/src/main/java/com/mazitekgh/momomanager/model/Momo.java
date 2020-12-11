@@ -11,17 +11,7 @@ import com.mazitekgh.momomanager.ExtractMtnMomoInfo;
  */
 public class Momo {
 
-//    public static final Creator<Momo> CREATOR = new Creator<Momo>() {
-//        @Override
-//        public Momo createFromParcel(Parcel in) {
-//            return new Momo(in);
-//        }
-//
-//        @Override
-//        public Momo[] newArray(int size) {
-//            return new Momo[size];
-//        }
-//    };
+
 
 
     private String date;
@@ -100,11 +90,11 @@ public class Momo {
         this.sender = sender;
     }
 
-    public String getTxID() {
+    public String getTransactionID() {
         return txID;
     }
 
-    public void setTxID(String txID) {
+    public void setTransactionID(String txID) {
         this.txID = txID;
     }
 
@@ -134,28 +124,11 @@ public class Momo {
     }
 
 
-//    public boolean isServerStatus() {
-//        return serverStatus;
-//    }
-
-//    public void setServerStatus(boolean serverStatus) {
-//        this.serverStatus = serverStatus;
-//    }
-
-//    public String getServerSentDate() {
-//        return serverSentDate;
-//    }
-//
-//    public void setServerSentDate(String serverSentDate) {
-//        this.serverSentDate = serverSentDate;
-//    }
-
     public String toJson() {
         return new Gson().toJson(this);
     }
 
     public static Momo fromJson(String jsonString) {
-
         return new Gson().fromJson(jsonString, Momo.class);
     }
 

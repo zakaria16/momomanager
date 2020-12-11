@@ -57,8 +57,8 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
         holder.mItem = mValues.get(pos);
         holder.momo_date.setText(mValues.get(pos).getDate());
         // holder.momoTextView.setText(mValues.get(position).getContentStr());
-        holder.amountReceived.setText(context.getString(R.string.amount,mValues.get(pos).getAmount()));
-        holder.txID.setText(mValues.get(pos).getTxID());
+        holder.amountReceived.setText(context.getString(R.string.amount, mValues.get(pos).getAmount()));
+        holder.txID.setText(mValues.get(pos).getTransactionID());
         holder.currentBalance.setText(mValues.get(pos).getCurrentBalance());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {

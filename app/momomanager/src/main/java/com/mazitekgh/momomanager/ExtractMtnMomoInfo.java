@@ -81,6 +81,7 @@ public class ExtractMtnMomoInfo {
         compilePattern();
     }
 
+
 //    public ExtractMtnMomoInfo(Context context, List msgList) {
 //        this.msgList = msgList;
 //        // sharedPref = new SharedPref(context);
@@ -105,21 +106,6 @@ public class ExtractMtnMomoInfo {
     }
 
 
-    //private final SharedPref sharedPref;
-
-
-//    public List<Sms> getOnlyMomoSMS() {
-//        List<Sms> resList = new ArrayList<>();
-//        Sms sms;
-//        for (int i = 0; i < msgList.size(); i++) {
-//            sms = (Sms) msgList.get(i);
-//            if (isMobileMoneyMsg(sms)) {
-//                resList.add(sms);
-//            }
-//
-//        }
-//        return resList;
-//    }
 
 
     /**
@@ -151,7 +137,7 @@ public class ExtractMtnMomoInfo {
         List<Momo> momoList;
         switch (whichMomo) {
             case ALL_MOMO: {
-                momoList = getAllMomoMessages();
+                momoList = getAllMomoData();
                 break;
             }
             case RECEIVED_MOMO: {
@@ -163,7 +149,7 @@ public class ExtractMtnMomoInfo {
                 break;
             }
             case CREDIT_MOMO: {
-                momoList = getCreditMessages();
+                momoList = getCreditMomoData();
                 break;
             }
             default: {
@@ -218,12 +204,12 @@ public class ExtractMtnMomoInfo {
         return amount;
     }
 
-    public List<Momo> getAllMomoMessages() {
+    public List<Momo> getAllMomoData() {
         List<Momo> allMsgs = new ArrayList<>();
 
         for (Sms sms : smsList) {
 
-            Momo momo = getMomo(sms);
+            Momo momo = getMomoFromSms(sms);
             if (momo == null) continue;
             allMsgs.add(momo);
         }
@@ -231,7 +217,7 @@ public class ExtractMtnMomoInfo {
         return allMsgs;
     }
 
-    private List<Momo> getCreditMessages() {
+    private List<Momo> getCreditMomoData() {
         List<Momo> creditMessages = new ArrayList<>();
         Sms sms;
         for (int i = 0; i < smsList.size(); i++) {
@@ -245,7 +231,7 @@ public class ExtractMtnMomoInfo {
     }
 
     //todo tweak to select the type of momo to get
-    public Momo getMomo(Sms sms) {
+    public Momo getMomoFromSms(Sms sms) {
         Momo momoSent = getSentMomo(sms);
         Momo momoReceived = getReceivedMomo(sms);
         Momo momoCredit = getCreditMomo(sms);
@@ -285,7 +271,7 @@ public class ExtractMtnMomoInfo {
                 }
                 momo.setSender(m.group(ReceivePattern.GROUP_SENDER));
                 momo.setCurrentBalance(m.group(ReceivePattern.GROUP_CURRENT_BAL));
-                momo.setTxID(m.group(ReceivePattern.GROUP_TXID));
+                momo.setTransactionID(m.group(ReceivePattern.GROUP_TXID));
                 momo.setContent(sms.getBody());
                 momo.setReference(m.group(ReceivePattern.GROUP_REFERENCE));
             }
@@ -308,7 +294,7 @@ public class ExtractMtnMomoInfo {
             momo.setDate(sdf.format(d));
             momo.setContent(sms.getBody());
 
-            momo.setTxID(getTxID(sms)); //none
+            momo.setTransactionID(getTxID(sms)); //none
             //momo.setCurrentBalance(String.valueOf(getIndividualCB(sms)));
             momo.setType(RECEIVED_MOMO);
 
@@ -325,11 +311,17 @@ public class ExtractMtnMomoInfo {
      * @param sms message to check
      * @return true if momo message or false if not momo message
      */
-    public boolean isMobileMoneyMsg(Sms sms) {
+    public boolean isMobileMoneySms(Sms sms) {
         return (sms.getAddress().equalsIgnoreCase("MobileMoney"));
     }
 
-    private boolean isCashIn(Sms sms) {
+    /**
+     * Check if the sms is a <b>cash in</b> momo sms
+     *
+     * @param sms the sms to check
+     * @return true if is a cash in sms, false other wise
+     */
+    private boolean isCashInSms(Sms sms) {
         return isReceivedMomo(sms, RECEIVED_MOMO);
     }
 
@@ -339,6 +331,7 @@ public class ExtractMtnMomoInfo {
      *
      * @param sms  the sms message to check
      * @param type type of momo message one of MomoType <br/>
+     *             there are many kinds of received momo
      *             <ol>
      *             <li>check for all</li>
      *             <li>payment received</li>
@@ -348,7 +341,7 @@ public class ExtractMtnMomoInfo {
      * @return boolean true if it is a momo received message
      */
     public boolean isReceivedMomo(Sms sms, @MomoType int type) {
-        if (!isMobileMoneyMsg(sms)) {
+        if (!isMobileMoneySms(sms)) {
             return false;
         }
         boolean res = false;
@@ -385,7 +378,7 @@ public class ExtractMtnMomoInfo {
             momo.setContent(paymentSentMessage(sms));
             momo.setAmount(getPaymentSentAmount(sms));
             momo.setSender(getReceiver(sms));
-            momo.setTxID(getTxID(sms));
+            momo.setTransactionID(getTxID(sms));
             momo.setCurrentBalance(String.valueOf(getIndividualCB(sms)));
             momo.setType(SENT_MOMO);
 
@@ -395,7 +388,7 @@ public class ExtractMtnMomoInfo {
             momo.setContent(cashOutMessage(sms));
             momo.setAmount(getCashOutAmount(sms));
             momo.setSender(getReceiver(sms));
-            momo.setTxID(getTxID(sms));
+            momo.setTransactionID(getTxID(sms));
             momo.setCurrentBalance(String.valueOf(getIndividualCB(sms)));
             momo.setType(SENT_MOMO);  //todo distinguish it from above one
         } else {
@@ -423,7 +416,7 @@ public class ExtractMtnMomoInfo {
             momo.setContent(paymentSentMessageMtn(sms));
             momo.setAmount(getPaymentSentAmountMtn(sms));
             momo.setSender(getReceiver(sms));
-            momo.setTxID(getTxID(sms));
+            momo.setTransactionID(getTxID(sms));
             momo.setCurrentBalance(String.valueOf(getIndividualCB(sms)));
             momo.setType(CREDIT_MOMO);
 
@@ -434,12 +427,14 @@ public class ExtractMtnMomoInfo {
         return momo;
     }
 
-    public double getTotalCharge() {
-        return 0;
-    }
+// TODO: 07-Dec-20 implement later
+//    public double getTotalCharge() {
+//        return 0;
+//    }
 
     /**
      * check if the given sms is received momo message
+     *
      * @param sms the sms message to check
      * @return boolean true if it is a momo received message
      */
@@ -448,15 +443,6 @@ public class ExtractMtnMomoInfo {
     }
 
     private boolean isPaymentReceived(Sms sms) {
-//         boolean res = false;
-//        // Payment received for  GHS 200.00 from UMB Bank OVA Current Balance: GHS 1716.14 . Available Balance: GHS 1716.14. Reference: Credit MTN Customer. Transaction ID: 4772674558. TRANSACTION FEE: 0.00
-//        //Pattern p = Pattern.compile(PAYMENT_RECEIVED_PATTERN);
-//        Matcher m = paymentReceivedPattern.matcher(sms.getBody());
-//        if (isMobileMoneyMsg(sms)) {
-//            // res = sms.getBody().contains("Payment received");
-//            res = m.find();
-//        }
-
         return isReceivedMomo(sms, RECEIVED_MOMO);
     }
 
@@ -464,7 +450,7 @@ public class ExtractMtnMomoInfo {
         //Cash Out made for GHS40.00 to IT TAKES GRACE  VENTURES, Current Balance: GHS1560.04 Financial Transaction Id: 4571767875. Cash-out fee is charged automatically from your MTN MobileMoney wallet. Please do not pay any fees to the merchant. Thank you for using MTN MobileMoney. Fee charged: GHS0.50.
         boolean res = false;
         Matcher m = cashOutPattern.matcher(sms.getBody());
-        if (isMobileMoneyMsg(sms)) {
+        if (isMobileMoneySms(sms)) {
             //  res = sms.getBody().contains("Cash Out made");
             res = m.find();
         }
@@ -474,8 +460,8 @@ public class ExtractMtnMomoInfo {
     public boolean isPaymentSent(Sms sms) {
         boolean res = false;
         Matcher m = paymentSentPattern.matcher(sms.getBody());
-        if (isMobileMoneyMsg(sms)) {
-            res= m.find();
+        if (isMobileMoneySms(sms)) {
+            res = m.find();
         }
         return res;
     }
@@ -487,10 +473,7 @@ public class ExtractMtnMomoInfo {
      * @return double the amount receive
      */
     public double getReceivedAmount(Sms sms) {
-        //if it is not cash in or payment received return 0
-//        if(!(isCashIn(sms) || isPaymentReceived(sms))){
-//            return  0;
-//        }
+
         if (!isReceivedMomo(sms)) {
             return 0;
         }
@@ -499,6 +482,7 @@ public class ExtractMtnMomoInfo {
         if (m.find()) {
             ss = m.group(1);
         }
+        if (ss ==null)return 0;
         return Double.parseDouble(ss.trim());
     }
 
@@ -548,7 +532,7 @@ public class ExtractMtnMomoInfo {
     private boolean isPaymentSentMadeFor(Sms sms) {
         boolean res = false;
         Matcher m = paymentMadeFor.matcher(sms.getBody());
-        if (isMobileMoneyMsg(sms)) {
+        if (isMobileMoneySms(sms)) {
             // res = sms.getBody().contains("Payment made for");
             res = m.find();
         }
@@ -558,7 +542,7 @@ public class ExtractMtnMomoInfo {
     private boolean isPaymentSentFor(Sms sms) {
         boolean res = false;
         Matcher m = paymentSentForPattern.matcher(sms.getBody());
-        if (isMobileMoneyMsg(sms)) {
+        if (isMobileMoneySms(sms)) {
             //res = sms.getBody().contains("Payment for");
             res = m.find();
         }
@@ -567,7 +551,7 @@ public class ExtractMtnMomoInfo {
 
     private boolean isPaymentSentMtn(Sms sms) {
         boolean res = false;
-        if (isMobileMoneyMsg(sms)) {
+        if (isMobileMoneySms(sms)) {
             Matcher m = sentMtnPattern.matcher(sms.getBody());
             //res = sms.getBody().contains("Your payment of");
             res = m.find();
@@ -578,45 +562,7 @@ public class ExtractMtnMomoInfo {
         return res;
     }
 
-//
-//    //receive amount
-//    private double getCashInReceivedAmount(Sms sms) {
-//        if (!isCashIn(sms)) {
-//            return 0;
-//        }
-//        String ss = null;
-//        Pattern p = Pattern.compile(CASH_IN_RECEIVED_PATTERN);
-//        Matcher m = p.matcher(sms.getBody());
-//        if (m.find()) {
-//            int count = m.groupCount();
-//            ss = m.group(count);
-//        }
-//
-//        return (ss == null || ss.isEmpty()) ? 0 : Double.valueOf(ss);
-//    }
-//
-//    private double getPaymentReceivedAmount(Sms sms) {
-//        if (!isPaymentReceived(sms)) {
-//            return 0;
-//        }
-//
-//        double db;
-//        String tt = "Payment received for";
-//        int st;
-//        int end;
-//        String ss;
-//        if (sms.getBody().contains(tt)) {
-//            st = sms.getBody().indexOf(tt) + tt.length() + 1;
-//            int sm = sms.getBody().indexOf("GHS ", st) + 4;
-//            end = sms.getBody().indexOf(" from", sm);
-//            ss = mSubstring(sms.getBody(), sm, end);
-//            db = (ss == null) ? 0 : Double.valueOf(ss);
-//        } else {
-//            db = 0;
-//        }
-//
-//        return db;
-//    }
+
 
     /**
      * get momo sender from given sms
@@ -624,7 +570,7 @@ public class ExtractMtnMomoInfo {
      * @return the sender
      */
     private String getSender(Sms sms) {
-        if (!(isPaymentReceived(sms)) && !(isCashIn(sms))) {
+        if (!(isPaymentReceived(sms)) && !(isCashInSms(sms))) {
             return null;
         }
         String startPattern = "from ";
@@ -669,32 +615,12 @@ public class ExtractMtnMomoInfo {
         boolean isPay = isPaymentReceived(sms);
         boolean isCashOut = isCashOut(sms);
         // boolean isPaymentSentFor = isPaymentSentFor(sms);
-        if (!(isPay || isCashIn(sms) || isCashOut || isPaymentSent(sms) || isPaymentSentMtn(sms))) {
+        if (!(isPay || isCashInSms(sms) || isCashOut || isPaymentSent(sms) || isPaymentSentMtn(sms))) {
             // TODO: 25-Nov-20 why are using -1
             return -1;
         }
         String amountStr = "0.0";
-//        String firstPattern = "Current Balance";
-//        String endPattern; // = isPay ? ". Available Balance" : "Available Balance";
-//        if (isPay) {
-//            endPattern = ". Available Balance";
-//        } else if (isCashOut) {
-//            endPattern = "Financial";
-//        } else if (isPaymentSentMtn(sms)) {
-//            firstPattern = "balance:";
-//            endPattern = ". Fee";
-//        } else if (isPaymentSentFor) {
-//            //firstPattern = "balance:";
-//            endPattern = ". Transaction";
-//        } else {
-//            endPattern = isPaymentSentMadeFor(sms) ? ". Available Balance" : "Available Balance";
-//        }
-//        int st = sms.getBody().indexOf(firstPattern) + firstPattern.length();
-//        int end = sms.getBody().indexOf(endPattern, st);
-//        int md = isCashOut ? sms.getBody().indexOf("GHS", st) - 1 : sms.getBody().indexOf("GHS ", st); //portable
-//
-//        String ss = mSubstring(sms.getBody(), md + 4, end);
-//
+
         Matcher m = currentBalancePattern.matcher(sms.getBody());
         if (m.find()) {
             amountStr = m.group(1);
@@ -760,7 +686,7 @@ public class ExtractMtnMomoInfo {
     }
 
     private String cashInMessage(Sms sms) {
-        return isCashIn(sms) ? sms.getBody() : null;
+        return isCashInSms(sms) ? sms.getBody() : null;
     }
 
 
@@ -850,7 +776,7 @@ public class ExtractMtnMomoInfo {
      */
     private String getTxID(Sms sms) {
         String startStr;
-        if (isCashIn(sms)) {
+        if (isCashInSms(sms)) {
             return null;
         } else if (isPaymentSentMtn(sms) || isCashOut(sms)) {
             startStr = "Financial Transaction Id: ";
@@ -890,8 +816,8 @@ public class ExtractMtnMomoInfo {
         int msgSize = smsList.size();
         Sms sms;
             for (int i = 0; i < msgSize; i++) {
-                sms = (Sms) smsList.get(i);
-                if (isMobileMoneyMsg(sms)) {
+                sms = smsList.get(i);
+                if (isMobileMoneySms(sms)) {
                     currentBal = getIndividualCB(sms);
                     if (currentBal >= 0.0) {
                         // sharedPref.StoreCurrentBalance(currentBal, sms.getReceivedDate());
@@ -903,11 +829,12 @@ public class ExtractMtnMomoInfo {
         return currentBal;
     }
 
-    public List<Sms> getMomoMsgList() {
-        return smsList;
-    }
+//    public List<Sms> getMomoMsgList() {
+//        return smsList;
+//    }
 
-    /** RECEIVED PATTERN
+    /**
+     * RECEIVED PATTERN
      * group 1: amount received
      * group 2: sender
      * group 3: current balance

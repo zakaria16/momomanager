@@ -5,8 +5,7 @@ package com.mazitekgh.momomanager.model;
  * Created by Zakaria on 12-Dec-18 at 12:57 AM.
  */
 public class Sms {
-    //todo access to private
-    //did this to for compatibility with old everythingme sms lib
+
     private String address;
     private String body;
     private Long receivedDate;

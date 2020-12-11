@@ -54,11 +54,11 @@ public class SmsReceiver extends BroadcastReceiver {
     }
 
     private void processSMS(Context context,Sms sms){
-        Log.d(TAG, "processSMS: "+sms);
+        Log.d(TAG, "processSMS: " + sms);
         ExtractMtnMomoInfo momoExi = new ExtractMtnMomoInfo(context);
         //check if it is mobile money msg
-        if (momoExi.isMobileMoneyMsg(sms)) {
-            Momo momo = momoExi.getMomo(sms);
+        if (momoExi.isMobileMoneySms(sms)) {
+            Momo momo = momoExi.getMomoFromSms(sms);
 
             Toast.makeText(context, "It's a mobile Money Message\n" +
                     "amount: " + momo.getAmount() + "\n" +
