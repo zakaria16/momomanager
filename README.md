@@ -29,3 +29,24 @@ This category shows all mobile money transaction you have sent from your device 
 
 ### Airtime Transactions
 At this category you will know the amount you are spending on airtime
+
+
+# Library
+add the library to your project
+```
+dependencies {
+    ...
+    implementation 'com.mazitekgh:momomanager:1.0.0'
+}
+```
+
+using the lib
+
+```java
+ExtractMtnMomoInfo exi = new ExtractMomoInfo(context);
+double receivedAmount = exi.getTotalReceived());
+double totalSent = exi.getTotalSent();
+double currentBalance = exi.getLatestBalance();
+
+
+```
