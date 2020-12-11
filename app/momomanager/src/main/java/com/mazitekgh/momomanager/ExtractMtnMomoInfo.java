@@ -128,12 +128,12 @@ public class ExtractMtnMomoInfo {
 
 
     /**
-     * Get All momo messages
+     * Get a list of all or a particular momo data
      *
      * @param whichMomo type of momo Message to retrieve
      * @return List<Momo> list of momo messages
      */
-    public List<Momo> getMessages(@MomoType int whichMomo) {
+    public List<Momo> getMomoData(@MomoType int whichMomo) {
         List<Momo> momoList;
         switch (whichMomo) {
             case ALL_MOMO: {
@@ -141,15 +141,15 @@ public class ExtractMtnMomoInfo {
                 break;
             }
             case RECEIVED_MOMO: {
-                momoList = getReceivedMomoMessages();
+                momoList = getAllReceivedMomo();
                 break;
             }
             case SENT_MOMO: {
-                momoList = getSentMomoMessages();
+                momoList = getAllSentMomo();
                 break;
             }
             case CREDIT_MOMO: {
-                momoList = getCreditMomoData();
+                momoList = getAllCreditMomo();
                 break;
             }
             default: {
@@ -164,7 +164,7 @@ public class ExtractMtnMomoInfo {
      *
      * @return List<Momo>
      */
-    public List<Momo> getReceivedMomoMessages() {
+    public List<Momo> getAllReceivedMomo() {
         List<Momo> receivedMomoList = new ArrayList<>();
         for (Sms sms : smsList) {
             Momo momo = getReceivedMomo(sms);
@@ -175,7 +175,7 @@ public class ExtractMtnMomoInfo {
         return receivedMomoList;
     }
 
-    public List<Momo> getSentMomoMessages() {
+    public List<Momo> getAllSentMomo() {
         List<Momo> sentMessages = new ArrayList<>();
         for (Sms sms : smsList) {
 
@@ -187,7 +187,12 @@ public class ExtractMtnMomoInfo {
         return sentMessages;
     }
 
-    public double getTotalSent() {
+    /**
+     * Get sum up all the amount of sent momo an returns it
+     *
+     * @return
+     */
+    public double getTotalSentAmount() {
         if (smsList == null || smsList.size() <= 0) {
             return 0;
         }
@@ -204,6 +209,11 @@ public class ExtractMtnMomoInfo {
         return amount;
     }
 
+    /**
+     * Get all momo Data regardless of type
+     *
+     * @return List of different types of Momo data
+     */
     public List<Momo> getAllMomoData() {
         List<Momo> allMsgs = new ArrayList<>();
 
@@ -217,7 +227,12 @@ public class ExtractMtnMomoInfo {
         return allMsgs;
     }
 
-    private List<Momo> getCreditMomoData() {
+    /**
+     * Get a list of momo use to buy credit
+     *
+     * @return List of credit Momo
+     */
+    private List<Momo> getAllCreditMomo() {
         List<Momo> creditMessages = new ArrayList<>();
         Sms sms;
         for (int i = 0; i < smsList.size(); i++) {
@@ -246,7 +261,7 @@ public class ExtractMtnMomoInfo {
      * Parse sms and check if it is a received momo and return it else return null
      *
      * @param sms the sms to parse
-     * @return receive Momo or null if is not receive momo
+     * @return received Momo or null if is not receive momo
      */
     public Momo getReceivedMomo(Sms sms) {
         Momo momo = new Momo();
@@ -317,7 +332,7 @@ public class ExtractMtnMomoInfo {
 
     /**
      * Check if the sms is a <b>cash in</b> momo sms
-     *
+     * is the momo sms a cash in sms?
      * @param sms the sms to check
      * @return true if is a cash in sms, false other wise
      */

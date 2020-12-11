@@ -119,7 +119,7 @@ public class InitialActivity extends AppCompatActivity {
             publishProgress(50);
             String totalReceived = df.format(exi.getTotalReceived());
             publishProgress(65);
-            String totalSent = df.format(exi.getTotalSent());
+            String totalSent = df.format(exi.getTotalSentAmount());
             publishProgress(75);
             String currentBalance = df.format(exi.getLatestBalance());
             publishProgress(85);

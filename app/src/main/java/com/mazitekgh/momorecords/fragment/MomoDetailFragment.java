@@ -177,13 +177,13 @@ public class MomoDetailFragment extends Fragment {
 
             int id = item.getItemId();
             if (id == R.id.navigation_all) {
-                resList = exi.getMessages(ExtractMtnMomoInfo.ALL_MOMO);
+                resList = exi.getMomoData(ExtractMtnMomoInfo.ALL_MOMO);
             } else if (id == R.id.navigation_received) {//pb.setVisibility(View.VISIBLE);
-                resList = exi.getMessages(ExtractMtnMomoInfo.RECEIVED_MOMO);
+                resList = exi.getMomoData(ExtractMtnMomoInfo.RECEIVED_MOMO);
             } else if (id == R.id.navigation_sent) {
-                resList = exi.getMessages(ExtractMtnMomoInfo.SENT_MOMO);
+                resList = exi.getMomoData(ExtractMtnMomoInfo.SENT_MOMO);
             } else if (id == R.id.navigation_credit) {// ctl.setBackgroundColor(getResources().getColor(R.color.colorCredit));
-                resList = exi.getMessages(ExtractMtnMomoInfo.CREDIT_MOMO);
+                resList = exi.getMomoData(ExtractMtnMomoInfo.CREDIT_MOMO);
             }
             if (resList != null) {
                 binding.infoTextview.setVisibility(View.GONE);
