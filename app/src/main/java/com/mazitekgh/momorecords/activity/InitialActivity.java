@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.mazitekgh.momomanager.ExtractMtnMomoInfo;
+import com.mazitekgh.momomanager.MtnMomoManager;
 import com.mazitekgh.momorecords.R;
 import com.mazitekgh.momorecords.databinding.ActivityInitialBinding;
 
@@ -115,7 +115,7 @@ public class InitialActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void[] objects) {
             DecimalFormat df = new DecimalFormat("0.00");
-            ExtractMtnMomoInfo exi = new ExtractMtnMomoInfo(InitialActivity.this);
+            MtnMomoManager exi = new MtnMomoManager(InitialActivity.this);
             publishProgress(50);
             String totalReceived = df.format(exi.getTotalReceived());
             publishProgress(65);

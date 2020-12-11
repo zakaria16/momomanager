@@ -11,7 +11,7 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.mazitekgh.momomanager.ExtractMtnMomoInfo;
+import com.mazitekgh.momomanager.MtnMomoManager;
 import com.mazitekgh.momomanager.model.Momo;
 import com.mazitekgh.momorecords.R;
 import com.mazitekgh.momorecords.databinding.FragmentMomodetailBinding;
@@ -79,7 +79,7 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
                 titleView.setBackgroundColor(context.getResources().getColor(R.color.colorAll));
                 break;
             }*/
-            case ExtractMtnMomoInfo.RECEIVED_MOMO: {
+            case MtnMomoManager.RECEIVED_MOMO: {
                 holder.sender.setText(context.getString(R.string.sender, "FROM", mValues.get(pos).getSender()));
                 holder.sender.setBackgroundColor(context.getResources().getColor(R.color.colorReceived));
                 holder.amountCaption.setText(context.getString(R.string.amount_received));
@@ -88,7 +88,7 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
 
                 break;
             }
-            case ExtractMtnMomoInfo.SENT_MOMO: {
+            case MtnMomoManager.SENT_MOMO: {
                 holder.sender.setText(context.getString(R.string.sender, "TO", mValues.get(pos).getSender()));
                 holder.sender.setBackgroundColor(context.getResources().getColor(R.color.colorSent));
                 holder.transactionFeeCaption.setText(""); //todo remove when "tc" fees is implemented
@@ -96,7 +96,7 @@ public class MomoDetailRecyclerViewAdapter extends RecyclerView.Adapter<MomoDeta
                 holder.amountCaption.setText(context.getString(R.string.amount_sent));
                 break;
             }
-            case ExtractMtnMomoInfo.CREDIT_MOMO: {
+            case MtnMomoManager.CREDIT_MOMO: {
                 holder.sender.setText(context.getString(R.string.sender, "FOR", mValues.get(pos).getSender()));
                 holder.amountCaption.setText(context.getString(R.string.credit_bought));
                 holder.sender.setBackgroundColor(context.getResources().getColor(R.color.colorCredit));

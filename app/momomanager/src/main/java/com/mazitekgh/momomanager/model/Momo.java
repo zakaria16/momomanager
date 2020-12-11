@@ -3,7 +3,7 @@ package com.mazitekgh.momomanager.model;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
-import com.mazitekgh.momomanager.ExtractMtnMomoInfo;
+import com.mazitekgh.momomanager.MtnMomoManager;
 
 /**
  * MtnMomo
@@ -62,7 +62,7 @@ public class Momo {
         return type;
     }
 
-    public void setType(@ExtractMtnMomoInfo.MomoType int type) {
+    public void setType(@MtnMomoManager.MomoType int type) {
         this.type = type;
     }
 

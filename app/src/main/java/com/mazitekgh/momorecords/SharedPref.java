@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
-import com.mazitekgh.momomanager.ExtractMtnMomoInfo;
+import com.mazitekgh.momomanager.MtnMomoManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -95,17 +95,17 @@ public class SharedPref {
         editor.apply();
     }
 
-    void storeCurrentMessageDate(@ExtractMtnMomoInfo.TotalAmountType int whichType, Long lastDate) {
+    void storeCurrentMessageDate(@MtnMomoManager.TotalAmountType int whichType, Long lastDate) {
         switch (whichType) {
-            case ExtractMtnMomoInfo.CURRENT_BALANCE: {
+            case MtnMomoManager.CURRENT_BALANCE: {
                 storeCurrentBalanceDate(lastDate);
                 break;
             }
-            case ExtractMtnMomoInfo.TOTAL_RECEIVED: {
+            case MtnMomoManager.TOTAL_RECEIVED: {
                 storeLastReceivedDate(lastDate);
                 break;
             }
-            case ExtractMtnMomoInfo.TOTAL_SENT: {
+            case MtnMomoManager.TOTAL_SENT: {
                 storeLastSentDate(lastDate);
                 break;
             }

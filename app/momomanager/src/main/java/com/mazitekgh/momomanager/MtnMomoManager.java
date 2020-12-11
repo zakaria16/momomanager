@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Zakaria on 01-Sep-18 at 4:03 PM.
  */
-public class ExtractMtnMomoInfo {
+public class MtnMomoManager {
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({CURRENT_BALANCE, TOTAL_RECEIVED, TOTAL_SENT})
     public @interface TotalAmountType {
@@ -76,7 +76,7 @@ public class ExtractMtnMomoInfo {
     private final List<Sms> smsList;
 
 
-    public ExtractMtnMomoInfo(Context c) {
+    public MtnMomoManager(Context c) {
         smsList = new SmsContent(c, "MobileMoney").getSmsList();
         compilePattern();
     }
@@ -875,7 +875,7 @@ public class ExtractMtnMomoInfo {
         try {
             ss = str.substring(start, end);
         } catch (IndexOutOfBoundsException e) {
-            Log.d(ExtractMtnMomoInfo.class.getSimpleName(), "caused by sms:" + str + "\n" + e.getMessage());
+            Log.d(MtnMomoManager.class.getSimpleName(), "caused by sms:" + str + "\n" + e.getMessage());
             return null;
         }
         return ss;

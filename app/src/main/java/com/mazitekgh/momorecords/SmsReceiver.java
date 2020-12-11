@@ -8,7 +8,7 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.mazitekgh.momomanager.ExtractMtnMomoInfo;
+import com.mazitekgh.momomanager.MtnMomoManager;
 import com.mazitekgh.momomanager.model.Momo;
 import com.mazitekgh.momomanager.model.Sms;
 
@@ -55,7 +55,7 @@ public class SmsReceiver extends BroadcastReceiver {
 
     private void processSMS(Context context,Sms sms){
         Log.d(TAG, "processSMS: " + sms);
-        ExtractMtnMomoInfo momoExi = new ExtractMtnMomoInfo(context);
+        MtnMomoManager momoExi = new MtnMomoManager(context);
         //check if it is mobile money msg
         if (momoExi.isMobileMoneySms(sms)) {
             Momo momo = momoExi.getMomoFromSms(sms);

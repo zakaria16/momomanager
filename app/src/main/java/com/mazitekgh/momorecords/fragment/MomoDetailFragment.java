@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.mazitekgh.momomanager.ExtractMtnMomoInfo;
+import com.mazitekgh.momomanager.MtnMomoManager;
 import com.mazitekgh.momomanager.model.Momo;
 import com.mazitekgh.momorecords.R;
 import com.mazitekgh.momorecords.adaptor.MomoDetailRecyclerViewAdapter;
@@ -35,7 +35,7 @@ public class MomoDetailFragment extends Fragment {
     private OnListFragmentInteractionListener mListener;
     // private TextView infoView;
     private Context context;
-    ExtractMtnMomoInfo exi;
+    MtnMomoManager exi;
 
 
     /**
@@ -58,7 +58,7 @@ public class MomoDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getContext();
-        exi = new ExtractMtnMomoInfo(context);
+        exi = new MtnMomoManager(context);
 
         //  ProgressDialog pd = ProgressDialog.show(context, "LOADING", "Please Wait...");
 
@@ -177,13 +177,13 @@ public class MomoDetailFragment extends Fragment {
 
             int id = item.getItemId();
             if (id == R.id.navigation_all) {
-                resList = exi.getMomoData(ExtractMtnMomoInfo.ALL_MOMO);
+                resList = exi.getMomoData(MtnMomoManager.ALL_MOMO);
             } else if (id == R.id.navigation_received) {//pb.setVisibility(View.VISIBLE);
-                resList = exi.getMomoData(ExtractMtnMomoInfo.RECEIVED_MOMO);
+                resList = exi.getMomoData(MtnMomoManager.RECEIVED_MOMO);
             } else if (id == R.id.navigation_sent) {
-                resList = exi.getMomoData(ExtractMtnMomoInfo.SENT_MOMO);
+                resList = exi.getMomoData(MtnMomoManager.SENT_MOMO);
             } else if (id == R.id.navigation_credit) {// ctl.setBackgroundColor(getResources().getColor(R.color.colorCredit));
-                resList = exi.getMomoData(ExtractMtnMomoInfo.CREDIT_MOMO);
+                resList = exi.getMomoData(MtnMomoManager.CREDIT_MOMO);
             }
             if (resList != null) {
                 binding.infoTextview.setVisibility(View.GONE);
