@@ -11,9 +11,6 @@ import com.mazitekgh.momomanager.MtnMomoManager;
  */
 public class Momo {
 
-
-
-
     private String date;
     private String content;
     private String sender;
@@ -40,22 +37,6 @@ public class Momo {
         this.reference = reference;
 
     }
-
-//    private Momo(Parcel in) {
-//        dateStr = in.readString();
-//        contentStr = in.readString();
-//    }
-//
-//    @Override
-//    public int describeContents() {
-//        return 0;
-//    }
-
-//    @Override
-//    public void writeToParcel(Parcel dest, int flags) {
-//        dest.writeString(dateStr);
-//        dest.writeString(contentStr);
-//    }
 
 
     public int getType() {

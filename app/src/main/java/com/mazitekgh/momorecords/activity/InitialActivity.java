@@ -1,3 +1,4 @@
+
 package com.mazitekgh.momorecords.activity;
 
 import android.Manifest;
@@ -39,11 +40,10 @@ public class InitialActivity extends AppCompatActivity {
 
         //First checking if the app is already having the permission 
         if (isSmsPermissionGranted()) {
-            //If permission is already having then showing the toast
-            // Toast.makeText(this, "You already have the permission to Access Storage", Toast.LENGTH_LONG).show();
+            //app has permission so show app
             showApp();
         } else {
-            //If the app has not the permission then asking for the permission
+            //app has no permission so ask for the permission
             showDialog();
         }
 
@@ -115,13 +115,13 @@ public class InitialActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void[] objects) {
             DecimalFormat df = new DecimalFormat("0.00");
-            MtnMomoManager exi = new MtnMomoManager(InitialActivity.this);
+            MtnMomoManager mtnMomoManager = new MtnMomoManager(InitialActivity.this);
             publishProgress(50);
-            String totalReceived = df.format(exi.getTotalReceived());
+            String totalReceived = df.format(mtnMomoManager.getTotalReceivedAmount());
             publishProgress(65);
-            String totalSent = df.format(exi.getTotalSentAmount());
+            String totalSent = df.format(mtnMomoManager.getTotalSentAmount());
             publishProgress(75);
-            String currentBalance = df.format(exi.getLatestBalance());
+            String currentBalance = df.format(mtnMomoManager.getLatestBalance());
             publishProgress(85);
             intent = new Intent(InitialActivity.this, MainActivity.class);
             intent.putExtra("totalReceived", totalReceived);

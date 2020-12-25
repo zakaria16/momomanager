@@ -35,7 +35,7 @@ public class MomoDetailFragment extends Fragment {
     private OnListFragmentInteractionListener mListener;
     // private TextView infoView;
     private Context context;
-    MtnMomoManager exi;
+    MtnMomoManager mtnMomoManager;
 
 
     /**
@@ -58,7 +58,7 @@ public class MomoDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getContext();
-        exi = new MtnMomoManager(context);
+        mtnMomoManager = new MtnMomoManager(context);
 
         //  ProgressDialog pd = ProgressDialog.show(context, "LOADING", "Please Wait...");
 
@@ -177,13 +177,13 @@ public class MomoDetailFragment extends Fragment {
 
             int id = item.getItemId();
             if (id == R.id.navigation_all) {
-                resList = exi.getMomoData(MtnMomoManager.ALL_MOMO);
+                resList = mtnMomoManager.getMomoData(MtnMomoManager.ALL_MOMO);
             } else if (id == R.id.navigation_received) {//pb.setVisibility(View.VISIBLE);
-                resList = exi.getMomoData(MtnMomoManager.RECEIVED_MOMO);
+                resList = mtnMomoManager.getMomoData(MtnMomoManager.RECEIVED_MOMO);
             } else if (id == R.id.navigation_sent) {
-                resList = exi.getMomoData(MtnMomoManager.SENT_MOMO);
+                resList = mtnMomoManager.getMomoData(MtnMomoManager.SENT_MOMO);
             } else if (id == R.id.navigation_credit) {// ctl.setBackgroundColor(getResources().getColor(R.color.colorCredit));
-                resList = exi.getMomoData(MtnMomoManager.CREDIT_MOMO);
+                resList = mtnMomoManager.getMomoData(MtnMomoManager.CREDIT_MOMO);
             }
             if (resList != null) {
                 binding.infoTextview.setVisibility(View.GONE);

@@ -114,7 +114,7 @@ public class MtnMomoManager {
      *
      * @return double the total amount
      */
-    public double getTotalReceived() {
+    public double getTotalReceivedAmount() {
         //TODO: 25-Nov-20 remove duplicate sms that is sms with the same txID
         if (smsList == null || smsList.size() <= 0) {
             return 0;
