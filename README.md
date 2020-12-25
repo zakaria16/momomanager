@@ -2,6 +2,11 @@
 
 !!! Work in progress, can change anytime
 
+## Quick links
+- [How to use the library](#use_lib)
+- [API Documentation](https://github.com/Zakaria16/momomanager/tree/master/app/momomanager/doc)
+
+### Overview
 Easily read mobile money transaction records and detect Momo fraud messages
 
 The app allows you to know your current balance, the total amount you have received so far and the total amount you have spent.
@@ -33,7 +38,7 @@ This category shows all mobile money transaction you have sent from your device 
 At this category you will know the amount you are spending on airtime
 
 
-# How to use the library
+## <a name="use_lib"></a> How to use the library
 add the library to your project
 ```
 dependencies {
@@ -42,7 +47,7 @@ dependencies {
 }
 ```
 
-using the lib
+### using the library
 
 ```java
 ExtractMtnMomoInfo mtnMomoManager = new MtnMomoManager(context);
@@ -66,4 +71,4 @@ resList = mtnMomoManager.getMomoData(ExtractMtnMomoInfo.CREDIT_MOMO);
 
 ```
 
-Read the API Documentation here: (API Doc)[app/momomanager/doc]
+Read the API Documentation here: [API Doc](https://github.com/Zakaria16/momomanager/tree/master/app/momomanager/doc)
