@@ -2,7 +2,7 @@
 
 !!! Work in progress, can change anytime
 
-Easily read your mobile money transaction records and detect Momo fraud messages
+Easily read mobile money transaction records and detect Momo fraud messages
 
 The app allows you to know your current balance, the total amount you have received so far and the total amount you have spent.
 
@@ -33,7 +33,7 @@ This category shows all mobile money transaction you have sent from your device 
 At this category you will know the amount you are spending on airtime
 
 
-# Library
+# How to use the library
 add the library to your project
 ```
 dependencies {
@@ -45,19 +45,25 @@ dependencies {
 using the lib
 
 ```java
-ExtractMtnMomoInfo exi = new ExtractMomoInfo(context);
-double receivedAmount = exi.getTotalReceived());
-double totalSent = exi.getTotalSent();
-double currentBalance = exi.getLatestBalance();
+ExtractMtnMomoInfo mtnMomoManager = new MtnMomoManager(context);
+//get the sum of all received momo amount
+double receivedAmount = mtnMomoManager.getTotalReceivedAmount();
+//get the sum of all sent momo amount
+double totalSent = mtnMomoManager.getTotalSentAmount();
+//get the current momo balance
+double currentBalance = mtnMomoManager.getLatestBalance();
 
 List<Momo> resList;
-//all momo data
-resList = exi.getMomoData(ExtractMtnMomoInfo.ALL_MOMO);
-//received momo data
-resList = exi.getMomoData(ExtractMtnMomoInfo.RECEIVED_MOMO);
-//sent momo data
-resList = exi.getMomoData(ExtractMtnMomoInfo.SENT_MOMO);
-//momo used to buy airtime
-resList = exi.getMomoData(ExtractMtnMomoInfo.CREDIT_MOMO);
+//list of all momo data
+resList = mtnMomoManager.getMomoData(ExtractMtnMomoInfo.ALL_MOMO);
+//list of all received momo data
+resList = mtnMomoManager.getMomoData(ExtractMtnMomoInfo.RECEIVED_MOMO);
+//list of all sent momo data
+resList = mtnMomoManager.getMomoData(ExtractMtnMomoInfo.SENT_MOMO);
+
+//list of all momo used to buy airtime
+resList = mtnMomoManager.getMomoData(ExtractMtnMomoInfo.CREDIT_MOMO);
 
 ```
+
+Read the API Documentation here: (API Doc)[app/momomanager/doc]
