@@ -50,7 +50,7 @@ dependencies {
 ### using the library
 
 ```java
-ExtractMtnMomoInfo mtnMomoManager = new MtnMomoManager(context);
+MtnMomoManager mtnMomoManager = new MtnMomoManager(context);
 //get the sum of all received momo amount
 double receivedAmount = mtnMomoManager.getTotalReceivedAmount();
 //get the sum of all sent momo amount
