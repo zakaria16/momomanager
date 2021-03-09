@@ -1,2 +1,2 @@
-include ':app:momomanager'
+include ':momomanager'
 include ':app'
