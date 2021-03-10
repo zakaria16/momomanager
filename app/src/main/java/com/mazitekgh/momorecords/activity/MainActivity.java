@@ -19,7 +19,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.mazitekgh.momorecords.BuildConfig;
 import com.mazitekgh.momorecords.R;
 import com.mazitekgh.momorecords.SharedPref;
 import com.mazitekgh.momorecords.SmsReceiver;
@@ -85,7 +84,9 @@ public class MainActivity extends AppCompatActivity implements
             final AlertDialog mzDialog = new AlertDialog.Builder(this).create();
             mzDialog.setTitle(getString(R.string.app_name));
             // todo 24 NOV find a way to link lib version
-            mzDialog.setMessage(getString(R.string.about_msg, BuildConfig.VERSION_NAME, "1.0.0"));
+            mzDialog.setMessage(getString(R.string.about_msg,
+                    com.mazitekgh.momorecords.BuildConfig.VERSION_NAME,
+                    com.mazitekgh.momomanager.BuildConfig.VERSION_NAME));
             mzDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Contact Mazitek GH", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

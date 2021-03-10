@@ -4,7 +4,10 @@ buildscript {
     ext {
         min_sdk_version = 15
     }
-    ext.kotlin_version = '1.4.30'
+    ext.kotlin_version = '1.4.31'
+
+    ext.lib_version_code=2
+    ext.lib_version_name='1.0.0'
 
     
     repositories {
