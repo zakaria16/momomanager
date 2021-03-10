@@ -40,15 +40,25 @@ At this category you will know the amount you are spending on airtime
 
 
 ## <a name="use_lib"></a> How to use the library
-add the library to your project
-```
-dependencies {
-    ...
-    implementation 'com.mazitekgh:momomanager:1.0.0'
+Step 1. Add it in your root build.gradle at the end of repositories:
+```java
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
+	}
 }
 ```
 
-### using the library
+Step 2. Add the dependency
+```java
+dependencies {
+    ...
+    implementation 'com.github.Zakaria16.momomanager:momomanager:1.0.0'
+}
+```
+
+### Using the library
 
 ```java
 MtnMomoManager mtnMomoManager = new MtnMomoManager(context);
