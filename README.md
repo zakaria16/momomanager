@@ -1,6 +1,7 @@
 # momomanager
+[![](https://jitpack.io/v/Zakaria16/momomanager.svg)](https://jitpack.io/#Zakaria16/momomanager)
 
-!!! Work in progress, can change anytime
+
 
 ## Quick links
 - [How to use the library](#use_lib)
