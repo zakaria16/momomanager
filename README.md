@@ -82,4 +82,4 @@ resList = mtnMomoManager.getMomoData(ExtractMtnMomoInfo.CREDIT_MOMO);
 
 ```
 
-Read the API Documentation here: [API Doc](https://github.com/Zakaria16/momomanager/tree/master/app/momomanager/doc)
+Read the API Documentation here: [API Doc](https://github.com/Zakaria16/momomanager/tree/master/momomanager/doc)
