@@ -5,10 +5,11 @@
 
 ## Quick links
 - [How to use the library](#use_lib)
-- [API Documentation](https://github.com/Zakaria16/momomanager/tree/master/app/momomanager/doc)
+- [App screenshots]()
+- [API Documentation](momomanager/doc)
 
-### Overview
-Easily read mobile money transaction records and detect Momo fraud messages
+## Overview
+Easily read mobile money transaction records and detect Momo fraud messages. Currently working on mtn mobile money
 
 The app allows you to know your current balance, the total amount you have received so far and the total amount you have spent.
 
@@ -18,7 +19,10 @@ It groups your transaction into categories
 * Sent Transactions
 * Airtime Transactions
 * It detect incoming SMS to verify if it is a legit Mobile Money message
-
+## App Screenshot
+All transactions|Received Transaction|sent transaction|Airtime transaction
+-----------------|----------------|-----------------|----------------
+<img src="screenshots/Screenshot_2.0.0_1.png" >|<img src="screenshots/Screenshot_2.0.0_2.jpg">|<img src="screenshots/Screenshot_2.0.0_3.png">|<img src="screenshots/Screenshot_2.0.0_4.png">
 
 ### current balance and all time Money received and spent
 Get to know your current balance and the total amount you have spent and received thus far
@@ -59,6 +63,21 @@ dependencies {
 ```
 
 ### Using the library
+first allow sms read permission and receive permision(if you want to analyze incoming sms)
+
+in the app's ***AndroidManifest.xml***
+
+```
+...
+
+<uses-permission android:name="android.permission.READ_SMS" />
+<uses-permission android:name="android.permission.RECEIVE_SMS" />
+
+...
+
+```
+
+Example on how to read momo data:
 
 ```java
 MtnMomoManager mtnMomoManager = new MtnMomoManager(context);
