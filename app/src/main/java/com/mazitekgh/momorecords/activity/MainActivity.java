@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Telephony;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,7 +16,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements
     private SmsReceiver smsReceiver;
     // private View view;
     private boolean isFirst = true;
-
+    private static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,10 +47,10 @@ public class MainActivity extends AppCompatActivity implements
             // smsReceiver.setMomoReceivedListener(this);
         }
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("");
 
-        setSupportActionBar(toolbar);
+        binding.toolbar.setTitle("");
+
+        setSupportActionBar(binding.toolbar);
 //        TextView totalSentView = binding.totalSent;
 //        TextView totalReceivedView = findViewById(R.id.total_received);
 //        TextView lastBalance = findViewById(R.id.last_balance);
@@ -111,11 +111,12 @@ public class MainActivity extends AppCompatActivity implements
         } else if (id == R.id.action_mtn) {
             //toast will be here
             Toast.makeText(this, "other networks coming soon", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.action_rate_app) {
+        } else if (id == R.id.action_visit_source_code) {
             try {
-                startActivity(new Intent("android.intent.action.VIEW", Uri.parse("market://details?id=" + getPackageName())));
+                startActivity(new Intent("android.intent.action.VIEW", Uri.parse("https://github.com/Zakaria16/momomanager")));
             } catch (ActivityNotFoundException e) {
-                startActivity(new Intent("android.intent.action.VIEW", Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName())));
+                Log.e(TAG, "onOptionsItemSelected: ", e);
+                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         }
 

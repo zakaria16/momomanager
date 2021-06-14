@@ -34,5 +34,6 @@
     <string name="export">Export</string>
     <string name="about">About</string>
     <string name="mtn_momo">MTN MoMo</string>
+    <string name="source_code">Source Code</string>
 
 </resources>
