@@ -58,7 +58,7 @@ Step 2. Add the dependency
 ```java
 dependencies {
     ...
-    implementation 'com.github.Zakaria16.momomanager:momomanager:1.0.0'
+    implementation 'com.github.Zakaria16.momomanager:momomanager:VERSION_NAME'
 }
 ```
 
